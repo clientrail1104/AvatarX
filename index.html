@@ -1,40 +1,52 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#050509">
-<title>VoxAI — Voice Command Center</title>
+<title>VoxAI — Universal Voice Assistant</title>
 
 <style>
+:root{
+  --bg:#050509;
+  --panel:rgba(17,18,27,.74);
+  --panel2:rgba(255,255,255,.045);
+  --border:rgba(255,255,255,.09);
+  --text:#f7f8ff;
+  --muted:#9298aa;
+  --purple:#8b5cf6;
+  --violet:#a855f7;
+  --cyan:#22d3ee;
+  --green:#34d399;
+  --red:#fb7185;
+}
+
 *{
   box-sizing:border-box;
   margin:0;
   padding:0;
 }
 
-:root{
-  --bg:#050509;
-  --panel:rgba(15,16,24,.72);
-  --panel2:rgba(255,255,255,.045);
-  --border:rgba(255,255,255,.09);
-  --white:#fff;
-  --muted:#9298aa;
-  --purple:#8b5cf6;
-  --cyan:#22d3ee;
-  --green:#34d399;
-  --red:#fb7185;
+html{
+  scroll-behavior:smooth;
 }
 
 body{
   min-height:100vh;
+  color:var(--text);
   background:
-    radial-gradient(circle at 15% 10%,rgba(139,92,246,.18),transparent 30%),
-    radial-gradient(circle at 85% 20%,rgba(34,211,238,.12),transparent 30%),
-    linear-gradient(135deg,#040509,#090a11 50%,#050509);
-  color:var(--white);
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
-              "SF Pro Text",Inter,system-ui,sans-serif;
+    radial-gradient(circle at 15% 8%,rgba(139,92,246,.18),transparent 30%),
+    radial-gradient(circle at 85% 18%,rgba(34,211,238,.11),transparent 28%),
+    linear-gradient(135deg,#030408,#080910 52%,#040509);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    Inter,
+    system-ui,
+    sans-serif;
   overflow-x:hidden;
 }
 
@@ -43,17 +55,18 @@ body:before{
   position:fixed;
   inset:0;
   pointer-events:none;
-  opacity:.18;
+  opacity:.2;
   background-image:
     linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
     linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
   background-size:45px 45px;
+  mask-image:linear-gradient(to bottom,black,transparent);
 }
 
 .app{
-  width:min(1380px,calc(100% - 32px));
+  width:min(1400px,calc(100% - 30px));
   margin:auto;
-  padding:20px 0 50px;
+  padding:18px 0 50px;
 }
 
 header{
@@ -67,21 +80,22 @@ header{
   display:flex;
   align-items:center;
   gap:11px;
+  font-size:17px;
   font-weight:800;
   letter-spacing:-.04em;
 }
 
-.logo-icon{
-  width:39px;
-  height:39px;
-  border-radius:13px;
+.logo-mark{
+  width:40px;
+  height:40px;
   display:grid;
   place-items:center;
+  border-radius:13px;
   background:linear-gradient(135deg,var(--purple),var(--cyan));
   box-shadow:0 0 35px rgba(139,92,246,.35);
 }
 
-.logo-icon:after{
+.logo-mark:after{
   content:"";
   width:15px;
   height:15px;
@@ -108,129 +122,149 @@ header{
 .status-dot{
   width:7px;
   height:7px;
-  background:var(--green);
   border-radius:50%;
-  box-shadow:0 0 12px var(--green);
+  background:var(--green);
+  box-shadow:0 0 13px var(--green);
 }
 
 .hero{
   text-align:center;
-  padding:80px 0 65px;
+  padding:70px 0 60px;
 }
 
 .badge{
   display:inline-flex;
+  align-items:center;
   padding:7px 12px;
-  border:1px solid rgba(139,92,246,.28);
-  background:rgba(139,92,246,.08);
+  margin-bottom:23px;
+  border:1px solid rgba(139,92,246,.27);
   border-radius:999px;
+  background:rgba(139,92,246,.08);
   color:#c4b5fd;
   font-size:10px;
   font-weight:800;
   letter-spacing:.1em;
-  margin-bottom:23px;
 }
 
 h1{
-  font-size:clamp(50px,8vw,94px);
+  font-size:clamp(52px,8vw,95px);
   line-height:.92;
   letter-spacing:-.07em;
-  background:linear-gradient(120deg,#fff 20%,#ddd6fe 55%,#67e8f9);
+  background:linear-gradient(
+    120deg,
+    #fff 20%,
+    #ddd6fe 53%,
+    #67e8f9
+  );
   -webkit-background-clip:text;
   background-clip:text;
   color:transparent;
 }
 
-.hero-description{
+.description{
   max-width:700px;
-  margin:26px auto 0;
+  margin:25px auto 0;
   color:var(--muted);
   line-height:1.75;
   font-size:16px;
 }
 
 /* VOICE */
+
 .voice-zone{
-  margin:75px auto 35px;
-  width:280px;
-  height:260px;
+  width:290px;
+  height:270px;
+  margin:65px auto 20px;
   position:relative;
   display:grid;
   place-items:center;
 }
 
 .orb{
-  width:145px;
-  height:145px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.22);
-  cursor:pointer;
+  width:150px;
+  height:150px;
   position:relative;
   z-index:5;
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:50%;
+  cursor:pointer;
   color:white;
   background:
-    radial-gradient(circle at 35% 25%,#ede9fe 0,#a78bfa 15%,
-    #7c3aed 38%,#4c1d95 68%,#100b20 100%);
+    radial-gradient(
+      circle at 35% 25%,
+      #f5f3ff 0,
+      #a78bfa 15%,
+      #7c3aed 38%,
+      #4c1d95 67%,
+      #10091e 100%
+    );
   box-shadow:
-    0 0 35px rgba(139,92,246,.65),
+    0 0 40px rgba(139,92,246,.65),
     0 0 110px rgba(139,92,246,.25),
-    inset 0 0 30px rgba(255,255,255,.18);
-  transition:.25s;
+    inset 0 0 35px rgba(255,255,255,.2);
+  transition:.25s ease;
 }
 
 .orb:hover{
-  transform:scale(1.06);
+  transform:scale(1.05);
 }
 
 .orb.listening{
-  animation:breath 1.1s infinite alternate;
+  animation:breathing 1s infinite alternate;
 }
 
 .orb:before,
 .orb:after{
   content:"";
   position:absolute;
+  inset:-22px;
+  border:1px solid rgba(139,92,246,.23);
   border-radius:50%;
-  inset:-20px;
-  border:1px solid rgba(139,92,246,.22);
   animation:ring 2.8s infinite ease-out;
 }
 
 .orb:after{
-  inset:-46px;
-  border-color:rgba(34,211,238,.14);
+  inset:-48px;
+  border-color:rgba(34,211,238,.13);
   animation-delay:1s;
 }
 
 .mic{
-  font-size:42px;
+  font-size:43px;
 }
 
-.voice-status{
+.voice-label{
   position:absolute;
   bottom:0;
   color:var(--muted);
   font-size:12px;
 }
 
-@keyframes ring{
-  0%{transform:scale(.72);opacity:1}
-  100%{transform:scale(1.35);opacity:0}
-}
-
-@keyframes breath{
+@keyframes breathing{
   from{transform:scale(1)}
   to{transform:scale(1.055)}
 }
 
+@keyframes ring{
+  from{
+    transform:scale(.7);
+    opacity:1;
+  }
+  to{
+    transform:scale(1.35);
+    opacity:0;
+  }
+}
+
 /* WAVE */
+
 .wave{
+  height:45px;
   display:flex;
   justify-content:center;
   align-items:center;
   gap:4px;
-  height:45px;
-  opacity:.3;
+  opacity:.25;
 }
 
 .wave.active{
@@ -238,7 +272,6 @@ h1{
 }
 
 .wave i{
-  display:block;
   width:3px;
   height:7px;
   border-radius:10px;
@@ -260,10 +293,11 @@ h1{
 
 @keyframes wave{
   0%,100%{height:7px}
-  50%{height:35px}
+  50%{height:36px}
 }
 
-/* COMMAND */
+/* INPUT */
+
 .command{
   max-width:850px;
   margin:25px auto 0;
@@ -272,32 +306,32 @@ h1{
   padding:7px;
   border:1px solid var(--border);
   border-radius:18px;
-  background:rgba(7,8,12,.75);
-  backdrop-filter:blur(24px);
+  background:rgba(6,7,11,.78);
+  backdrop-filter:blur(25px);
   box-shadow:0 25px 80px rgba(0,0,0,.4);
 }
 
 .command input{
-  min-width:0;
   flex:1;
+  min-width:0;
   border:0;
   outline:0;
-  color:white;
   background:transparent;
+  color:white;
   padding:14px;
   font-size:14px;
 }
 
 .command input::placeholder{
-  color:#676d7e;
+  color:#666c7c;
 }
 
 .btn{
   border:1px solid var(--border);
-  background:rgba(255,255,255,.06);
-  color:white;
   border-radius:12px;
   padding:0 15px;
+  color:white;
+  background:rgba(255,255,255,.06);
   cursor:pointer;
   transition:.2s;
 }
@@ -311,7 +345,52 @@ h1{
   border-color:transparent;
 }
 
+/* API */
+
+.api-panel{
+  max-width:850px;
+  margin:15px auto 0;
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:rgba(255,255,255,.025);
+  text-align:left;
+}
+
+.api-row{
+  display:flex;
+  gap:7px;
+}
+
+.api-row input{
+  flex:1;
+  min-width:0;
+  padding:11px;
+  color:white;
+  background:#0a0b10;
+  border:1px solid var(--border);
+  outline:0;
+  border-radius:10px;
+}
+
+.api-row button{
+  padding:0 14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.07);
+  color:white;
+  cursor:pointer;
+}
+
+.api-help{
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.5;
+  margin-top:7px;
+}
+
 /* DASHBOARD */
+
 .dashboard{
   display:grid;
   grid-template-columns:1.35fr .65fr;
@@ -321,22 +400,23 @@ h1{
 .card{
   border:1px solid var(--border);
   border-radius:22px;
-  background:linear-gradient(
-    145deg,
-    rgba(255,255,255,.055),
-    rgba(255,255,255,.018)
-  );
-  backdrop-filter:blur(22px);
   overflow:hidden;
-  box-shadow:0 25px 80px rgba(0,0,0,.28);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.055),
+      rgba(255,255,255,.018)
+    );
+  backdrop-filter:blur(22px);
+  box-shadow:0 25px 80px rgba(0,0,0,.3);
 }
 
 .card-head{
   padding:18px 20px;
-  border-bottom:1px solid var(--border);
   display:flex;
   align-items:center;
   justify-content:space-between;
+  border-bottom:1px solid var(--border);
 }
 
 .title{
@@ -345,21 +425,21 @@ h1{
 }
 
 .subtitle{
+  margin-top:3px;
   color:var(--muted);
   font-size:10px;
-  margin-top:3px;
 }
 
 .clear{
-  color:var(--muted);
-  background:none;
   border:0;
+  background:transparent;
+  color:var(--muted);
   cursor:pointer;
   font-size:11px;
 }
 
 .messages{
-  height:420px;
+  height:430px;
   overflow:auto;
   padding:18px;
 }
@@ -376,62 +456,71 @@ h1{
 .empty strong{
   display:block;
   color:white;
-  margin-bottom:6px;
   font-size:14px;
+  margin-bottom:5px;
 }
 
-.msg{
-  padding:14px;
+.message{
   margin-bottom:10px;
-  border-radius:15px;
+  padding:14px;
   border:1px solid var(--border);
+  border-radius:15px;
   animation:appear .25s ease;
 }
 
-.msg.user{
+.message.user{
   background:rgba(139,92,246,.08);
 }
 
-.msg.ai{
+.message.ai{
   background:rgba(34,211,238,.045);
 }
 
-.msg-top{
+.message-top{
   display:flex;
   justify-content:space-between;
+  margin-bottom:7px;
   color:var(--muted);
   font-size:9px;
-  margin-bottom:7px;
 }
 
-.msg-body{
-  color:#e9eaf1;
+.message-body{
+  color:#e9eaf2;
   font-size:13px;
-  line-height:1.6;
+  line-height:1.65;
+  white-space:pre-wrap;
 }
 
 @keyframes appear{
-  from{opacity:0;transform:translateY(7px)}
-  to{opacity:1;transform:none}
+  from{
+    opacity:0;
+    transform:translateY(7px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
 }
+
+/* SHORTCUTS */
 
 .shortcuts{
   padding:18px;
 }
 
 .shortcut{
-  border:1px solid var(--border);
-  border-radius:15px;
   padding:14px;
   margin-bottom:9px;
+  border:1px solid var(--border);
+  border-radius:15px;
   cursor:pointer;
   transition:.2s;
 }
 
 .shortcut:hover{
-  background:rgba(139,92,246,.07);
-  border-color:rgba(139,92,246,.35);
   transform:translateY(-2px);
+  border-color:rgba(139,92,246,.35);
+  background:rgba(139,92,246,.06);
 }
 
 .shortcut strong{
@@ -439,10 +528,12 @@ h1{
 }
 
 .shortcut p{
+  margin-top:4px;
   color:var(--muted);
   font-size:10px;
-  margin-top:4px;
 }
+
+/* STATS */
 
 .stats{
   display:grid;
@@ -452,29 +543,24 @@ h1{
 }
 
 .stat{
+  padding:17px;
   border:1px solid var(--border);
   border-radius:18px;
-  padding:17px;
   background:rgba(255,255,255,.025);
 }
 
-.stat-number{
-  font-size:23px;
+.stat-value{
+  font-size:22px;
   font-weight:800;
 }
 
 .stat-label{
+  margin-top:4px;
   color:var(--muted);
   font-size:10px;
-  margin-top:4px;
 }
 
-footer{
-  color:#616778;
-  text-align:center;
-  padding:45px 0 10px;
-  font-size:10px;
-}
+/* TOAST */
 
 .toast{
   position:fixed;
@@ -485,9 +571,9 @@ footer{
   opacity:0;
   pointer-events:none;
   padding:12px 17px;
+  border:1px solid var(--border);
   border-radius:13px;
   background:#171923;
-  border:1px solid var(--border);
   box-shadow:0 20px 60px rgba(0,0,0,.5);
   font-size:12px;
   transition:.25s;
@@ -498,7 +584,15 @@ footer{
   transform:translate(-50%,0);
 }
 
+footer{
+  padding:45px 0 10px;
+  text-align:center;
+  color:#606676;
+  font-size:10px;
+}
+
 @media(max-width:850px){
+
   .dashboard{
     grid-template-columns:1fr;
   }
@@ -506,13 +600,10 @@ footer{
   .stats{
     grid-template-columns:repeat(2,1fr);
   }
-
-  .hero{
-    padding-top:55px;
-  }
 }
 
 @media(max-width:500px){
+
   .app{
     width:calc(100% - 20px);
   }
@@ -525,7 +616,7 @@ footer{
     font-size:48px;
   }
 
-  .hero-description{
+  .description{
     font-size:14px;
   }
 
@@ -540,6 +631,14 @@ footer{
   .btn{
     padding:0 11px;
   }
+
+  .api-row{
+    flex-direction:column;
+  }
+
+  .api-row button{
+    height:40px;
+  }
 }
 </style>
 </head>
@@ -549,22 +648,24 @@ footer{
 <div class="app">
 
 <header>
+
   <div class="logo">
-    <div class="logo-icon"></div>
+    <div class="logo-mark"></div>
     <div>Vox<span>AI</span></div>
   </div>
 
   <div class="status">
     <span class="status-dot" id="statusDot"></span>
-    <span id="statusText">Voice engine ready</span>
+    <span id="statusText">Ready</span>
   </div>
+
 </header>
 
 
 <section class="hero">
 
   <div class="badge">
-    ✦ NATURAL VOICE COMMAND CENTER
+    ✦ UNIVERSAL VOICE ASSISTANT
   </div>
 
   <h1>
@@ -573,9 +674,10 @@ footer{
     <span>Done.</span>
   </h1>
 
-  <p class="hero-description">
-    Talk naturally. VoxAI listens, understands your command,
-    executes available actions and answers back with voice.
+  <p class="description">
+    Talk naturally. Ask questions. Calculate. Create. Search.
+    Open websites. Give instructions. VoxAI processes your
+    commands and responds with voice.
   </p>
 
 
@@ -583,14 +685,14 @@ footer{
 
     <button
       class="orb"
-      id="mic"
+      id="orb"
       aria-label="Start voice assistant"
     >
       <span class="mic">🎙</span>
     </button>
 
-    <div class="voice-status" id="voiceStatus">
-      Tap the orb to speak
+    <div class="voice-label" id="voiceLabel">
+      Tap to speak
     </div>
 
   </div>
@@ -605,16 +707,15 @@ footer{
   <form class="command" id="commandForm">
 
     <input
-      id="input"
+      id="commandInput"
       autocomplete="off"
-      placeholder="Say something or type a command..."
+      placeholder="Speak or type any command..."
     >
 
     <button
       type="button"
       class="btn"
-      id="voiceBtn"
-      title="Voice input"
+      id="voiceButton"
     >
       🎙
     </button>
@@ -628,6 +729,36 @@ footer{
 
   </form>
 
+
+  <div class="api-panel">
+
+    <div class="api-row">
+
+      <input
+        id="apiKey"
+        type="password"
+        autocomplete="off"
+        placeholder="Optional: paste your OpenAI API key"
+      >
+
+      <button id="saveKey">
+        Save
+      </button>
+
+      <button id="removeKey">
+        Remove
+      </button>
+
+    </div>
+
+    <div class="api-help">
+      Your key is stored only in this browser's local storage.
+      For a public/production website, use a server-side backend
+      instead of exposing an API key in the browser.
+    </div>
+
+  </div>
+
 </section>
 
 
@@ -638,28 +769,31 @@ footer{
     <div class="card-head">
 
       <div>
-        <div class="title">Live command stream</div>
+        <div class="title">
+          Live conversation
+        </div>
+
         <div class="subtitle">
-          Your conversation appears here
+          Voice and AI command history
         </div>
       </div>
 
-      <button
-        class="clear"
-        id="clear"
-      >
+      <button class="clear" id="clear">
         Clear
       </button>
 
     </div>
 
+
     <div class="messages" id="messages">
 
       <div class="empty" id="empty">
+
         <div>
           <strong>VoxAI is ready</strong>
-          Say “hello” to begin.
+          Say "Hello VoxAI".
         </div>
+
       </div>
 
     </div>
@@ -672,68 +806,73 @@ footer{
     <div class="card-head">
 
       <div>
-        <div class="title">Quick commands</div>
-        <div class="subtitle">Click to execute</div>
+        <div class="title">
+          Quick commands
+        </div>
+
+        <div class="subtitle">
+          Instant examples
+        </div>
       </div>
 
     </div>
 
+
     <div class="shortcuts">
 
-      <div
-        class="shortcut"
-        data-command="Hello"
-      >
+      <div class="shortcut"
+           data-command="Hello VoxAI">
         <strong>👋 Hello</strong>
         <p>Start a conversation.</p>
       </div>
 
-      <div
-        class="shortcut"
-        data-command="What time is it?"
-      >
-        <strong>🕐 Current time</strong>
-        <p>Get the current local time.</p>
+
+      <div class="shortcut"
+           data-command="What time is it?">
+        <strong>🕐 Time</strong>
+        <p>Get the current time.</p>
       </div>
 
-      <div
-        class="shortcut"
-        data-command="What is today's date?"
-      >
-        <strong>📅 Today's date</strong>
+
+      <div class="shortcut"
+           data-command="What is today's date?">
+        <strong>📅 Date</strong>
         <p>Get today's date.</p>
       </div>
 
-      <div
-        class="shortcut"
-        data-command="Calculate 125 times 8"
-      >
+
+      <div class="shortcut"
+           data-command="Calculate 125 times 8">
         <strong>🧮 Calculator</strong>
-        <p>Calculate mathematical expressions.</p>
+        <p>Perform calculations.</p>
       </div>
 
-      <div
-        class="shortcut"
-        data-command="Tell me a joke"
-      >
-        <strong>😂 Tell me a joke</strong>
-        <p>Generate a quick joke.</p>
+
+      <div class="shortcut"
+           data-command="Tell me a joke">
+        <strong>😂 Joke</strong>
+        <p>Tell a joke.</p>
       </div>
 
-      <div
-        class="shortcut"
-        data-command="Give me a productivity tip"
-      >
+
+      <div class="shortcut"
+           data-command="Give me a productivity tip">
         <strong>⚡ Productivity</strong>
-        <p>Get a useful productivity tip.</p>
+        <p>Get a useful tip.</p>
       </div>
 
-      <div
-        class="shortcut"
-        data-command="Open Google"
-      >
+
+      <div class="shortcut"
+           data-command="Open Google">
         <strong>🌐 Open Google</strong>
-        <p>Launch Google in a new tab.</p>
+        <p>Open Google in a new tab.</p>
+      </div>
+
+
+      <div class="shortcut"
+           data-command="Explain artificial intelligence in simple language">
+        <strong>🤖 Ask AI</strong>
+        <p>Send a natural-language request to AI.</p>
       </div>
 
     </div>
@@ -746,30 +885,30 @@ footer{
 <section class="stats">
 
   <div class="stat">
-    <div class="stat-number" id="count">0</div>
-    <div class="stat-label">Commands processed</div>
+    <div class="stat-value" id="commandCount">0</div>
+    <div class="stat-label">Commands</div>
   </div>
 
   <div class="stat">
-    <div class="stat-number">∞</div>
-    <div class="stat-label">Session architecture</div>
+    <div class="stat-value">∞</div>
+    <div class="stat-label">Command possibilities</div>
   </div>
 
   <div class="stat">
-    <div class="stat-number">LIVE</div>
-    <div class="stat-label">Voice engine</div>
+    <div class="stat-value">LIVE</div>
+    <div class="stat-label">Voice interface</div>
   </div>
 
   <div class="stat">
-    <div class="stat-number">24/7</div>
-    <div class="stat-label">Interface availability</div>
+    <div class="stat-value">AI</div>
+    <div class="stat-label">Intelligence layer</div>
   </div>
 
 </section>
 
 
 <footer>
-  VoxAI Voice Command Center
+  VoxAI • Universal Voice Command Center
 </footer>
 
 </div>
@@ -779,68 +918,151 @@ footer{
 
 
 <script>
-/* ==========================================================
-   VOXAI — ROBUST MAC VOICE ENGINE
-   ========================================================== */
+/*
+============================================================
+VOXAI — ALL-IN-ONE ENGINE
+============================================================
+*/
 
-const mic = document.getElementById("mic");
-const voiceBtn = document.getElementById("voiceBtn");
-const input = document.getElementById("input");
-const form = document.getElementById("commandForm");
-const messages = document.getElementById("messages");
-const empty = document.getElementById("empty");
-const clear = document.getElementById("clear");
 
-const wave = document.getElementById("wave");
-const voiceStatus = document.getElementById("voiceStatus");
+const orb =
+  document.getElementById("orb");
 
-const statusText = document.getElementById("statusText");
-const statusDot = document.getElementById("statusDot");
+const voiceButton =
+  document.getElementById("voiceButton");
 
-const count = document.getElementById("count");
-const toast = document.getElementById("toast");
+const input =
+  document.getElementById("commandInput");
+
+const form =
+  document.getElementById("commandForm");
+
+const messages =
+  document.getElementById("messages");
+
+const empty =
+  document.getElementById("empty");
+
+const clearButton =
+  document.getElementById("clear");
+
+const wave =
+  document.getElementById("wave");
+
+const voiceLabel =
+  document.getElementById("voiceLabel");
+
+const statusText =
+  document.getElementById("statusText");
+
+const statusDot =
+  document.getElementById("statusDot");
+
+const commandCount =
+  document.getElementById("commandCount");
+
+const apiKeyInput =
+  document.getElementById("apiKey");
+
+const saveKey =
+  document.getElementById("saveKey");
+
+const removeKey =
+  document.getElementById("removeKey");
+
+const toast =
+  document.getElementById("toast");
 
 
 let recognition = null;
 let listening = false;
-let shouldKeepListening = false;
-let commandCount = 0;
-let finalTranscript = "";
+let continuousMode = false;
+let restarting = false;
+let count = 0;
 let voices = [];
-let speaking = false;
+let toastTimer;
 
 
-/* ==========================================================
-   SPEECH SYNTHESIS
-   ========================================================== */
+/*
+============================================================
+API KEY
+============================================================
+*/
+
+apiKeyInput.value =
+  localStorage.getItem("voxai_openai_key") || "";
+
+
+saveKey.addEventListener("click", () => {
+
+  const key =
+    apiKeyInput.value.trim();
+
+  if(!key){
+
+    showToast(
+      "Enter an API key first."
+    );
+
+    return;
+  }
+
+  localStorage.setItem(
+    "voxai_openai_key",
+    key
+  );
+
+  showToast(
+    "AI key saved locally."
+  );
+
+});
+
+
+removeKey.addEventListener("click", () => {
+
+  localStorage.removeItem(
+    "voxai_openai_key"
+  );
+
+  apiKeyInput.value = "";
+
+  showToast(
+    "AI key removed."
+  );
+
+});
+
+
+/*
+============================================================
+NATURAL VOICE
+============================================================
+*/
 
 function loadVoices(){
 
-  voices = window.speechSynthesis
-    ? window.speechSynthesis.getVoices()
-    : [];
+  if(!("speechSynthesis" in window))
+    return;
+
+  voices =
+    speechSynthesis.getVoices();
 
 }
 
 loadVoices();
 
-if ("speechSynthesis" in window){
+if("speechSynthesis" in window){
 
-  speechSynthesis.onvoiceschanged = loadVoices;
+  speechSynthesis.onvoiceschanged =
+    loadVoices;
 
 }
 
 
-function getBestVoice(){
+function bestVoice(){
 
-  if (!voices.length) return null;
-
-  /*
-    Prefer high-quality voices commonly available
-    on macOS / Chrome / Safari.
-  */
-
-  const preferredNames = [
+  const preferred = [
     "Samantha",
     "Ava",
     "Karen",
@@ -852,26 +1074,28 @@ function getBestVoice(){
     "Microsoft Jenny"
   ];
 
-  for(const name of preferredNames){
+  for(const name of preferred){
 
-    const match = voices.find(
-      voice =>
-        voice.name.toLowerCase()
-        .includes(name.toLowerCase())
-    );
+    const found =
+      voices.find(
+        voice =>
+          voice.name
+            .toLowerCase()
+            .includes(name.toLowerCase())
+      );
 
-    if(match) return match;
+    if(found)
+      return found;
+
   }
 
-
-  /*
-    Otherwise choose an English voice.
-  */
 
   return voices.find(
     voice =>
       voice.lang &&
-      voice.lang.toLowerCase().startsWith("en")
+      voice.lang
+        .toLowerCase()
+        .startsWith("en")
   ) || voices[0];
 
 }
@@ -879,111 +1103,133 @@ function getBestVoice(){
 
 function speak(text){
 
-  if(!("speechSynthesis" in window)){
+  if(!("speechSynthesis" in window))
     return;
-  }
-
-  /*
-    Stop previous speech.
-  */
 
   speechSynthesis.cancel();
 
   const utterance =
-    new SpeechSynthesisUtterance(text);
+    new SpeechSynthesisUtterance(
+      text
+    );
 
-  const voice = getBestVoice();
+  const voice =
+    bestVoice();
 
-  if(voice){
+  if(voice)
     utterance.voice = voice;
-  }
 
-  utterance.rate = 0.96;
+  /*
+    Slightly slower than default
+    for a more natural assistant feel.
+  */
+
+  utterance.rate = .95;
   utterance.pitch = 1.02;
   utterance.volume = 1;
 
+
   utterance.onstart = () => {
-    speaking = true;
+
+    statusText.textContent =
+      "Speaking";
+
   };
+
 
   utterance.onend = () => {
-    speaking = false;
 
-    /*
-      In continuous mode, go back to listening
-      after the assistant finishes speaking.
-    */
+    if(continuousMode){
 
-    if(shouldKeepListening && !listening){
+      statusText.textContent =
+        "Listening";
 
-      setTimeout(() => {
-        startListening();
-      }, 250);
+      setTimeout(
+        startListening,
+        250
+      );
+
+    }else{
+
+      statusText.textContent =
+        "Ready";
 
     }
+
   };
 
-  utterance.onerror = () => {
-    speaking = false;
-  };
 
-  speechSynthesis.speak(utterance);
+  speechSynthesis.speak(
+    utterance
+  );
+
 }
 
 
-/* ==========================================================
-   SPEECH RECOGNITION DETECTION
-   ========================================================== */
+/*
+============================================================
+MICROPHONE
+============================================================
+*/
 
 const Recognition =
   window.SpeechRecognition ||
   window.webkitSpeechRecognition;
 
 
-/* ==========================================================
-   INITIALIZE RECOGNITION
-   ========================================================== */
-
-function createRecognition(){
+function setupRecognition(){
 
   if(!Recognition){
-    showUnsupportedVoiceMessage();
+
+    showToast(
+      "Voice recognition is unavailable in this browser. Use Chrome on your Mac."
+    );
+
+    voiceLabel.textContent =
+      "Use Chrome for voice";
+
+    statusText.textContent =
+      "Voice unavailable";
+
+    statusDot.style.background =
+      "#fb7185";
+
     return null;
   }
 
-  const r = new Recognition();
+
+  const r =
+    new Recognition();
+
 
   /*
-    Important:
-    continuous mode keeps the voice assistant alive.
+    Continuous recognition is enabled.
+
+    Chrome may still periodically stop its
+    recognition session. The onend handler below
+    automatically starts it again.
   */
 
   r.continuous = true;
-
-  /*
-    Interim results make the UI react immediately.
-  */
-
   r.interimResults = true;
-
-  /*
-    en-US tends to work well with macOS/Chrome.
-    Change to en-GB/en-AU if desired.
-  */
-
-  r.lang = "en-US";
-
   r.maxAlternatives = 1;
+  r.lang = "en-US";
 
 
   r.onstart = () => {
 
     listening = true;
+    restarting = false;
 
-    mic.classList.add("listening");
-    wave.classList.add("active");
+    orb.classList.add(
+      "listening"
+    );
 
-    voiceStatus.textContent =
+    wave.classList.add(
+      "active"
+    );
+
+    voiceLabel.textContent =
       "Listening… speak naturally";
 
     statusText.textContent =
@@ -997,11 +1243,9 @@ function createRecognition(){
 
   r.onresult = event => {
 
-    let interim = "";
+    let finalText = "";
+    let interimText = "";
 
-    /*
-      Only process final speech once.
-    */
 
     for(
       let i = event.resultIndex;
@@ -1009,41 +1253,45 @@ function createRecognition(){
       i++
     ){
 
-      const transcript =
+      const text =
         event.results[i][0].transcript;
 
-      if(event.results[i].isFinal){
 
-        finalTranscript +=
-          " " + transcript;
+      if(
+        event.results[i].isFinal
+      ){
+
+        finalText += text;
 
       }else{
 
-        interim += transcript;
+        interimText += text;
 
       }
+
     }
 
 
-    const visible =
-      (finalTranscript + " " + interim)
-      .trim();
-
-    input.value = visible;
+    input.value =
+      (finalText + " " + interimText)
+        .trim();
 
 
     /*
-      Execute only when final speech arrives.
+      Process finalized speech immediately.
     */
 
-    if(finalTranscript.trim()){
+    if(finalText.trim()){
 
       const command =
-        finalTranscript.trim();
+        finalText.trim();
 
-      finalTranscript = "";
+      input.value = "";
 
-      processCommand(command);
+      processCommand(
+        command
+      );
+
     }
 
   };
@@ -1052,40 +1300,48 @@ function createRecognition(){
   r.onerror = event => {
 
     console.warn(
-      "Speech recognition:",
+      "Voice error:",
       event.error
     );
 
-
-    /*
-      Permission errors should NOT loop.
-    */
 
     if(
       event.error === "not-allowed" ||
       event.error === "service-not-allowed"
     ){
 
-      shouldKeepListening = false;
+      continuousMode = false;
+
+      stopListening();
 
       showToast(
-        "Microphone permission was denied. Allow microphone access for this website."
+        "Microphone permission is blocked. Allow microphone access for this page in Chrome."
       );
 
-      updateVoiceUI(false);
-
       return;
+
     }
 
 
-    /*
-      Network errors are recoverable.
-    */
+    if(
+      event.error === "no-speech"
+    ){
 
-    if(event.error === "network"){
+      /*
+        Normal — don't show an error.
+      */
+
+      return;
+
+    }
+
+
+    if(
+      event.error === "network"
+    ){
 
       showToast(
-        "Voice service temporarily unavailable. Retrying…"
+        "Voice service interrupted. Retrying…"
       );
 
     }
@@ -1097,31 +1353,51 @@ function createRecognition(){
 
     listening = false;
 
-    updateVoiceUI(false);
+    orb.classList.remove(
+      "listening"
+    );
+
+    wave.classList.remove(
+      "active"
+    );
 
 
     /*
-      Chrome sometimes terminates recognition
-      unexpectedly. Restart it automatically.
+      Automatic recovery.
+
+      This is important for Mac/Chrome because
+      speech recognition may terminate on its own.
     */
 
     if(
-      shouldKeepListening &&
-      !speaking
+      continuousMode &&
+      !restarting
     ){
 
-      setTimeout(() => {
+      restarting = true;
 
-        if(
-          shouldKeepListening &&
-          !listening
-        ){
+      setTimeout(
+        () => {
 
-          startListening();
+          restarting = false;
 
-        }
+          if(
+            continuousMode &&
+            !listening
+          ){
 
-      }, 400);
+            startListening();
+
+          }
+
+        },
+        450
+      );
+
+    }else{
+
+      voiceLabel.textContent =
+        "Tap to speak";
 
     }
 
@@ -1129,43 +1405,27 @@ function createRecognition(){
 
 
   return r;
+
 }
 
 
-recognition = createRecognition();
+recognition =
+  setupRecognition();
 
 
-/* ==========================================================
-   START LISTENING
-   ========================================================== */
+/*
+============================================================
+START
+============================================================
+*/
 
 function startListening(){
 
-  if(!recognition){
-
-    showUnsupportedVoiceMessage();
-
+  if(!recognition)
     return;
 
-  }
 
-
-  /*
-    Make sure old speech does not interfere.
-  */
-
-  if("speechSynthesis" in window){
-
-    speechSynthesis.cancel();
-
-  }
-
-
-  shouldKeepListening = true;
-
-  finalTranscript = "";
-
-  input.value = "";
+  continuousMode = true;
 
 
   try{
@@ -1175,12 +1435,13 @@ function startListening(){
   }catch(error){
 
     /*
-      Calling start twice causes InvalidStateError.
-      Ignore it and keep the existing session alive.
+      Already started.
+
+      Ignore InvalidStateError.
     */
 
     console.log(
-      "Recognition already active."
+      "Recognition already running."
     );
 
   }
@@ -1188,21 +1449,25 @@ function startListening(){
 }
 
 
-/* ==========================================================
-   STOP LISTENING
-   ========================================================== */
+/*
+============================================================
+STOP
+============================================================
+*/
 
 function stopListening(){
 
-  shouldKeepListening = false;
+  continuousMode = false;
 
-  finalTranscript = "";
+  listening = false;
 
   if(recognition){
 
     try{
+
       recognition.stop();
-    }catch(e){}
+
+    }catch(error){}
 
   }
 
@@ -1212,14 +1477,22 @@ function stopListening(){
 
   }
 
-  updateVoiceUI(false);
+  orb.classList.remove(
+    "listening"
+  );
+
+  wave.classList.remove(
+    "active"
+  );
+
+  voiceLabel.textContent =
+    "Tap to speak";
+
+  statusText.textContent =
+    "Ready";
 
 }
 
-
-/* ==========================================================
-   TOGGLE
-   ========================================================== */
 
 function toggleVoice(){
 
@@ -1236,178 +1509,184 @@ function toggleVoice(){
 }
 
 
-mic.addEventListener(
+orb.addEventListener(
   "click",
   toggleVoice
 );
 
-voiceBtn.addEventListener(
+voiceButton.addEventListener(
   "click",
   toggleVoice
 );
 
 
-/* ==========================================================
-   UI STATE
-   ========================================================== */
+/*
+============================================================
+AI REQUEST
+============================================================
+*/
 
-function updateVoiceUI(active){
+async function askAI(command){
 
-  if(active){
+  const key =
+    localStorage.getItem(
+      "voxai_openai_key"
+    );
 
-    mic.classList.add("listening");
 
-    wave.classList.add("active");
+  /*
+    No key:
+    use local engine instead.
+  */
 
-    voiceStatus.textContent =
-      "Listening… speak naturally";
+  if(!key){
 
-    statusText.textContent =
-      "Listening";
-
-  }else{
-
-    mic.classList.remove("listening");
-
-    wave.classList.remove("active");
-
-    voiceStatus.textContent =
-      "Tap the orb to speak";
-
-    statusText.textContent =
-      "Voice engine ready";
+    return localCommand(
+      command
+    );
 
   }
 
-}
 
+  try{
 
-/* ==========================================================
-   COMMAND FORM
-   ========================================================== */
+    const response =
+      await fetch(
+        "https://api.openai.com/v1/responses",
+        {
+          method:"POST",
 
-form.addEventListener(
-  "submit",
-  event => {
+          headers:{
+            "Content-Type":
+              "application/json",
 
-    event.preventDefault();
+            "Authorization":
+              "Bearer " + key
+          },
 
-    const command =
-      input.value.trim();
+          body:JSON.stringify({
 
-    if(!command){
+            model:"gpt-5",
 
-      showToast(
-        "Say or type a command first."
+            instructions:`
+You are VoxAI, a natural voice assistant.
+
+Understand normal human language.
+
+Answer accurately and naturally.
+
+Keep spoken answers reasonably concise.
+
+Never claim that you performed an external action
+unless the browser can actually perform it.
+
+If the user asks you to open a website, return a
+special action instruction exactly like:
+
+[ACTION:OPEN:url]
+
+Then briefly tell the user what you are doing.
+
+For ordinary requests, return only the natural
+answer.
+`,
+
+            input:command
+
+          })
+
+        }
       );
 
-      return;
+
+    if(!response.ok){
+
+      const error =
+        await response.text();
+
+      console.error(
+        "OpenAI error:",
+        error
+      );
+
+      throw new Error(
+        "AI request failed."
+      );
 
     }
 
-    processCommand(command);
 
-  }
-);
-
-
-/* ==========================================================
-   COMMAND ENGINE
-   ========================================================== */
-
-async function processCommand(command){
-
-  if(!command.trim()) return;
+    const data =
+      await response.json();
 
 
-  commandCount++;
-
-  count.textContent =
-    commandCount;
+    let text =
+      data.output_text || "";
 
 
-  addMessage(
-    "You",
-    command,
-    "user"
-  );
+    if(!text){
 
-
-  input.value = "";
-
-
-  const result =
-    await executeCommand(command);
-
-
-  addMessage(
-    "VoxAI",
-    result.text,
-    "ai"
-  );
-
-
-  /*
-    Speak the result naturally.
-  */
-
-  if(result.speak !== false){
-
-    speak(result.text);
-
-  }
-
-
-  /*
-    Execute action after responding.
-  */
-
-  if(result.action){
-
-    try{
-
-      result.action();
-
-    }catch(error){
-
-      console.error(error);
+      text =
+        "I received your request but didn't receive a text response.";
 
     }
+
+
+    return text;
+
+
+  }catch(error){
+
+    console.error(error);
+
+    /*
+      Don't completely break the assistant if
+      the network/API is unavailable.
+
+      Fall back to local commands.
+    */
+
+    return localCommand(
+      command
+    );
 
   }
 
 }
 
 
-/* ==========================================================
-   COMMAND ROUTER
-   ========================================================== */
+/*
+============================================================
+LOCAL COMMAND ENGINE
+============================================================
+*/
 
-async function executeCommand(command){
-
-  const original =
-    command.trim();
+function localCommand(command){
 
   const c =
-    original.toLowerCase();
+    command
+      .toLowerCase()
+      .trim();
 
 
-  /* GREETING */
+  /*
+    HELLO
+  */
 
   if(
-    /^(hi|hello|hey|hey vox|hello vox)[!. ]*$/i
-      .test(original)
+    /^(hi|hello|hey|hey voxai|hello voxai)[!. ]*$/
+      .test(c)
   ){
 
-    return {
-      text:
-        "Hello. I'm ready. Tell me what you need."
-    };
+    return:
+      "Hello. I'm ready. What can I do for you?";
 
   }
 
 
-  /* TIME */
+  /*
+    TIME
+  */
 
   if(
     c.includes("what time") ||
@@ -1415,7 +1694,8 @@ async function executeCommand(command){
     c.includes("current time")
   ){
 
-    const time =
+    return:
+      "It is currently " +
       new Intl.DateTimeFormat(
         undefined,
         {
@@ -1423,17 +1703,15 @@ async function executeCommand(command){
           minute:"2-digit",
           second:"2-digit"
         }
-      ).format(new Date());
-
-    return {
-      text:
-        `It is currently ${time}.`
-    };
+      ).format(new Date()) +
+      ".";
 
   }
 
 
-  /* DATE */
+  /*
+    DATE
+  */
 
   if(
     c.includes("today's date") ||
@@ -1441,7 +1719,8 @@ async function executeCommand(command){
     c === "date"
   ){
 
-    const date =
+    return:
+      "Today is " +
       new Intl.DateTimeFormat(
         undefined,
         {
@@ -1450,17 +1729,15 @@ async function executeCommand(command){
           month:"long",
           day:"numeric"
         }
-      ).format(new Date());
-
-    return {
-      text:
-        `Today is ${date}.`
-    };
+      ).format(new Date()) +
+      ".";
 
   }
 
 
-  /* CALCULATOR */
+  /*
+    CALCULATOR
+  */
 
   if(
     c.startsWith("calculate ") ||
@@ -1484,48 +1761,9 @@ async function executeCommand(command){
         .trim();
 
 
-    /*
-      Convert simple number words.
-    */
-
-    const numbers = {
-      zero:0,
-      one:1,
-      two:2,
-      three:3,
-      four:4,
-      five:5,
-      six:6,
-      seven:7,
-      eight:8,
-      nine:9,
-      ten:10,
-      twenty:20,
-      thirty:30,
-      forty:40,
-      fifty:50,
-      hundred:100
-    };
-
-
-    for(const [word,value] of Object.entries(numbers)){
-
-      expression =
-        expression.replace(
-          new RegExp("\\b"+word+"\\b","g"),
-          value
-        );
-
-    }
-
-
-    /*
-      SECURITY:
-      Never execute arbitrary voice text.
-    */
-
     if(
-      /^[0-9+\-*/().%\s]+$/.test(expression)
+      /^[0-9+\-*/().%\s]+$/
+        .test(expression)
     ){
 
       try{
@@ -1540,10 +1778,10 @@ async function executeCommand(command){
           Number.isFinite(answer)
         ){
 
-          return {
-            text:
-              `The answer is ${answer}.`
-          };
+          return:
+            "The answer is " +
+            answer +
+            ".";
 
         }
 
@@ -1554,239 +1792,326 @@ async function executeCommand(command){
   }
 
 
-  /* JOKE */
+  /*
+    JOKE
+  */
 
   if(
     c.includes("tell me a joke") ||
-    c.includes("make me laugh") ||
-    c === "joke"
+    c === "joke" ||
+    c.includes("make me laugh")
   ){
 
     const jokes = [
 
       "Why do programmers prefer dark mode? Because light attracts bugs.",
 
-      "I told my computer I needed a break. Now it keeps showing me vacation ads.",
+      "I told my computer I needed a break. Now it keeps sending me vacation ads.",
 
       "Why did the developer go broke? Because they used all their cache.",
 
-      "There are only 10 types of people: those who understand binary and those who don't."
+      "There are only 10 kinds of people: those who understand binary and those who don't."
 
     ];
 
 
-    return {
-      text:
-        jokes[
-          Math.floor(
-            Math.random() * jokes.length
-          )
-        ]
-    };
-
-  }
-
-
-  /* PRODUCTIVITY */
-
-  if(
-    c.includes("productivity tip") ||
-    c.includes("help me be productive")
-  ){
-
-    const tips = [
-
-      "Pick one important task and work on it without notifications for twenty five minutes.",
-
-      "Break your biggest task into the smallest action you can complete right now.",
-
-      "Before finishing today, decide the single most important thing you will do tomorrow.",
-
-      "If a task takes less than two minutes, consider doing it immediately."
-
-    ];
-
-
-    return {
-      text:
-        tips[
-          Math.floor(
-            Math.random() * tips.length
-          )
-        ]
-    };
-
-  }
-
-
-  /* OPEN GOOGLE */
-
-  if(
-    c.includes("open google")
-  ){
-
-    return {
-
-      text:"Opening Google.",
-
-      action:() => {
-
-        window.open(
-          "https://www.google.com",
-          "_blank",
-          "noopener,noreferrer"
-        );
-
-      }
-
-    };
-
-  }
-
-
-  /* OPEN YOUTUBE */
-
-  if(
-    c.includes("open youtube")
-  ){
-
-    return {
-
-      text:"Opening YouTube.",
-
-      action:() => {
-
-        window.open(
-          "https://www.youtube.com",
-          "_blank",
-          "noopener,noreferrer"
-        );
-
-      }
-
-    };
-
-  }
-
-
-  /* STOP */
-
-  if(
-    c === "stop" ||
-    c === "stop talking" ||
-    c === "be quiet"
-  ){
-
-    stopListening();
-
-    return {
-      text:"Okay. I'm listening for your next command.",
-      speak:false
-    };
-
-  }
-
-
-  /* HELP */
-
-  if(
-    c === "help" ||
-    c.includes("what can you do")
-  ){
-
-    return {
-
-      text:
-        "I can respond to conversational commands, calculate numbers, tell jokes, provide productivity tips, tell you the date and time, open websites, speak responses, and connect to external AI tools through the backend command endpoint."
-
-    };
+    return:
+      jokes[
+        Math.floor(
+          Math.random() *
+          jokes.length
+        )
+      ];
 
   }
 
 
   /*
-    ==========================================================
-    AI BACKEND FALLBACK
-    ==========================================================
-
-    If you later add:
-
-      POST /api/command
-
-    with:
-
-      { "command": "user command" }
-
-    returning:
-
-      { "text": "AI response" }
-
-    then unknown commands can be routed to your
-    actual AI model.
-
-    This is what turns the website from a local demo
-    into a true general-purpose AI assistant.
+    PRODUCTIVITY
   */
 
-  try{
+  if(
+    c.includes("productivity")
+  ){
 
-    const response =
-      await fetch(
-        "/api/command",
-        {
-          method:"POST",
+    const tips = [
 
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
+      "Choose one important task and finish it before checking notifications.",
 
-          body:JSON.stringify({
-            command:original
-          })
-        }
-      );
+      "Break a large task into the smallest action you can complete right now.",
+
+      "Decide tomorrow's most important task before you finish today.",
+
+      "If something takes less than two minutes, consider doing it immediately."
+
+    ];
 
 
-    if(response.ok){
-
-      const data =
-        await response.json();
-
-
-      if(data && data.text){
-
-        return {
-          text:String(data.text)
-        };
-
-      }
-
-    }
-
-  }catch(error){
-
-    /*
-      No backend is installed.
-      Continue with local fallback.
-    */
+    return:
+      tips[
+        Math.floor(
+          Math.random() *
+          tips.length
+        )
+      ];
 
   }
 
 
-  return {
+  /*
+    OPEN GOOGLE
+  */
 
-    text:
-      `I heard you say: "${original}". I can execute this automatically once the corresponding tool or AI backend is connected.`
+  if(
+    c.includes("open google")
+  ){
 
-  };
+    openWebsite(
+      "https://www.google.com"
+    );
+
+    return:
+      "Opening Google.";
+
+  }
+
+
+  /*
+    OPEN YOUTUBE
+  */
+
+  if(
+    c.includes("open youtube")
+  ){
+
+    openWebsite(
+      "https://www.youtube.com"
+    );
+
+    return:
+      "Opening YouTube.";
+
+  }
+
+
+  /*
+    STOP
+  */
+
+  if(
+    c === "stop" ||
+    c === "stop listening" ||
+    c === "stop talking"
+  ){
+
+    stopListening();
+
+    return:
+      "Okay. I'm stopping.";
+
+  }
+
+
+  return:
+    "I heard you say: " +
+    command +
+    ". Add an AI key above to give VoxAI general-purpose AI understanding.";
 
 }
 
 
-/* ==========================================================
-   MESSAGE UI
-   ========================================================== */
+/*
+============================================================
+COMMAND PROCESSOR
+============================================================
+*/
+
+async function processCommand(
+  command
+){
+
+  if(!command?.trim())
+    return;
+
+
+  count++;
+
+  commandCount.textContent =
+    count;
+
+
+  addMessage(
+    "You",
+    command,
+    "user"
+  );
+
+
+  /*
+    Get AI/local answer.
+  */
+
+  let answer =
+    await askAI(command);
+
+
+  /*
+    Detect website action.
+  */
+
+  const actionMatch =
+    answer.match(
+      /\[ACTION:OPEN:(.*?)\]/
+    );
+
+
+  if(actionMatch){
+
+    const url =
+      actionMatch[1].trim();
+
+
+    answer =
+      answer
+        .replace(
+          actionMatch[0],
+          ""
+        )
+        .trim();
+
+
+    if(isSafeURL(url)){
+
+      openWebsite(url);
+
+    }
+
+  }
+
+
+  addMessage(
+    "VoxAI",
+    answer,
+    "ai"
+  );
+
+
+  speak(answer);
+
+}
+
+
+/*
+============================================================
+SAFE WEBSITE OPENING
+============================================================
+*/
+
+function isSafeURL(value){
+
+  try{
+
+    const url =
+      new URL(value);
+
+    return (
+      url.protocol === "https:" ||
+      url.protocol === "http:"
+    );
+
+  }catch{
+
+    return false;
+
+  }
+
+}
+
+
+function openWebsite(url){
+
+  if(!isSafeURL(url))
+    return;
+
+
+  window.open(
+    url,
+    "_blank",
+    "noopener,noreferrer"
+  );
+
+}
+
+
+/*
+============================================================
+FORM
+============================================================
+*/
+
+form.addEventListener(
+  "submit",
+  event => {
+
+    event.preventDefault();
+
+    const command =
+      input.value.trim();
+
+    if(!command){
+
+      showToast(
+        "Enter or speak a command."
+      );
+
+      return;
+
+    }
+
+    input.value = "";
+
+    processCommand(
+      command
+    );
+
+  }
+);
+
+
+/*
+============================================================
+SHORTCUTS
+============================================================
+*/
+
+document
+  .querySelectorAll(".shortcut")
+  .forEach(item => {
+
+    item.addEventListener(
+      "click",
+      () => {
+
+        const command =
+          item.dataset.command;
+
+        input.value = "";
+
+        processCommand(
+          command
+        );
+
+      }
+    );
+
+  });
+
+
+/*
+============================================================
+MESSAGE UI
+============================================================
+*/
 
 function addMessage(
   sender,
@@ -1794,39 +2119,44 @@ function addMessage(
   type
 ){
 
-  if(empty){
-
+  if(empty)
     empty.style.display =
       "none";
 
-  }
-
 
   const message =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   message.className =
-    "msg " + type;
+    "message " + type;
 
 
   const top =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   top.className =
-    "msg-top";
+    "message-top";
 
 
-  const senderEl =
-    document.createElement("span");
+  const senderElement =
+    document.createElement(
+      "span"
+    );
 
-  senderEl.textContent =
+  senderElement.textContent =
     sender;
 
 
-  const timeEl =
-    document.createElement("span");
+  const time =
+    document.createElement(
+      "span"
+    );
 
-  timeEl.textContent =
+  time.textContent =
     new Date().toLocaleTimeString(
       [],
       {
@@ -1836,22 +2166,34 @@ function addMessage(
     );
 
 
-  top.appendChild(senderEl);
-  top.appendChild(timeEl);
+  top.appendChild(
+    senderElement
+  );
+
+  top.appendChild(
+    time
+  );
 
 
   const body =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   body.className =
-    "msg-body";
+    "message-body";
 
   body.textContent =
     text;
 
 
-  message.appendChild(top);
-  message.appendChild(body);
+  message.appendChild(
+    top
+  );
+
+  message.appendChild(
+    body
+  );
 
 
   messages.appendChild(
@@ -1865,74 +2207,46 @@ function addMessage(
 }
 
 
-/* ==========================================================
-   QUICK COMMANDS
-   ========================================================== */
+/*
+============================================================
+CLEAR
+============================================================
+*/
 
-document
-  .querySelectorAll(".shortcut")
-  .forEach(button => {
-
-    button.addEventListener(
-      "click",
-      () => {
-
-        const command =
-          button.dataset.command;
-
-        input.value =
-          command;
-
-        processCommand(command);
-
-      }
-    );
-
-  });
-
-
-/* ==========================================================
-   CLEAR
-   ========================================================== */
-
-clear.addEventListener(
+clearButton.addEventListener(
   "click",
   () => {
 
     messages.innerHTML = "";
 
-    messages.appendChild(empty);
+    messages.appendChild(
+      empty
+    );
 
     empty.style.display =
       "grid";
 
-    commandCount = 0;
+    count = 0;
 
-    count.textContent =
+    commandCount.textContent =
       "0";
 
-    speechSynthesis?.cancel();
-
-    showToast(
-      "Command history cleared."
-    );
+    if("speechSynthesis" in window)
+      speechSynthesis.cancel();
 
   }
 );
 
 
-/* ==========================================================
-   KEYBOARD CONTROL
-   ========================================================== */
+/*
+============================================================
+KEYBOARD
+============================================================
+*/
 
 document.addEventListener(
   "keydown",
   event => {
-
-    /*
-      Space activates voice when
-      user is not typing.
-    */
 
     if(
       event.code === "Space" &&
@@ -1946,10 +2260,6 @@ document.addEventListener(
     }
 
 
-    /*
-      Escape stops everything.
-    */
-
     if(event.key === "Escape"){
 
       stopListening();
@@ -1960,40 +2270,20 @@ document.addEventListener(
 );
 
 
-/* ==========================================================
-   UNSUPPORTED BROWSER
-   ========================================================== */
-
-function showUnsupportedVoiceMessage(){
-
-  statusText.textContent =
-    "Voice unavailable";
-
-  statusDot.style.background =
-    "#fb7185";
-
-  voiceStatus.textContent =
-    "Use Chrome for voice commands";
-
-  showToast(
-    "Speech recognition is unavailable in this browser. Chrome on macOS is recommended."
-  );
-
-}
-
-
-/* ==========================================================
-   TOAST
-   ========================================================== */
-
-let toastTimer;
+/*
+============================================================
+TOAST
+============================================================
+*/
 
 function showToast(message){
 
   toast.textContent =
     message;
 
-  toast.classList.add("show");
+  toast.classList.add(
+    "show"
+  );
 
   clearTimeout(
     toastTimer
@@ -2008,28 +2298,45 @@ function showToast(message){
         );
 
       },
-      3200
+      3000
     );
 
 }
 
 
-/* ==========================================================
-   BROWSER CHECK
-   ========================================================== */
+/*
+============================================================
+STARTUP
+============================================================
+*/
+
+if(!Recognition){
+
+  voiceLabel.textContent =
+    "Chrome required for voice";
+
+  statusText.textContent =
+    "Voice unavailable";
+
+  statusDot.style.background =
+    "#fb7185";
+
+}else{
+
+  statusText.textContent =
+    "Voice ready";
+
+}
+
+
+/*
+============================================================
+WELCOME
+============================================================
+*/
 
 console.log(
-  "VoxAI initialized.",
-  {
-    browser:
-      navigator.userAgent,
-
-    speechRecognition:
-      !!Recognition,
-
-    speechSynthesis:
-      "speechSynthesis" in window
-  }
+  "VoxAI initialized."
 );
 
 </script>
