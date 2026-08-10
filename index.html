@@ -1,618 +1,544 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="theme-color" content="#07070b" />
-<title>VoxAI — Unlimited Voice Command Center</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#050509">
+<title>VoxAI — Voice Command Center</title>
 
 <style>
-:root {
-  --bg: #06070a;
-  --panel: rgba(15, 17, 24, .72);
-  --panel-2: rgba(20, 22, 31, .82);
-  --border: rgba(255,255,255,.09);
-  --text: #f5f7ff;
-  --muted: #8e94a7;
-  --violet: #8b5cf6;
-  --purple: #a855f7;
-  --cyan: #22d3ee;
-  --green: #34d399;
-  --red: #fb7185;
-  --shadow: 0 25px 80px rgba(0,0,0,.45);
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+:root{
+  --bg:#050509;
+  --panel:rgba(15,16,24,.72);
+  --panel2:rgba(255,255,255,.045);
+  --border:rgba(255,255,255,.09);
+  --white:#fff;
+  --muted:#9298aa;
+  --purple:#8b5cf6;
+  --cyan:#22d3ee;
+  --green:#34d399;
+  --red:#fb7185;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  min-height: 100vh;
-  color: var(--text);
+body{
+  min-height:100vh;
   background:
-    radial-gradient(circle at 15% 10%, rgba(139,92,246,.16), transparent 30%),
-    radial-gradient(circle at 85% 20%, rgba(34,211,238,.11), transparent 28%),
-    linear-gradient(135deg, #05060a, #080910 55%, #05060a);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-               "Segoe UI", sans-serif;
-  overflow-x: hidden;
+    radial-gradient(circle at 15% 10%,rgba(139,92,246,.18),transparent 30%),
+    radial-gradient(circle at 85% 20%,rgba(34,211,238,.12),transparent 30%),
+    linear-gradient(135deg,#040509,#090a11 50%,#050509);
+  color:var(--white);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
+              "SF Pro Text",Inter,system-ui,sans-serif;
+  overflow-x:hidden;
 }
 
-/* Background */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: .23;
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.18;
   background-image:
-    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-  background-size: 45px 45px;
-  mask-image: linear-gradient(to bottom, black, transparent);
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:45px 45px;
 }
 
-.ambient {
-  position: fixed;
-  width: 420px;
-  height: 420px;
-  border-radius: 50%;
-  filter: blur(100px);
-  pointer-events: none;
-  opacity: .16;
+.app{
+  width:min(1380px,calc(100% - 32px));
+  margin:auto;
+  padding:20px 0 50px;
 }
 
-.ambient.one {
-  background: var(--violet);
-  top: 5%;
-  left: -150px;
+header{
+  height:65px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
 
-.ambient.two {
-  background: var(--cyan);
-  bottom: -180px;
-  right: -100px;
+.logo{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  font-weight:800;
+  letter-spacing:-.04em;
 }
 
-/* Layout */
-.app {
-  width: min(1400px, calc(100% - 32px));
-  margin: auto;
-  padding: 22px 0 50px;
+.logo-icon{
+  width:39px;
+  height:39px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,var(--purple),var(--cyan));
+  box-shadow:0 0 35px rgba(139,92,246,.35);
 }
 
-header {
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 4px;
+.logo-icon:after{
+  content:"";
+  width:15px;
+  height:15px;
+  border:3px solid white;
+  border-radius:50%;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.logo span{
+  color:var(--cyan);
 }
 
-.brand-mark {
-  width: 40px;
-  height: 40px;
-  border-radius: 13px;
-  display: grid;
-  place-items: center;
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, var(--violet), var(--cyan));
-  box-shadow: 0 0 35px rgba(139,92,246,.3);
+.status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 13px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.035);
+  border-radius:999px;
+  color:var(--muted);
+  font-size:11px;
 }
 
-.brand-mark::after {
-  content: "";
-  position: absolute;
-  width: 17px;
-  height: 17px;
-  border: 3px solid white;
-  border-radius: 50%;
+.status-dot{
+  width:7px;
+  height:7px;
+  background:var(--green);
+  border-radius:50%;
+  box-shadow:0 0 12px var(--green);
 }
 
-.brand-name {
-  font-size: 17px;
-  font-weight: 750;
-  letter-spacing: -.03em;
+.hero{
+  text-align:center;
+  padding:80px 0 65px;
 }
 
-.brand-name span {
-  color: var(--cyan);
+.badge{
+  display:inline-flex;
+  padding:7px 12px;
+  border:1px solid rgba(139,92,246,.28);
+  background:rgba(139,92,246,.08);
+  border-radius:999px;
+  color:#c4b5fd;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.1em;
+  margin-bottom:23px;
 }
 
-.status-pill {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 13px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.035);
-  border-radius: 999px;
-  color: var(--muted);
-  font-size: 12px;
+h1{
+  font-size:clamp(50px,8vw,94px);
+  line-height:.92;
+  letter-spacing:-.07em;
+  background:linear-gradient(120deg,#fff 20%,#ddd6fe 55%,#67e8f9);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
 }
 
-.status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 14px var(--green);
+.hero-description{
+  max-width:700px;
+  margin:26px auto 0;
+  color:var(--muted);
+  line-height:1.75;
+  font-size:16px;
 }
 
-/* Hero */
-.hero {
-  min-height: 690px;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  position: relative;
-  padding: 60px 0 40px;
+/* VOICE */
+.voice-zone{
+  margin:75px auto 35px;
+  width:280px;
+  height:260px;
+  position:relative;
+  display:grid;
+  place-items:center;
 }
 
-.hero-content {
-  max-width: 900px;
-  z-index: 2;
-}
-
-.eyebrow {
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  padding: 7px 11px;
-  border: 1px solid rgba(139,92,246,.25);
-  border-radius: 999px;
-  background: rgba(139,92,246,.08);
-  color: #c4b5fd;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  margin-bottom: 22px;
-}
-
-.hero h1 {
-  font-size: clamp(48px, 8vw, 92px);
-  line-height: .94;
-  letter-spacing: -.065em;
-  margin-bottom: 25px;
-  background: linear-gradient(120deg, #fff 20%, #d8d4fe 50%, #67e8f9);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.hero p {
-  max-width: 670px;
-  margin: auto;
-  color: var(--muted);
-  font-size: 17px;
-  line-height: 1.7;
-}
-
-/* Voice Orb */
-.voice-area {
-  margin: 55px auto 25px;
-  position: relative;
-  width: 250px;
-  height: 250px;
-  display: grid;
-  place-items: center;
-}
-
-.orb {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  position: relative;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  border: 1px solid rgba(255,255,255,.25);
+.orb{
+  width:145px;
+  height:145px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.22);
+  cursor:pointer;
+  position:relative;
+  z-index:5;
+  color:white;
   background:
-    radial-gradient(circle at 35% 25%, #ddd6fe, #8b5cf6 35%, #5b21b6 65%, #17122b);
+    radial-gradient(circle at 35% 25%,#ede9fe 0,#a78bfa 15%,
+    #7c3aed 38%,#4c1d95 68%,#100b20 100%);
   box-shadow:
-    0 0 35px rgba(139,92,246,.6),
-    0 0 90px rgba(139,92,246,.22),
-    inset 0 0 30px rgba(255,255,255,.15);
-  transition: .25s ease;
+    0 0 35px rgba(139,92,246,.65),
+    0 0 110px rgba(139,92,246,.25),
+    inset 0 0 30px rgba(255,255,255,.18);
+  transition:.25s;
 }
 
-.orb:hover {
-  transform: scale(1.06);
+.orb:hover{
+  transform:scale(1.06);
 }
 
-.orb::before,
-.orb::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  inset: -22px;
-  border: 1px solid rgba(139,92,246,.2);
-  animation: pulse 3s infinite ease-out;
+.orb.listening{
+  animation:breath 1.1s infinite alternate;
 }
 
-.orb::after {
-  inset: -45px;
-  border-color: rgba(34,211,238,.12);
-  animation-delay: 1s;
+.orb:before,
+.orb:after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  inset:-20px;
+  border:1px solid rgba(139,92,246,.22);
+  animation:ring 2.8s infinite ease-out;
 }
 
-.orb.active {
-  animation: orbBeat 1.2s infinite alternate;
+.orb:after{
+  inset:-46px;
+  border-color:rgba(34,211,238,.14);
+  animation-delay:1s;
 }
 
-.mic-icon {
-  font-size: 38px;
-  filter: drop-shadow(0 3px 12px rgba(0,0,0,.4));
+.mic{
+  font-size:42px;
 }
 
-.voice-label {
-  position: absolute;
-  bottom: -30px;
-  color: var(--muted);
-  font-size: 12px;
+.voice-status{
+  position:absolute;
+  bottom:0;
+  color:var(--muted);
+  font-size:12px;
 }
 
-@keyframes pulse {
-  0% { transform: scale(.75); opacity: .9; }
-  100% { transform: scale(1.35); opacity: 0; }
+@keyframes ring{
+  0%{transform:scale(.72);opacity:1}
+  100%{transform:scale(1.35);opacity:0}
 }
 
-@keyframes orbBeat {
-  from { transform: scale(.98); }
-  to { transform: scale(1.05); }
+@keyframes breath{
+  from{transform:scale(1)}
+  to{transform:scale(1.055)}
 }
 
-/* Waveform */
-.waveform {
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  opacity: .35;
-  transition: .3s;
+/* WAVE */
+.wave{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:4px;
+  height:45px;
+  opacity:.3;
 }
 
-.waveform.active {
-  opacity: 1;
+.wave.active{
+  opacity:1;
 }
 
-.bar {
-  width: 3px;
-  height: 10px;
-  border-radius: 5px;
-  background: linear-gradient(var(--cyan), var(--violet));
+.wave i{
+  display:block;
+  width:3px;
+  height:7px;
+  border-radius:10px;
+  background:linear-gradient(var(--cyan),var(--purple));
 }
 
-.waveform.active .bar {
-  animation: wave .8s infinite ease-in-out;
+.wave.active i{
+  animation:wave .75s infinite ease-in-out;
 }
 
-.bar:nth-child(2n) { animation-delay: .1s; }
-.bar:nth-child(3n) { animation-delay: .2s; }
-.bar:nth-child(4n) { animation-delay: .3s; }
-.bar:nth-child(5n) { animation-delay: .4s; }
+.wave i:nth-child(2){animation-delay:.08s}
+.wave i:nth-child(3){animation-delay:.16s}
+.wave i:nth-child(4){animation-delay:.24s}
+.wave i:nth-child(5){animation-delay:.32s}
+.wave i:nth-child(6){animation-delay:.40s}
+.wave i:nth-child(7){animation-delay:.48s}
+.wave i:nth-child(8){animation-delay:.56s}
+.wave i:nth-child(9){animation-delay:.64s}
 
-@keyframes wave {
-  0%,100% { height: 8px; }
-  50% { height: 38px; }
+@keyframes wave{
+  0%,100%{height:7px}
+  50%{height:35px}
 }
 
-/* Command Input */
-.command-box {
-  max-width: 820px;
-  margin: 35px auto 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 7px;
-  border: 1px solid var(--border);
-  background: rgba(10,11,16,.7);
-  backdrop-filter: blur(22px);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
+/* COMMAND */
+.command{
+  max-width:850px;
+  margin:25px auto 0;
+  display:flex;
+  gap:7px;
+  padding:7px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:rgba(7,8,12,.75);
+  backdrop-filter:blur(24px);
+  box-shadow:0 25px 80px rgba(0,0,0,.4);
 }
 
-.command-box input {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: white;
-  padding: 14px;
-  font-size: 14px;
+.command input{
+  min-width:0;
+  flex:1;
+  border:0;
+  outline:0;
+  color:white;
+  background:transparent;
+  padding:14px;
+  font-size:14px;
 }
 
-.command-box input::placeholder {
-  color: #666b7b;
+.command input::placeholder{
+  color:#676d7e;
 }
 
-.action-btn {
-  border: 0;
-  cursor: pointer;
-  color: white;
-  background: rgba(255,255,255,.07);
-  border: 1px solid var(--border);
-  padding: 11px 15px;
-  border-radius: 12px;
-  transition: .2s;
+.btn{
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.06);
+  color:white;
+  border-radius:12px;
+  padding:0 15px;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.action-btn:hover {
-  background: rgba(255,255,255,.12);
+.btn:hover{
+  background:rgba(255,255,255,.12);
 }
 
-.send-btn {
-  background: linear-gradient(135deg, var(--violet), #6d28d9);
-  border-color: transparent;
+.send{
+  background:linear-gradient(135deg,var(--purple),#6d28d9);
+  border-color:transparent;
 }
 
-/* Dashboard */
-.dashboard {
-  display: grid;
-  grid-template-columns: 1.35fr .65fr;
-  gap: 18px;
+/* DASHBOARD */
+.dashboard{
+  display:grid;
+  grid-template-columns:1.35fr .65fr;
+  gap:18px;
 }
 
-.card {
-  background: linear-gradient(
+.card{
+  border:1px solid var(--border);
+  border-radius:22px;
+  background:linear-gradient(
     145deg,
     rgba(255,255,255,.055),
     rgba(255,255,255,.018)
   );
-  border: 1px solid var(--border);
-  border-radius: 22px;
-  backdrop-filter: blur(20px);
-  box-shadow: var(--shadow);
+  backdrop-filter:blur(22px);
+  overflow:hidden;
+  box-shadow:0 25px 80px rgba(0,0,0,.28);
 }
 
-.card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 19px 20px;
-  border-bottom: 1px solid var(--border);
+.card-head{
+  padding:18px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
 
-.card-title {
-  font-size: 13px;
-  font-weight: 700;
+.title{
+  font-size:13px;
+  font-weight:750;
 }
 
-.card-subtitle {
-  color: var(--muted);
-  font-size: 11px;
-  margin-top: 3px;
+.subtitle{
+  color:var(--muted);
+  font-size:10px;
+  margin-top:3px;
 }
 
-.clear-btn {
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  font-size: 11px;
+.clear{
+  color:var(--muted);
+  background:none;
+  border:0;
+  cursor:pointer;
+  font-size:11px;
 }
 
-.clear-btn:hover {
-  color: white;
+.messages{
+  height:420px;
+  overflow:auto;
+  padding:18px;
 }
 
-/* Results */
-.results {
-  min-height: 330px;
-  max-height: 500px;
-  overflow-y: auto;
-  padding: 18px;
+.empty{
+  height:100%;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
 }
 
-.empty-state {
-  height: 290px;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  color: var(--muted);
+.empty strong{
+  display:block;
+  color:white;
+  margin-bottom:6px;
+  font-size:14px;
 }
 
-.empty-icon {
-  font-size: 40px;
-  margin-bottom: 12px;
+.msg{
+  padding:14px;
+  margin-bottom:10px;
+  border-radius:15px;
+  border:1px solid var(--border);
+  animation:appear .25s ease;
 }
 
-.message {
-  padding: 14px;
-  border-radius: 15px;
-  margin-bottom: 10px;
-  border: 1px solid var(--border);
-  animation: slideIn .25s ease;
+.msg.user{
+  background:rgba(139,92,246,.08);
 }
 
-.message.user {
-  background: rgba(139,92,246,.08);
+.msg.ai{
+  background:rgba(34,211,238,.045);
 }
 
-.message.ai {
-  background: rgba(34,211,238,.045);
+.msg-top{
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:9px;
+  margin-bottom:7px;
 }
 
-.message-top {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 7px;
-  font-size: 10px;
-  color: var(--muted);
+.msg-body{
+  color:#e9eaf1;
+  font-size:13px;
+  line-height:1.6;
 }
 
-.message-text {
-  color: #e7e9f3;
-  font-size: 13px;
-  line-height: 1.6;
+@keyframes appear{
+  from{opacity:0;transform:translateY(7px)}
+  to{opacity:1;transform:none}
 }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
+.shortcuts{
+  padding:18px;
+}
+
+.shortcut{
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:14px;
+  margin-bottom:9px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.shortcut:hover{
+  background:rgba(139,92,246,.07);
+  border-color:rgba(139,92,246,.35);
+  transform:translateY(-2px);
+}
+
+.shortcut strong{
+  font-size:12px;
+}
+
+.shortcut p{
+  color:var(--muted);
+  font-size:10px;
+  margin-top:4px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-top:18px;
+}
+
+.stat{
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:17px;
+  background:rgba(255,255,255,.025);
+}
+
+.stat-number{
+  font-size:23px;
+  font-weight:800;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:10px;
+  margin-top:4px;
+}
+
+footer{
+  color:#616778;
+  text-align:center;
+  padding:45px 0 10px;
+  font-size:10px;
+}
+
+.toast{
+  position:fixed;
+  z-index:100;
+  left:50%;
+  bottom:25px;
+  transform:translate(-50%,30px);
+  opacity:0;
+  pointer-events:none;
+  padding:12px 17px;
+  border-radius:13px;
+  background:#171923;
+  border:1px solid var(--border);
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  font-size:12px;
+  transition:.25s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+@media(max-width:850px){
+  .dashboard{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .hero{
+    padding-top:55px;
   }
 }
 
-/* Capabilities */
-.capabilities {
-  padding: 18px;
-}
-
-.capability {
-  padding: 14px;
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: .2s;
-}
-
-.capability:hover {
-  border-color: rgba(139,92,246,.4);
-  background: rgba(139,92,246,.05);
-  transform: translateY(-2px);
-}
-
-.capability strong {
-  font-size: 12px;
-}
-
-.capability p {
-  color: var(--muted);
-  font-size: 11px;
-  margin-top: 4px;
-  line-height: 1.5;
-}
-
-/* Stats */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.stat {
-  padding: 17px;
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: rgba(255,255,255,.025);
-}
-
-.stat-value {
-  font-size: 23px;
-  font-weight: 750;
-}
-
-.stat-label {
-  color: var(--muted);
-  font-size: 10px;
-  margin-top: 4px;
-}
-
-/* Footer */
-footer {
-  text-align: center;
-  padding: 50px 0 10px;
-  color: #626879;
-  font-size: 11px;
-}
-
-/* Toast */
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: 25px;
-  transform: translate(-50%, 30px);
-  opacity: 0;
-  pointer-events: none;
-  background: #151720;
-  border: 1px solid var(--border);
-  color: white;
-  padding: 12px 17px;
-  border-radius: 13px;
-  box-shadow: var(--shadow);
-  font-size: 12px;
-  transition: .25s;
-  z-index: 99;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translate(-50%, 0);
-}
-
-/* Responsive */
-@media (max-width: 850px) {
-  .dashboard {
-    grid-template-columns: 1fr;
+@media(max-width:500px){
+  .app{
+    width:calc(100% - 20px);
   }
 
-  .stats {
-    grid-template-columns: repeat(2, 1fr);
+  .status{
+    display:none;
   }
 
-  .hero {
-    min-height: 630px;
+  h1{
+    font-size:48px;
   }
 
-  .hero h1 {
-    font-size: 56px;
-  }
-}
-
-@media (max-width: 500px) {
-  .app {
-    width: min(100% - 20px, 1400px);
+  .hero-description{
+    font-size:14px;
   }
 
-  header {
-    height: 60px;
+  .command{
+    border-radius:15px;
   }
 
-  .status-pill {
-    display: none;
+  .command input{
+    padding:12px 7px;
   }
 
-  .hero {
-    padding-top: 35px;
-  }
-
-  .hero h1 {
-    font-size: 45px;
-  }
-
-  .hero p {
-    font-size: 14px;
-  }
-
-  .voice-area {
-    transform: scale(.9);
-  }
-
-  .command-box {
-    border-radius: 15px;
-  }
-
-  .command-box input {
-    padding: 12px 8px;
+  .btn{
+    padding:0 11px;
   }
 }
 </style>
@@ -620,830 +546,1494 @@ footer {
 
 <body>
 
-<div class="ambient one"></div>
-<div class="ambient two"></div>
-
 <div class="app">
 
-  <header>
-    <div class="brand">
-      <div class="brand-mark"></div>
-      <div class="brand-name">Vox<span>AI</span></div>
+<header>
+  <div class="logo">
+    <div class="logo-icon"></div>
+    <div>Vox<span>AI</span></div>
+  </div>
+
+  <div class="status">
+    <span class="status-dot" id="statusDot"></span>
+    <span id="statusText">Voice engine ready</span>
+  </div>
+</header>
+
+
+<section class="hero">
+
+  <div class="badge">
+    ✦ NATURAL VOICE COMMAND CENTER
+  </div>
+
+  <h1>
+    Speak.<br>
+    Command.<br>
+    <span>Done.</span>
+  </h1>
+
+  <p class="hero-description">
+    Talk naturally. VoxAI listens, understands your command,
+    executes available actions and answers back with voice.
+  </p>
+
+
+  <div class="voice-zone">
+
+    <button
+      class="orb"
+      id="mic"
+      aria-label="Start voice assistant"
+    >
+      <span class="mic">🎙</span>
+    </button>
+
+    <div class="voice-status" id="voiceStatus">
+      Tap the orb to speak
     </div>
 
-    <div class="status-pill">
-      <span class="status-dot"></span>
-      Voice engine ready
+  </div>
+
+
+  <div class="wave" id="wave">
+    <i></i><i></i><i></i><i></i><i></i>
+    <i></i><i></i><i></i><i></i>
+  </div>
+
+
+  <form class="command" id="commandForm">
+
+    <input
+      id="input"
+      autocomplete="off"
+      placeholder="Say something or type a command..."
+    >
+
+    <button
+      type="button"
+      class="btn"
+      id="voiceBtn"
+      title="Voice input"
+    >
+      🎙
+    </button>
+
+    <button
+      type="submit"
+      class="btn send"
+    >
+      Send
+    </button>
+
+  </form>
+
+</section>
+
+
+<section class="dashboard">
+
+  <div class="card">
+
+    <div class="card-head">
+
+      <div>
+        <div class="title">Live command stream</div>
+        <div class="subtitle">
+          Your conversation appears here
+        </div>
+      </div>
+
+      <button
+        class="clear"
+        id="clear"
+      >
+        Clear
+      </button>
+
     </div>
-  </header>
 
-  <main>
+    <div class="messages" id="messages">
 
-    <section class="hero">
-
-      <div class="hero-content">
-
-        <div class="eyebrow">
-          ✦ NEXT-GENERATION VOICE INTERFACE
-        </div>
-
-        <h1>
-          Speak.<br>
-          Command.<br>
-          <span>Done.</span>
-        </h1>
-
-        <p>
-          A powerful voice command center built for instant interaction.
-          Speak naturally, ask questions, launch actions and get immediate
-          responses through one intelligent interface.
-        </p>
-
-        <div class="voice-area">
-          <button class="orb" id="micButton" aria-label="Start voice recognition">
-            <span class="mic-icon">◉</span>
-          </button>
-
-          <div class="voice-label" id="voiceLabel">
-            Tap to speak
-          </div>
-        </div>
-
-        <div class="waveform" id="waveform">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </div>
-
-        <form class="command-box" id="commandForm">
-          <input
-            id="commandInput"
-            autocomplete="off"
-            placeholder="Type a command or ask anything..."
-          />
-
-          <button type="button" class="action-btn" id="speakButton">
-            🎙
-          </button>
-
-          <button type="submit" class="action-btn send-btn">
-            Send
-          </button>
-        </form>
-
-      </div>
-    </section>
-
-    <section class="dashboard">
-
-      <div class="card">
-
-        <div class="card-header">
-          <div>
-            <div class="card-title">Command stream</div>
-            <div class="card-subtitle">Live interaction history</div>
-          </div>
-
-          <button class="clear-btn" id="clearButton">
-            Clear history
-          </button>
-        </div>
-
-        <div class="results" id="results">
-
-          <div class="empty-state" id="emptyState">
-            <div>
-              <div class="empty-icon">✦</div>
-              <div>Ready for your first command</div>
-            </div>
-          </div>
-
+      <div class="empty" id="empty">
+        <div>
+          <strong>VoxAI is ready</strong>
+          Say “hello” to begin.
         </div>
       </div>
 
-      <div class="card">
+    </div>
 
-        <div class="card-header">
-          <div>
-            <div class="card-title">Command library</div>
-            <div class="card-subtitle">Try these instantly</div>
-          </div>
-        </div>
+  </div>
 
-        <div class="capabilities">
 
-          <div class="capability"
-               data-command="What time is it?">
-            <strong>🕐 Time & date</strong>
-            <p>Ask for the current time or date.</p>
-          </div>
+  <div class="card">
 
-          <div class="capability"
-               data-command="Calculate 25 times 8">
-            <strong>🧮 Calculator</strong>
-            <p>Perform arithmetic calculations instantly.</p>
-          </div>
+    <div class="card-head">
 
-          <div class="capability"
-               data-command="Tell me a joke">
-            <strong>✨ Creativity</strong>
-            <p>Generate jokes, ideas and quick responses.</p>
-          </div>
-
-          <div class="capability"
-               data-command="What is the weather?">
-            <strong>🌤 Weather</strong>
-            <p>Weather command placeholder ready for an API.</p>
-          </div>
-
-          <div class="capability"
-               data-command="Open Google">
-            <strong>🚀 Web actions</strong>
-            <p>Open websites directly from voice commands.</p>
-          </div>
-
-          <div class="capability"
-               data-command="Give me a productivity tip">
-            <strong>⚡ Productivity</strong>
-            <p>Get fast tips and useful micro-actions.</p>
-          </div>
-
-        </div>
-
+      <div>
+        <div class="title">Quick commands</div>
+        <div class="subtitle">Click to execute</div>
       </div>
 
-    </section>
+    </div>
 
-    <section class="stats">
+    <div class="shortcuts">
 
-      <div class="stat">
-        <div class="stat-value" id="commandCount">0</div>
-        <div class="stat-label">Commands processed</div>
+      <div
+        class="shortcut"
+        data-command="Hello"
+      >
+        <strong>👋 Hello</strong>
+        <p>Start a conversation.</p>
       </div>
 
-      <div class="stat">
-        <div class="stat-value">∞</div>
-        <div class="stat-label">Command architecture</div>
+      <div
+        class="shortcut"
+        data-command="What time is it?"
+      >
+        <strong>🕐 Current time</strong>
+        <p>Get the current local time.</p>
       </div>
 
-      <div class="stat">
-        <div class="stat-value">0ms*</div>
-        <div class="stat-label">Local response latency</div>
+      <div
+        class="shortcut"
+        data-command="What is today's date?"
+      >
+        <strong>📅 Today's date</strong>
+        <p>Get today's date.</p>
       </div>
 
-      <div class="stat">
-        <div class="stat-value">24/7</div>
-        <div class="stat-label">Ready interface</div>
+      <div
+        class="shortcut"
+        data-command="Calculate 125 times 8"
+      >
+        <strong>🧮 Calculator</strong>
+        <p>Calculate mathematical expressions.</p>
       </div>
 
-    </section>
+      <div
+        class="shortcut"
+        data-command="Tell me a joke"
+      >
+        <strong>😂 Tell me a joke</strong>
+        <p>Generate a quick joke.</p>
+      </div>
 
-  </main>
+      <div
+        class="shortcut"
+        data-command="Give me a productivity tip"
+      >
+        <strong>⚡ Productivity</strong>
+        <p>Get a useful productivity tip.</p>
+      </div>
 
-  <footer>
-    VoxAI • Browser-native voice command experience
-    <br><br>
-    *Actual response speed depends on the command, browser and connected services.
-  </footer>
+      <div
+        class="shortcut"
+        data-command="Open Google"
+      >
+        <strong>🌐 Open Google</strong>
+        <p>Launch Google in a new tab.</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section class="stats">
+
+  <div class="stat">
+    <div class="stat-number" id="count">0</div>
+    <div class="stat-label">Commands processed</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-number">∞</div>
+    <div class="stat-label">Session architecture</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-number">LIVE</div>
+    <div class="stat-label">Voice engine</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-number">24/7</div>
+    <div class="stat-label">Interface availability</div>
+  </div>
+
+</section>
+
+
+<footer>
+  VoxAI Voice Command Center
+</footer>
 
 </div>
 
+
 <div class="toast" id="toast"></div>
 
-<script>
-/* =========================================================
-   VOXAI ENGINE
-   ========================================================= */
 
-const micButton = document.getElementById("micButton");
-const speakButton = document.getElementById("speakButton");
-const commandInput = document.getElementById("commandInput");
-const commandForm = document.getElementById("commandForm");
-const results = document.getElementById("results");
-const emptyState = document.getElementById("emptyState");
-const clearButton = document.getElementById("clearButton");
-const waveform = document.getElementById("waveform");
-const voiceLabel = document.getElementById("voiceLabel");
-const commandCount = document.getElementById("commandCount");
+<script>
+/* ==========================================================
+   VOXAI — ROBUST MAC VOICE ENGINE
+   ========================================================== */
+
+const mic = document.getElementById("mic");
+const voiceBtn = document.getElementById("voiceBtn");
+const input = document.getElementById("input");
+const form = document.getElementById("commandForm");
+const messages = document.getElementById("messages");
+const empty = document.getElementById("empty");
+const clear = document.getElementById("clear");
+
+const wave = document.getElementById("wave");
+const voiceStatus = document.getElementById("voiceStatus");
+
+const statusText = document.getElementById("statusText");
+const statusDot = document.getElementById("statusDot");
+
+const count = document.getElementById("count");
 const toast = document.getElementById("toast");
 
-let totalCommands = 0;
+
 let recognition = null;
 let listening = false;
+let shouldKeepListening = false;
+let commandCount = 0;
+let finalTranscript = "";
+let voices = [];
+let speaking = false;
 
 
-/* ---------------------------------------------------------
-   Speech Recognition
-   --------------------------------------------------------- */
+/* ==========================================================
+   SPEECH SYNTHESIS
+   ========================================================== */
 
-const SpeechRecognition =
-  window.SpeechRecognition ||
-  window.webkitSpeechRecognition;
+function loadVoices(){
 
-if (SpeechRecognition) {
+  voices = window.speechSynthesis
+    ? window.speechSynthesis.getVoices()
+    : [];
 
-  recognition = new SpeechRecognition();
+}
 
-  recognition.continuous = false;
-  recognition.interimResults = true;
-  recognition.lang = "en-US";
+loadVoices();
 
-  recognition.onstart = () => {
-    listening = true;
+if ("speechSynthesis" in window){
 
-    micButton.classList.add("active");
-    waveform.classList.add("active");
+  speechSynthesis.onvoiceschanged = loadVoices;
 
-    voiceLabel.textContent = "Listening...";
-  };
+}
 
-  recognition.onresult = event => {
 
-    let transcript = "";
+function getBestVoice(){
 
-    for (
-      let i = event.resultIndex;
-      i < event.results.length;
-      i++
-    ) {
-      transcript += event.results[i][0].transcript;
-    }
+  if (!voices.length) return null;
 
-    commandInput.value = transcript;
+  /*
+    Prefer high-quality voices commonly available
+    on macOS / Chrome / Safari.
+  */
 
-    if (event.results[event.results.length - 1].isFinal) {
-      processCommand(transcript);
-    }
-  };
+  const preferredNames = [
+    "Samantha",
+    "Ava",
+    "Karen",
+    "Daniel",
+    "Alex",
+    "Victoria",
+    "Google US English",
+    "Microsoft Aria",
+    "Microsoft Jenny"
+  ];
 
-  recognition.onerror = event => {
+  for(const name of preferredNames){
 
-    listening = false;
-
-    micButton.classList.remove("active");
-    waveform.classList.remove("active");
-
-    voiceLabel.textContent = "Tap to speak";
-
-    showToast(
-      "Voice recognition error: " + event.error
+    const match = voices.find(
+      voice =>
+        voice.name.toLowerCase()
+        .includes(name.toLowerCase())
     );
-  };
 
-  recognition.onend = () => {
+    if(match) return match;
+  }
 
-    listening = false;
 
-    micButton.classList.remove("active");
-    waveform.classList.remove("active");
+  /*
+    Otherwise choose an English voice.
+  */
 
-    voiceLabel.textContent = "Tap to speak";
-  };
+  return voices.find(
+    voice =>
+      voice.lang &&
+      voice.lang.toLowerCase().startsWith("en")
+  ) || voices[0];
 
-} else {
-
-  voiceLabel.textContent =
-    "Voice recognition unavailable";
-
-  showToast(
-    "Use Chrome or Edge for voice recognition."
-  );
 }
 
 
-/* ---------------------------------------------------------
-   Start / Stop Listening
-   --------------------------------------------------------- */
+function speak(text){
 
-function toggleListening() {
-
-  if (!recognition) {
-    showToast("Speech recognition is not supported.");
+  if(!("speechSynthesis" in window)){
     return;
-  }
-
-  if (listening) {
-    recognition.stop();
-  } else {
-
-    commandInput.value = "";
-
-    try {
-      recognition.start();
-    } catch (error) {
-      console.log(error);
-    }
-  }
-}
-
-micButton.addEventListener("click", toggleListening);
-speakButton.addEventListener("click", toggleListening);
-
-
-/* ---------------------------------------------------------
-   Form
-   --------------------------------------------------------- */
-
-commandForm.addEventListener("submit", event => {
-
-  event.preventDefault();
-
-  const command = commandInput.value.trim();
-
-  if (!command) {
-    showToast("Enter a command first.");
-    return;
-  }
-
-  processCommand(command);
-});
-
-
-/* ---------------------------------------------------------
-   Command Processing
-   --------------------------------------------------------- */
-
-async function processCommand(command) {
-
-  command = command.trim();
-
-  if (!command) return;
-
-  totalCommands++;
-  commandCount.textContent = totalCommands;
-
-  addMessage("You", command, "user");
-
-  commandInput.value = "";
-
-  const result = await executeCommand(command);
-
-  addMessage("VoxAI", result.text, "ai");
-
-  if (result.speak !== false) {
-    speak(result.text);
   }
 
   /*
-    If a command returns an action, execute it.
+    Stop previous speech.
   */
-  if (result.action) {
-    result.action();
+
+  speechSynthesis.cancel();
+
+  const utterance =
+    new SpeechSynthesisUtterance(text);
+
+  const voice = getBestVoice();
+
+  if(voice){
+    utterance.voice = voice;
   }
+
+  utterance.rate = 0.96;
+  utterance.pitch = 1.02;
+  utterance.volume = 1;
+
+  utterance.onstart = () => {
+    speaking = true;
+  };
+
+  utterance.onend = () => {
+    speaking = false;
+
+    /*
+      In continuous mode, go back to listening
+      after the assistant finishes speaking.
+    */
+
+    if(shouldKeepListening && !listening){
+
+      setTimeout(() => {
+        startListening();
+      }, 250);
+
+    }
+  };
+
+  utterance.onerror = () => {
+    speaking = false;
+  };
+
+  speechSynthesis.speak(utterance);
 }
 
 
-/* ---------------------------------------------------------
-   Unlimited-style Extensible Command Router
-   --------------------------------------------------------- */
+/* ==========================================================
+   SPEECH RECOGNITION DETECTION
+   ========================================================== */
 
-async function executeCommand(rawCommand) {
+const Recognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
 
-  const command = rawCommand.toLowerCase().trim();
+
+/* ==========================================================
+   INITIALIZE RECOGNITION
+   ========================================================== */
+
+function createRecognition(){
+
+  if(!Recognition){
+    showUnsupportedVoiceMessage();
+    return null;
+  }
+
+  const r = new Recognition();
+
+  /*
+    Important:
+    continuous mode keeps the voice assistant alive.
+  */
+
+  r.continuous = true;
+
+  /*
+    Interim results make the UI react immediately.
+  */
+
+  r.interimResults = true;
+
+  /*
+    en-US tends to work well with macOS/Chrome.
+    Change to en-GB/en-AU if desired.
+  */
+
+  r.lang = "en-US";
+
+  r.maxAlternatives = 1;
+
+
+  r.onstart = () => {
+
+    listening = true;
+
+    mic.classList.add("listening");
+    wave.classList.add("active");
+
+    voiceStatus.textContent =
+      "Listening… speak naturally";
+
+    statusText.textContent =
+      "Listening";
+
+    statusDot.style.background =
+      "#34d399";
+
+  };
+
+
+  r.onresult = event => {
+
+    let interim = "";
+
+    /*
+      Only process final speech once.
+    */
+
+    for(
+      let i = event.resultIndex;
+      i < event.results.length;
+      i++
+    ){
+
+      const transcript =
+        event.results[i][0].transcript;
+
+      if(event.results[i].isFinal){
+
+        finalTranscript +=
+          " " + transcript;
+
+      }else{
+
+        interim += transcript;
+
+      }
+    }
+
+
+    const visible =
+      (finalTranscript + " " + interim)
+      .trim();
+
+    input.value = visible;
+
+
+    /*
+      Execute only when final speech arrives.
+    */
+
+    if(finalTranscript.trim()){
+
+      const command =
+        finalTranscript.trim();
+
+      finalTranscript = "";
+
+      processCommand(command);
+    }
+
+  };
+
+
+  r.onerror = event => {
+
+    console.warn(
+      "Speech recognition:",
+      event.error
+    );
+
+
+    /*
+      Permission errors should NOT loop.
+    */
+
+    if(
+      event.error === "not-allowed" ||
+      event.error === "service-not-allowed"
+    ){
+
+      shouldKeepListening = false;
+
+      showToast(
+        "Microphone permission was denied. Allow microphone access for this website."
+      );
+
+      updateVoiceUI(false);
+
+      return;
+    }
+
+
+    /*
+      Network errors are recoverable.
+    */
+
+    if(event.error === "network"){
+
+      showToast(
+        "Voice service temporarily unavailable. Retrying…"
+      );
+
+    }
+
+  };
+
+
+  r.onend = () => {
+
+    listening = false;
+
+    updateVoiceUI(false);
+
+
+    /*
+      Chrome sometimes terminates recognition
+      unexpectedly. Restart it automatically.
+    */
+
+    if(
+      shouldKeepListening &&
+      !speaking
+    ){
+
+      setTimeout(() => {
+
+        if(
+          shouldKeepListening &&
+          !listening
+        ){
+
+          startListening();
+
+        }
+
+      }, 400);
+
+    }
+
+  };
+
+
+  return r;
+}
+
+
+recognition = createRecognition();
+
+
+/* ==========================================================
+   START LISTENING
+   ========================================================== */
+
+function startListening(){
+
+  if(!recognition){
+
+    showUnsupportedVoiceMessage();
+
+    return;
+
+  }
+
+
+  /*
+    Make sure old speech does not interfere.
+  */
+
+  if("speechSynthesis" in window){
+
+    speechSynthesis.cancel();
+
+  }
+
+
+  shouldKeepListening = true;
+
+  finalTranscript = "";
+
+  input.value = "";
+
+
+  try{
+
+    recognition.start();
+
+  }catch(error){
+
+    /*
+      Calling start twice causes InvalidStateError.
+      Ignore it and keep the existing session alive.
+    */
+
+    console.log(
+      "Recognition already active."
+    );
+
+  }
+
+}
+
+
+/* ==========================================================
+   STOP LISTENING
+   ========================================================== */
+
+function stopListening(){
+
+  shouldKeepListening = false;
+
+  finalTranscript = "";
+
+  if(recognition){
+
+    try{
+      recognition.stop();
+    }catch(e){}
+
+  }
+
+  if("speechSynthesis" in window){
+
+    speechSynthesis.cancel();
+
+  }
+
+  updateVoiceUI(false);
+
+}
+
+
+/* ==========================================================
+   TOGGLE
+   ========================================================== */
+
+function toggleVoice(){
+
+  if(listening){
+
+    stopListening();
+
+  }else{
+
+    startListening();
+
+  }
+
+}
+
+
+mic.addEventListener(
+  "click",
+  toggleVoice
+);
+
+voiceBtn.addEventListener(
+  "click",
+  toggleVoice
+);
+
+
+/* ==========================================================
+   UI STATE
+   ========================================================== */
+
+function updateVoiceUI(active){
+
+  if(active){
+
+    mic.classList.add("listening");
+
+    wave.classList.add("active");
+
+    voiceStatus.textContent =
+      "Listening… speak naturally";
+
+    statusText.textContent =
+      "Listening";
+
+  }else{
+
+    mic.classList.remove("listening");
+
+    wave.classList.remove("active");
+
+    voiceStatus.textContent =
+      "Tap the orb to speak";
+
+    statusText.textContent =
+      "Voice engine ready";
+
+  }
+
+}
+
+
+/* ==========================================================
+   COMMAND FORM
+   ========================================================== */
+
+form.addEventListener(
+  "submit",
+  event => {
+
+    event.preventDefault();
+
+    const command =
+      input.value.trim();
+
+    if(!command){
+
+      showToast(
+        "Say or type a command first."
+      );
+
+      return;
+
+    }
+
+    processCommand(command);
+
+  }
+);
+
+
+/* ==========================================================
+   COMMAND ENGINE
+   ========================================================== */
+
+async function processCommand(command){
+
+  if(!command.trim()) return;
+
+
+  commandCount++;
+
+  count.textContent =
+    commandCount;
+
+
+  addMessage(
+    "You",
+    command,
+    "user"
+  );
+
+
+  input.value = "";
+
+
+  const result =
+    await executeCommand(command);
+
+
+  addMessage(
+    "VoxAI",
+    result.text,
+    "ai"
+  );
+
+
+  /*
+    Speak the result naturally.
+  */
+
+  if(result.speak !== false){
+
+    speak(result.text);
+
+  }
+
+
+  /*
+    Execute action after responding.
+  */
+
+  if(result.action){
+
+    try{
+
+      result.action();
+
+    }catch(error){
+
+      console.error(error);
+
+    }
+
+  }
+
+}
+
+
+/* ==========================================================
+   COMMAND ROUTER
+   ========================================================== */
+
+async function executeCommand(command){
+
+  const original =
+    command.trim();
+
+  const c =
+    original.toLowerCase();
+
+
+  /* GREETING */
+
+  if(
+    /^(hi|hello|hey|hey vox|hello vox)[!. ]*$/i
+      .test(original)
+  ){
+
+    return {
+      text:
+        "Hello. I'm ready. Tell me what you need."
+    };
+
+  }
 
 
   /* TIME */
 
-  if (
-    command.includes("what time") ||
-    command === "time" ||
-    command.includes("current time")
-  ) {
+  if(
+    c.includes("what time") ||
+    c === "time" ||
+    c.includes("current time")
+  ){
 
-    const time = new Intl.DateTimeFormat(
-      undefined,
-      {
-        hour: "numeric",
-        minute: "2-digit",
-        second: "2-digit"
-      }
-    ).format(new Date());
+    const time =
+      new Intl.DateTimeFormat(
+        undefined,
+        {
+          hour:"numeric",
+          minute:"2-digit",
+          second:"2-digit"
+        }
+      ).format(new Date());
 
     return {
-      text: `The current time is ${time}.`
+      text:
+        `It is currently ${time}.`
     };
+
   }
 
 
   /* DATE */
 
-  if (
-    command.includes("what date") ||
-    command.includes("today's date") ||
-    command === "date"
-  ) {
+  if(
+    c.includes("today's date") ||
+    c.includes("what date") ||
+    c === "date"
+  ){
 
-    const date = new Intl.DateTimeFormat(
-      undefined,
-      {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      }
-    ).format(new Date());
+    const date =
+      new Intl.DateTimeFormat(
+        undefined,
+        {
+          weekday:"long",
+          year:"numeric",
+          month:"long",
+          day:"numeric"
+        }
+      ).format(new Date());
 
     return {
-      text: `Today is ${date}.`
+      text:
+        `Today is ${date}.`
     };
+
   }
 
 
   /* CALCULATOR */
 
-  if (
-    command.includes("calculate") ||
-    command.includes("what is") ||
-    command.includes("compute")
-  ) {
+  if(
+    c.startsWith("calculate ") ||
+    c.startsWith("compute ") ||
+    c.includes(" plus ") ||
+    c.includes(" minus ") ||
+    c.includes(" times ") ||
+    c.includes(" divided by ")
+  ){
 
-    const expression = command
-      .replace(/calculate/g, "")
-      .replace(/compute/g, "")
-      .replace(/what is/g, "")
-      .replace(/plus/g, "+")
-      .replace(/minus/g, "-")
-      .replace(/times/g, "*")
-      .replace(/multiplied by/g, "*")
-      .replace(/divided by/g, "/")
-      .replace(/over/g, "/")
-      .replace(/x/g, "*")
-      .trim();
+    let expression =
+      c
+        .replace(/^calculate\s+/,"")
+        .replace(/^compute\s+/,"")
+        .replace(/multiplied by/g,"*")
+        .replace(/divided by/g,"/")
+        .replace(/plus/g,"+")
+        .replace(/minus/g,"-")
+        .replace(/times/g,"*")
+        .replace(/\bx\b/g,"*")
+        .trim();
+
 
     /*
-      Only permit mathematical characters.
-      This prevents arbitrary JavaScript execution.
+      Convert simple number words.
     */
 
-    if (/^[0-9+\-*/().%\s]+$/.test(expression)) {
+    const numbers = {
+      zero:0,
+      one:1,
+      two:2,
+      three:3,
+      four:4,
+      five:5,
+      six:6,
+      seven:7,
+      eight:8,
+      nine:9,
+      ten:10,
+      twenty:20,
+      thirty:30,
+      forty:40,
+      fifty:50,
+      hundred:100
+    };
 
-      try {
 
-        const answer = Function(
-          `"use strict"; return (${expression})`
-        )();
+    for(const [word,value] of Object.entries(numbers)){
 
-        if (Number.isFinite(answer)) {
+      expression =
+        expression.replace(
+          new RegExp("\\b"+word+"\\b","g"),
+          value
+        );
+
+    }
+
+
+    /*
+      SECURITY:
+      Never execute arbitrary voice text.
+    */
+
+    if(
+      /^[0-9+\-*/().%\s]+$/.test(expression)
+    ){
+
+      try{
+
+        const answer =
+          Function(
+            `"use strict";return (${expression})`
+          )();
+
+
+        if(
+          Number.isFinite(answer)
+        ){
 
           return {
-            text: `The answer is ${answer}.`
+            text:
+              `The answer is ${answer}.`
           };
+
         }
 
-      } catch {}
+      }catch(error){}
+
     }
+
   }
 
 
-  /* JOKES */
+  /* JOKE */
 
-  if (
-    command.includes("joke") ||
-    command.includes("make me laugh")
-  ) {
+  if(
+    c.includes("tell me a joke") ||
+    c.includes("make me laugh") ||
+    c === "joke"
+  ){
 
     const jokes = [
-      "Why did the developer go broke? Because they used up all their cache.",
-      "I told my computer I needed a break. Now it keeps sending me vacation ads.",
+
       "Why do programmers prefer dark mode? Because light attracts bugs.",
-      "There are only 10 kinds of people: those who understand binary and those who don't."
+
+      "I told my computer I needed a break. Now it keeps showing me vacation ads.",
+
+      "Why did the developer go broke? Because they used all their cache.",
+
+      "There are only 10 types of people: those who understand binary and those who don't."
+
     ];
 
+
     return {
-      text: jokes[Math.floor(Math.random() * jokes.length)]
+      text:
+        jokes[
+          Math.floor(
+            Math.random() * jokes.length
+          )
+        ]
     };
+
   }
 
 
   /* PRODUCTIVITY */
 
-  if (
-    command.includes("productivity") ||
-    command.includes("productivity tip")
-  ) {
+  if(
+    c.includes("productivity tip") ||
+    c.includes("help me be productive")
+  ){
 
     const tips = [
-      "Choose one important task and finish it before checking notifications.",
-      "Use a short timer and work without interruption until it ends.",
-      "Turn a large task into the smallest action you can complete in five minutes.",
-      "Write tomorrow's most important task before ending today."
+
+      "Pick one important task and work on it without notifications for twenty five minutes.",
+
+      "Break your biggest task into the smallest action you can complete right now.",
+
+      "Before finishing today, decide the single most important thing you will do tomorrow.",
+
+      "If a task takes less than two minutes, consider doing it immediately."
+
     ];
+
 
     return {
       text:
-        tips[Math.floor(Math.random() * tips.length)]
+        tips[
+          Math.floor(
+            Math.random() * tips.length
+          )
+        ]
     };
+
   }
 
 
-  /* OPEN WEBSITES */
+  /* OPEN GOOGLE */
 
-  if (command.includes("open google")) {
+  if(
+    c.includes("open google")
+  ){
 
     return {
-      text: "Opening Google.",
-      speak: true,
-      action: () => {
+
+      text:"Opening Google.",
+
+      action:() => {
+
         window.open(
           "https://www.google.com",
           "_blank",
           "noopener,noreferrer"
         );
+
       }
+
     };
+
   }
 
 
-  if (command.includes("open youtube")) {
+  /* OPEN YOUTUBE */
+
+  if(
+    c.includes("open youtube")
+  ){
 
     return {
-      text: "Opening YouTube.",
-      speak: true,
-      action: () => {
+
+      text:"Opening YouTube.",
+
+      action:() => {
+
         window.open(
           "https://www.youtube.com",
           "_blank",
           "noopener,noreferrer"
         );
+
       }
+
     };
+
   }
 
 
-  /* WEATHER */
+  /* STOP */
 
-  if (
-    command.includes("weather") ||
-    command.includes("temperature")
-  ) {
+  if(
+    c === "stop" ||
+    c === "stop talking" ||
+    c === "be quiet"
+  ){
+
+    stopListening();
 
     return {
-      text:
-        "The weather command is ready for a live weather API. Connect your preferred weather service to return real-time conditions."
+      text:"Okay. I'm listening for your next command.",
+      speak:false
     };
+
   }
 
 
   /* HELP */
 
-  if (
-    command === "help" ||
-    command.includes("what can you do")
-  ) {
+  if(
+    c === "help" ||
+    c.includes("what can you do")
+  ){
 
     return {
+
       text:
-        "I can process time, date, calculations, jokes, productivity requests, website actions, weather commands, and any additional commands you add to the command router."
+        "I can respond to conversational commands, calculate numbers, tell jokes, provide productivity tips, tell you the date and time, open websites, speak responses, and connect to external AI tools through the backend command endpoint."
+
     };
+
   }
 
 
-  /* GREETINGS */
+  /*
+    ==========================================================
+    AI BACKEND FALLBACK
+    ==========================================================
 
-  if (
-    command === "hello" ||
-    command === "hi" ||
-    command.includes("hey vox")
-  ) {
+    If you later add:
 
-    return {
-      text:
-        "Hello. I'm ready. What would you like me to do?"
-    };
+      POST /api/command
+
+    with:
+
+      { "command": "user command" }
+
+    returning:
+
+      { "text": "AI response" }
+
+    then unknown commands can be routed to your
+    actual AI model.
+
+    This is what turns the website from a local demo
+    into a true general-purpose AI assistant.
+  */
+
+  try{
+
+    const response =
+      await fetch(
+        "/api/command",
+        {
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:JSON.stringify({
+            command:original
+          })
+        }
+      );
+
+
+    if(response.ok){
+
+      const data =
+        await response.json();
+
+
+      if(data && data.text){
+
+        return {
+          text:String(data.text)
+        };
+
+      }
+
+    }
+
+  }catch(error){
+
+    /*
+      No backend is installed.
+      Continue with local fallback.
+    */
+
   }
 
-
-  /* UNKNOWN COMMAND */
 
   return {
+
     text:
-      `I received "${rawCommand}". This command isn't mapped locally yet. The command engine is extensible, so you can connect it to an AI API or add another command handler for virtually any workflow.`
+      `I heard you say: "${original}". I can execute this automatically once the corresponding tool or AI backend is connected.`
+
   };
+
 }
 
 
-/* ---------------------------------------------------------
-   Speech Synthesis
-   --------------------------------------------------------- */
+/* ==========================================================
+   MESSAGE UI
+   ========================================================== */
 
-function speak(text) {
+function addMessage(
+  sender,
+  text,
+  type
+){
 
-  if (!("speechSynthesis" in window)) return;
+  if(empty){
 
-  window.speechSynthesis.cancel();
+    empty.style.display =
+      "none";
 
-  const utterance =
-    new SpeechSynthesisUtterance(text);
-
-  utterance.rate = 1.02;
-  utterance.pitch = 1;
-  utterance.volume = 1;
-
-  const voices =
-    window.speechSynthesis.getVoices();
-
-  const preferredVoice =
-    voices.find(v =>
-      /Google US English|Microsoft Aria|Samantha/i
-        .test(v.name)
-    );
-
-  if (preferredVoice) {
-    utterance.voice = preferredVoice;
   }
 
-  window.speechSynthesis.speak(utterance);
-}
-
-
-/* ---------------------------------------------------------
-   Message UI
-   --------------------------------------------------------- */
-
-function addMessage(sender, text, type) {
-
-  if (emptyState) {
-    emptyState.style.display = "none";
-  }
 
   const message =
     document.createElement("div");
 
   message.className =
-    `message ${type}`;
+    "msg " + type;
+
 
   const top =
     document.createElement("div");
 
-  top.className = "message-top";
+  top.className =
+    "msg-top";
 
-  top.innerHTML = `
-    <span>${escapeHTML(sender)}</span>
-    <span>${new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit"
-    })}</span>
-  `;
+
+  const senderEl =
+    document.createElement("span");
+
+  senderEl.textContent =
+    sender;
+
+
+  const timeEl =
+    document.createElement("span");
+
+  timeEl.textContent =
+    new Date().toLocaleTimeString(
+      [],
+      {
+        hour:"2-digit",
+        minute:"2-digit"
+      }
+    );
+
+
+  top.appendChild(senderEl);
+  top.appendChild(timeEl);
+
 
   const body =
     document.createElement("div");
 
-  body.className = "message-text";
+  body.className =
+    "msg-body";
 
-  body.textContent = text;
+  body.textContent =
+    text;
+
 
   message.appendChild(top);
   message.appendChild(body);
 
-  results.appendChild(message);
 
-  results.scrollTop =
-    results.scrollHeight;
+  messages.appendChild(
+    message
+  );
+
+
+  messages.scrollTop =
+    messages.scrollHeight;
+
 }
 
 
-/* ---------------------------------------------------------
-   Safe HTML escaping
-   --------------------------------------------------------- */
-
-function escapeHTML(value) {
-
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-
-/* ---------------------------------------------------------
-   Clear
-   --------------------------------------------------------- */
-
-clearButton.addEventListener("click", () => {
-
-  results.innerHTML = "";
-
-  if (emptyState) {
-    results.appendChild(emptyState);
-    emptyState.style.display = "grid";
-  }
-
-  totalCommands = 0;
-  commandCount.textContent = "0";
-
-  window.speechSynthesis?.cancel();
-
-  showToast("Command history cleared.");
-});
-
-
-/* ---------------------------------------------------------
-   Capability shortcuts
-   --------------------------------------------------------- */
+/* ==========================================================
+   QUICK COMMANDS
+   ========================================================== */
 
 document
-  .querySelectorAll(".capability")
-  .forEach(card => {
+  .querySelectorAll(".shortcut")
+  .forEach(button => {
 
-    card.addEventListener("click", () => {
+    button.addEventListener(
+      "click",
+      () => {
 
-      const command =
-        card.dataset.command;
+        const command =
+          button.dataset.command;
 
-      commandInput.value = command;
+        input.value =
+          command;
 
-      processCommand(command);
-    });
+        processCommand(command);
+
+      }
+    );
 
   });
 
 
-/* ---------------------------------------------------------
-   Toast
-   --------------------------------------------------------- */
+/* ==========================================================
+   CLEAR
+   ========================================================== */
+
+clear.addEventListener(
+  "click",
+  () => {
+
+    messages.innerHTML = "";
+
+    messages.appendChild(empty);
+
+    empty.style.display =
+      "grid";
+
+    commandCount = 0;
+
+    count.textContent =
+      "0";
+
+    speechSynthesis?.cancel();
+
+    showToast(
+      "Command history cleared."
+    );
+
+  }
+);
+
+
+/* ==========================================================
+   KEYBOARD CONTROL
+   ========================================================== */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    /*
+      Space activates voice when
+      user is not typing.
+    */
+
+    if(
+      event.code === "Space" &&
+      document.activeElement !== input
+    ){
+
+      event.preventDefault();
+
+      toggleVoice();
+
+    }
+
+
+    /*
+      Escape stops everything.
+    */
+
+    if(event.key === "Escape"){
+
+      stopListening();
+
+    }
+
+  }
+);
+
+
+/* ==========================================================
+   UNSUPPORTED BROWSER
+   ========================================================== */
+
+function showUnsupportedVoiceMessage(){
+
+  statusText.textContent =
+    "Voice unavailable";
+
+  statusDot.style.background =
+    "#fb7185";
+
+  voiceStatus.textContent =
+    "Use Chrome for voice commands";
+
+  showToast(
+    "Speech recognition is unavailable in this browser. Chrome on macOS is recommended."
+  );
+
+}
+
+
+/* ==========================================================
+   TOAST
+   ========================================================== */
 
 let toastTimer;
 
-function showToast(message) {
+function showToast(message){
 
-  toast.textContent = message;
+  toast.textContent =
+    message;
 
   toast.classList.add("show");
 
-  clearTimeout(toastTimer);
+  clearTimeout(
+    toastTimer
+  );
 
-  toastTimer = setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2500);
-}
+  toastTimer =
+    setTimeout(
+      () => {
 
+        toast.classList.remove(
+          "show"
+        );
 
-/* ---------------------------------------------------------
-   Keyboard shortcuts
-   --------------------------------------------------------- */
-
-document.addEventListener("keydown", event => {
-
-  /*
-    Space = voice activation when
-    the user isn't typing.
-  */
-
-  if (
-    event.code === "Space" &&
-    document.activeElement !== commandInput
-  ) {
-
-    event.preventDefault();
-    toggleListening();
-  }
-
-  /*
-    Escape = stop speaking/listening
-  */
-
-  if (event.key === "Escape") {
-
-    window.speechSynthesis?.cancel();
-
-    if (recognition && listening) {
-      recognition.stop();
-    }
-  }
-
-});
-
-
-/* ---------------------------------------------------------
-   Voice availability notification
-   --------------------------------------------------------- */
-
-if (!SpeechRecognition) {
-
-  setTimeout(() => {
-
-    showToast(
-      "For voice commands, use a browser supporting Web Speech API."
+      },
+      3200
     );
 
-  }, 1000);
 }
+
+
+/* ==========================================================
+   BROWSER CHECK
+   ========================================================== */
+
+console.log(
+  "VoxAI initialized.",
+  {
+    browser:
+      navigator.userAgent,
+
+    speechRecognition:
+      !!Recognition,
+
+    speechSynthesis:
+      "speechSynthesis" in window
+  }
+);
 
 </script>
 
 </body>
 </html>
+```
