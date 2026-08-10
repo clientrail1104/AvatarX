@@ -2,503 +2,813 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OmniAI — Universal Voice Assistant</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#050816">
+<meta name="description" content="OmniAI Universal Voice Assistant">
+<title>OmniAI — Universal AI Assistant</title>
 
 <style>
-:root {
-    --bg: #060914;
-    --panel: rgba(15, 23, 42, .78);
-    --panel2: rgba(30, 41, 59, .55);
-    --border: rgba(148, 163, 184, .16);
-    --text: #f8fafc;
-    --muted: #94a3b8;
-    --blue: #38bdf8;
-    --purple: #8b5cf6;
-    --green: #22c55e;
-    --yellow: #f59e0b;
-    --red: #ef4444;
+:root{
+  --bg:#050816;
+  --bg2:#080d1d;
+  --panel:rgba(14,22,43,.72);
+  --panel2:rgba(19,30,55,.58);
+  --line:rgba(148,163,184,.15);
+  --line2:rgba(56,189,248,.25);
+  --text:#f8fafc;
+  --muted:#94a3b8;
+  --blue:#38bdf8;
+  --cyan:#22d3ee;
+  --violet:#8b5cf6;
+  --purple:#a855f7;
+  --green:#22c55e;
+  --yellow:#f59e0b;
+  --red:#ef4444;
+  --shadow:0 25px 80px rgba(0,0,0,.35);
+  --radius:20px;
 }
 
-* {
-    box-sizing: border-box;
+*{
+  box-sizing:border-box;
 }
 
-body {
-    margin: 0;
-    min-height: 100vh;
-    color: var(--text);
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background:
-        radial-gradient(circle at 15% 10%, rgba(56,189,248,.12), transparent 30%),
-        radial-gradient(circle at 85% 20%, rgba(139,92,246,.15), transparent 30%),
-        radial-gradient(circle at 50% 100%, rgba(34,197,94,.08), transparent 35%),
-        var(--bg);
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background:
+    radial-gradient(circle at 10% 5%,rgba(56,189,248,.12),transparent 28%),
+    radial-gradient(circle at 90% 10%,rgba(139,92,246,.13),transparent 30%),
+    radial-gradient(circle at 50% 100%,rgba(34,197,94,.07),transparent 35%),
+    var(--bg);
+  overflow-x:hidden;
 }
 
 button,
-input {
-    font: inherit;
+input,
+textarea,
+select{
+  font:inherit;
 }
 
-button {
-    cursor: pointer;
+button{
+  cursor:pointer;
 }
 
-.app {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    min-height: 100vh;
+button:disabled{
+  cursor:not-allowed;
+  opacity:.55;
 }
 
-/* SIDEBAR */
-
-.sidebar {
-    border-right: 1px solid var(--border);
-    background: rgba(2, 6, 23, .72);
-    backdrop-filter: blur(20px);
-    padding: 22px 16px;
+.app{
+  display:grid;
+  grid-template-columns:260px minmax(0,1fr);
+  min-height:100vh;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 35px;
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar{
+  position:sticky;
+  top:0;
+  height:100vh;
+  padding:20px 15px;
+  border-right:1px solid var(--line);
+  background:rgba(3,7,18,.76);
+  backdrop-filter:blur(24px);
+  z-index:20;
 }
 
-.logo-icon {
-    width: 42px;
-    height: 42px;
-    display: grid;
-    place-items: center;
-    border-radius: 13px;
-    background: linear-gradient(135deg, var(--blue), var(--purple));
-    box-shadow: 0 0 35px rgba(56,189,248,.25);
-    font-size: 20px;
+.logo{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:7px;
+  margin-bottom:27px;
 }
 
-.logo strong {
-    font-size: 18px;
+.logo-mark{
+  width:43px;
+  height:43px;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  font-size:21px;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  box-shadow:
+    0 0 30px rgba(56,189,248,.25),
+    inset 0 1px rgba(255,255,255,.3);
 }
 
-.logo span {
-    display: block;
-    color: var(--muted);
-    font-size: 11px;
+.logo-title{
+  font-weight:800;
+  letter-spacing:-.02em;
 }
 
-.nav {
-    display: grid;
-    gap: 7px;
+.logo-sub{
+  display:block;
+  margin-top:2px;
+  color:var(--muted);
+  font-size:10px;
 }
 
-.nav button {
-    border: 0;
-    color: var(--muted);
-    background: transparent;
-    padding: 12px 13px;
-    border-radius: 10px;
-    text-align: left;
-    transition: .2s;
+.nav{
+  display:grid;
+  gap:5px;
+}
+
+.nav button{
+  width:100%;
+  border:1px solid transparent;
+  border-radius:12px;
+  padding:11px 12px;
+  color:var(--muted);
+  background:transparent;
+  text-align:left;
+  transition:.2s ease;
 }
 
 .nav button:hover,
-.nav button.active {
-    color: white;
-    background: rgba(56,189,248,.1);
+.nav button.active{
+  color:#fff;
+  background:rgba(56,189,248,.08);
+  border-color:rgba(56,189,248,.12);
 }
 
-.status {
-    margin-top: 35px;
-    padding: 14px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: rgba(15,23,42,.55);
+.nav-icon{
+  display:inline-block;
+  width:25px;
 }
 
-.status-title {
-    font-size: 11px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .1em;
+.system-card{
+  margin-top:25px;
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:rgba(15,23,42,.52);
 }
 
-.status-row {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-    font-size: 13px;
+.system-label{
+  color:var(--muted);
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.12em;
 }
 
-.online {
-    color: var(--green);
+.system-row{
+  display:flex;
+  justify-content:space-between;
+  margin-top:11px;
+  font-size:12px;
 }
 
-/* MAIN */
-
-main {
-    padding: 25px;
-    max-width: 1500px;
-    width: 100%;
-    margin: auto;
+.good{
+  color:var(--green);
 }
 
-.topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 25px;
+/* =====================================================
+   MAIN
+===================================================== */
+
+.main{
+  width:100%;
+  max-width:1600px;
+  margin:auto;
+  padding:24px;
 }
 
-.topbar h1 {
-    margin: 0;
-    font-size: 25px;
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:20px;
 }
 
-.topbar p {
-    margin: 5px 0 0;
-    color: var(--muted);
-    font-size: 13px;
+.heading h1{
+  margin:0;
+  font-size:25px;
+  letter-spacing:-.04em;
 }
 
-.top-actions {
-    display: flex;
-    gap: 8px;
+.heading p{
+  margin:5px 0 0;
+  color:var(--muted);
+  font-size:13px;
 }
 
-.icon-btn {
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--border);
-    background: var(--panel);
-    color: white;
-    border-radius: 10px;
+.top-actions{
+  display:flex;
+  gap:8px;
 }
 
-/* HERO */
-
-.hero {
-    position: relative;
-    overflow: hidden;
-    min-height: 430px;
-    border: 1px solid var(--border);
-    border-radius: 25px;
-    background:
-        linear-gradient(145deg, rgba(15,23,42,.92), rgba(8,15,31,.86));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
+.icon-btn{
+  width:41px;
+  height:41px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--line);
+  border-radius:12px;
+  color:#fff;
+  background:var(--panel);
+  transition:.2s;
 }
 
-.hero::before {
-    content: "";
-    position: absolute;
-    width: 500px;
-    height: 500px;
-    border-radius: 50%;
-    background: radial-gradient(circle,
-        rgba(56,189,248,.14),
-        rgba(139,92,246,.08) 40%,
-        transparent 70%);
-    animation: breathe 5s ease-in-out infinite;
+.icon-btn:hover{
+  border-color:var(--line2);
+  transform:translateY(-1px);
 }
 
-@keyframes breathe {
-    0%,100% { transform: scale(.9); opacity: .7; }
-    50% { transform: scale(1.1); opacity: 1; }
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero{
+  position:relative;
+  min-height:475px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  text-align:center;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:28px;
+  background:
+    linear-gradient(145deg,
+      rgba(15,23,42,.88),
+      rgba(7,13,29,.9));
+  box-shadow:var(--shadow);
 }
 
-.orb {
-    position: relative;
-    width: 145px;
-    height: 145px;
-    border-radius: 50%;
-    background:
-        radial-gradient(circle at 35% 30%, #fff, #38bdf8 9%, #2563eb 30%, #4c1d95 65%, #111827);
-    box-shadow:
-        0 0 40px rgba(56,189,248,.4),
-        0 0 100px rgba(139,92,246,.25),
-        inset -20px -25px 50px rgba(0,0,0,.45);
-    display: grid;
-    place-items: center;
-    transition: .3s;
+.hero::before{
+  content:"";
+  position:absolute;
+  width:560px;
+  height:560px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle,
+      rgba(34,211,238,.10),
+      rgba(139,92,246,.08) 38%,
+      transparent 68%);
+  animation:ambient 6s ease-in-out infinite;
 }
 
-.orb.listening {
-    animation: pulse 1.3s infinite;
+@keyframes ambient{
+  0%,100%{
+    transform:scale(.9);
+    opacity:.65;
+  }
+  50%{
+    transform:scale(1.08);
+    opacity:1;
+  }
 }
 
-@keyframes pulse {
-    0%,100% {
-        transform: scale(1);
-        box-shadow: 0 0 40px rgba(56,189,248,.4),
-                    0 0 100px rgba(139,92,246,.25);
-    }
-    50% {
-        transform: scale(1.08);
-        box-shadow: 0 0 60px rgba(56,189,248,.7),
-                    0 0 140px rgba(139,92,246,.4);
-    }
+.orb-wrap{
+  position:relative;
+  width:170px;
+  height:170px;
+  display:grid;
+  place-items:center;
 }
 
-.mic-symbol {
-    font-size: 42px;
+.orb-ring{
+  position:absolute;
+  inset:0;
+  border:1px solid rgba(56,189,248,.18);
+  border-radius:50%;
+  animation:rotate 16s linear infinite;
 }
 
-.hero h2 {
-    margin: 25px 0 7px;
-    position: relative;
+.orb-ring::before{
+  content:"";
+  position:absolute;
+  top:-4px;
+  left:50%;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--cyan);
+  box-shadow:0 0 20px var(--cyan);
 }
 
-.hero p {
-    position: relative;
-    color: var(--muted);
-    max-width: 600px;
+@keyframes rotate{
+  to{transform:rotate(360deg)}
 }
 
-.voice-button {
-    position: relative;
-    margin-top: 18px;
-    border: 0;
-    border-radius: 999px;
-    padding: 13px 25px;
-    color: white;
-    font-weight: 700;
-    background: linear-gradient(90deg, var(--blue), var(--purple));
-    box-shadow: 0 10px 35px rgba(56,189,248,.18);
+.orb{
+  position:relative;
+  width:132px;
+  height:132px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 32% 26%,
+      #fff 0 4%,
+      #67e8f9 7%,
+      #2563eb 30%,
+      #581c87 63%,
+      #0f172a 100%);
+  box-shadow:
+    0 0 40px rgba(34,211,238,.35),
+    0 0 110px rgba(139,92,246,.20),
+    inset -20px -25px 40px rgba(0,0,0,.4);
+  transition:.3s;
 }
 
-/* GRID */
-
-.dashboard {
-    display: grid;
-    grid-template-columns: 1.2fr .8fr;
-    gap: 18px;
-    margin-top: 18px;
+.orb.listening{
+  animation:listen 1.25s ease-in-out infinite;
 }
 
-.card {
-    border: 1px solid var(--border);
-    background: var(--panel);
-    backdrop-filter: blur(15px);
-    border-radius: 18px;
-    padding: 18px;
+@keyframes listen{
+  0%,100%{
+    transform:scale(1);
+  }
+  50%{
+    transform:scale(1.08);
+  }
 }
 
-.card-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
+.orb-icon{
+  font-size:39px;
 }
 
-.card-title h3 {
-    margin: 0;
-    font-size: 15px;
+.hero-status{
+  position:relative;
+  margin-top:23px;
+  font-size:21px;
+  font-weight:750;
+  letter-spacing:-.025em;
 }
 
-.card-title span {
-    font-size: 11px;
-    color: var(--muted);
+.hero-sub{
+  position:relative;
+  max-width:650px;
+  margin:7px 20px 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
 }
 
-/* COMMAND */
-
-.command-box {
-    display: flex;
-    gap: 8px;
+.voice-actions{
+  position:relative;
+  display:flex;
+  gap:9px;
+  margin-top:21px;
 }
 
-.command-box input {
-    flex: 1;
-    min-width: 0;
-    border: 1px solid var(--border);
-    background: rgba(2,6,23,.7);
-    color: white;
-    border-radius: 11px;
-    padding: 12px;
-    outline: none;
+.primary{
+  border:0;
+  border-radius:999px;
+  padding:12px 23px;
+  color:white;
+  font-weight:750;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  box-shadow:0 12px 35px rgba(56,189,248,.18);
+  transition:.2s;
 }
 
-.command-box input:focus {
-    border-color: rgba(56,189,248,.5);
+.primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 15px 45px rgba(56,189,248,.28);
 }
 
-.send {
-    border: 0;
-    border-radius: 11px;
-    padding: 0 18px;
-    color: white;
-    background: var(--purple);
+.secondary{
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:12px 18px;
+  color:white;
+  background:rgba(15,23,42,.65);
 }
 
-.result {
-    margin-top: 12px;
-    min-height: 60px;
-    padding: 12px;
-    border-radius: 11px;
-    background: rgba(2,6,23,.45);
-    color: var(--muted);
-    font-size: 13px;
+.secondary:hover{
+  border-color:var(--line2);
 }
 
-/* CONNECTORS */
+/* =====================================================
+   GRID / CARDS
+===================================================== */
 
-.connectors {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 9px;
+.grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);
+  gap:16px;
+  margin-top:16px;
 }
 
-.connector {
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--panel2);
+.card{
+  min-width:0;
+  border:1px solid var(--line);
+  border-radius:19px;
+  padding:17px;
+  background:var(--panel);
+  backdrop-filter:blur(18px);
 }
 
-.connector-icon {
-    font-size: 20px;
+.card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:14px;
 }
 
-.connector-name {
-    margin-top: 7px;
-    font-size: 12px;
+.card-title{
+  margin:0;
+  font-size:14px;
 }
 
-.connector-status {
-    color: var(--green);
-    font-size: 10px;
-    margin-top: 4px;
+.card-meta{
+  color:var(--muted);
+  font-size:10px;
 }
 
-/* ACTIVITY */
+/* =====================================================
+   COMMAND
+===================================================== */
 
-.activity {
-    display: grid;
-    gap: 9px;
+.command{
+  display:flex;
+  gap:8px;
 }
 
-.activity-item {
-    display: flex;
-    gap: 10px;
-    padding: 10px;
-    border-radius: 10px;
-    background: rgba(2,6,23,.35);
+.command input{
+  width:100%;
+  min-width:0;
+  border:1px solid var(--line);
+  outline:none;
+  border-radius:12px;
+  padding:12px 13px;
+  color:white;
+  background:rgba(2,6,23,.58);
 }
 
-.activity-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--green);
-    margin-top: 5px;
-    flex-shrink: 0;
+.command input:focus{
+  border-color:rgba(56,189,248,.42);
+  box-shadow:0 0 0 3px rgba(56,189,248,.06);
 }
 
-.activity-text {
-    font-size: 12px;
+.execute{
+  flex:0 0 auto;
+  border:0;
+  border-radius:12px;
+  padding:0 18px;
+  color:#fff;
+  background:var(--violet);
 }
 
-.activity-time {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 3px;
+.result{
+  min-height:72px;
+  margin-top:10px;
+  padding:13px;
+  border-radius:12px;
+  color:var(--muted);
+  background:rgba(2,6,23,.45);
+  font-size:12px;
+  line-height:1.55;
 }
 
-/* AUTOMATION */
-
-.automation {
-    margin-top: 18px;
+.result strong{
+  color:#fff;
 }
 
-.workflow {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
+/* =====================================================
+   LIVE INTELLIGENCE
+===================================================== */
+
+.live-list{
+  display:grid;
+  gap:9px;
 }
 
-.node {
-    border: 1px solid var(--border);
-    background: rgba(15,23,42,.65);
-    border-radius: 11px;
-    padding: 11px 14px;
-    font-size: 12px;
+.live-item{
+  display:flex;
+  gap:10px;
+  padding:10px;
+  border-radius:11px;
+  background:rgba(2,6,23,.34);
 }
 
-.arrow {
-    color: var(--blue);
+.dot{
+  width:8px;
+  height:8px;
+  flex:0 0 8px;
+  margin-top:5px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 12px rgba(34,197,94,.55);
 }
 
-/* SECURITY */
-
-.security {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+.live-text{
+  font-size:12px;
 }
 
-.security-item {
-    padding: 13px;
-    border-radius: 12px;
-    background: rgba(2,6,23,.35);
+.live-time{
+  margin-top:3px;
+  color:var(--muted);
+  font-size:10px;
 }
 
-.security-item strong {
-    display: block;
-    font-size: 13px;
+/* =====================================================
+   CONNECTORS
+===================================================== */
+
+.full{
+  margin-top:16px;
 }
 
-.security-item span {
-    color: var(--muted);
-    font-size: 10px;
+.connectors{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:9px;
 }
 
-/* RESPONSIVE */
-
-@media (max-width: 1000px) {
-    .app {
-        grid-template-columns: 1fr;
-    }
-
-    .sidebar {
-        display: none;
-    }
-
-    .dashboard {
-        grid-template-columns: 1fr;
-    }
-
-    .security {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.connector{
+  position:relative;
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:var(--panel2);
+  transition:.2s;
 }
 
-@media (max-width: 600px) {
-    main {
-        padding: 14px;
-    }
+.connector:hover{
+  transform:translateY(-2px);
+  border-color:var(--line2);
+}
 
-    .connectors {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.connector-icon{
+  font-size:20px;
+}
 
-    .hero {
-        min-height: 390px;
-    }
+.connector-name{
+  margin-top:7px;
+  font-size:11px;
+  font-weight:650;
+}
 
-    .orb {
-        width: 120px;
-        height: 120px;
-    }
+.connector-status{
+  margin-top:4px;
+  color:var(--green);
+  font-size:9px;
+}
 
-    .security {
-        grid-template-columns: 1fr;
-    }
+.connector button{
+  position:absolute;
+  top:9px;
+  right:8px;
+  border:0;
+  color:var(--muted);
+  background:transparent;
+}
+
+/* =====================================================
+   AUTOMATION
+===================================================== */
+
+.workflow{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  overflow:auto;
+  padding-bottom:3px;
+}
+
+.node{
+  flex:0 0 auto;
+  border:1px solid var(--line);
+  border-radius:11px;
+  padding:10px 13px;
+  background:rgba(15,23,42,.65);
+  font-size:11px;
+}
+
+.arrow{
+  flex:0 0 auto;
+  color:var(--cyan);
+}
+
+/* =====================================================
+   SECURITY
+===================================================== */
+
+.security{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+}
+
+.security-box{
+  padding:13px;
+  border-radius:12px;
+  background:rgba(2,6,23,.35);
+}
+
+.security-box strong{
+  display:block;
+  font-size:11px;
+}
+
+.security-box span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:9px;
+  line-height:1.4;
+}
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+.toast{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:100;
+  max-width:340px;
+  padding:13px 15px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  color:white;
+  background:rgba(8,15,31,.94);
+  box-shadow:var(--shadow);
+  opacity:0;
+  transform:translateY(15px);
+  pointer-events:none;
+  transition:.25s;
+  font-size:12px;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:90;
+  display:none;
+  place-items:center;
+  padding:20px;
+  background:rgba(0,0,0,.62);
+  backdrop-filter:blur(10px);
+}
+
+.modal.show{
+  display:grid;
+}
+
+.modal-box{
+  width:min(520px,100%);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:20px;
+  background:#0b1328;
+  box-shadow:var(--shadow);
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.modal-head h3{
+  margin:0;
+}
+
+.modal-close{
+  border:0;
+  color:white;
+  background:transparent;
+  font-size:20px;
+}
+
+.modal-body{
+  margin-top:17px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1100px){
+  .connectors{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media(max-width:900px){
+  .app{
+    grid-template-columns:1fr;
+  }
+
+  .sidebar{
+    position:relative;
+    height:auto;
+    border-right:0;
+    border-bottom:1px solid var(--line);
+  }
+
+  .nav{
+    display:flex;
+    overflow:auto;
+  }
+
+  .nav button{
+    min-width:max-content;
+  }
+
+  .system-card{
+    display:none;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .security{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:620px){
+  .main{
+    padding:13px;
+  }
+
+  .topbar{
+    align-items:flex-start;
+  }
+
+  .heading h1{
+    font-size:20px;
+  }
+
+  .top-actions{
+    display:none;
+  }
+
+  .hero{
+    min-height:420px;
+  }
+
+  .orb-wrap{
+    width:145px;
+    height:145px;
+  }
+
+  .orb{
+    width:115px;
+    height:115px;
+  }
+
+  .voice-actions{
+    flex-direction:column;
+    width:calc(100% - 40px);
+  }
+
+  .command{
+    flex-direction:column;
+  }
+
+  .execute{
+    min-height:43px;
+  }
+
+  .connectors{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .security{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -507,608 +817,1429 @@ main {
 
 <div class="app">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
 
-        <div class="logo">
-            <div class="logo-icon">✦</div>
-            <div>
-                <strong>OmniAI</strong>
-                <span>Universal Agent</span>
+<aside class="sidebar">
+
+  <div class="logo">
+    <div class="logo-mark">✦</div>
+    <div>
+      <div class="logo-title">OmniAI</div>
+      <span class="logo-sub">Universal Intelligence</span>
+    </div>
+  </div>
+
+  <nav class="nav">
+
+    <button class="active" data-section="dashboard">
+      <span class="nav-icon">◉</span> Dashboard
+    </button>
+
+    <button data-section="voice">
+      <span class="nav-icon">◌</span> Voice Assistant
+    </button>
+
+    <button data-section="phone">
+      <span class="nav-icon">☎</span> Telephony
+    </button>
+
+    <button data-section="automation">
+      <span class="nav-icon">⚡</span> Automations
+    </button>
+
+    <button data-section="ai">
+      <span class="nav-icon">◎</span> AI Network
+    </button>
+
+    <button data-section="devices">
+      <span class="nav-icon">◈</span> Devices
+    </button>
+
+    <button data-section="apps">
+      <span class="nav-icon">◫</span> Applications
+    </button>
+
+    <button data-section="world">
+      <span class="nav-icon">◍</span> Real-Time World
+    </button>
+
+    <button id="settingsButton">
+      <span class="nav-icon">⚙</span> Settings
+    </button>
+
+  </nav>
+
+  <div class="system-card">
+
+    <div class="system-label">System status</div>
+
+    <div class="system-row">
+      <span>AI Core</span>
+      <span class="good">● Ready</span>
+    </div>
+
+    <div class="system-row">
+      <span>Voice</span>
+      <span class="good" id="sideVoice">● Ready</span>
+    </div>
+
+    <div class="system-row">
+      <span>Automation</span>
+      <span class="good">● Active</span>
+    </div>
+
+  </div>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+  <header class="topbar">
+
+    <div class="heading">
+      <h1>Universal AI Assistant</h1>
+      <p>Understand → plan → execute → verify.</p>
+    </div>
+
+    <div class="top-actions">
+
+      <button
+        class="icon-btn"
+        id="notificationButton"
+        aria-label="Notifications">
+        🔔
+      </button>
+
+      <button
+        class="icon-btn"
+        id="securityButton"
+        aria-label="Security">
+        🔐
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- ===================================================
+       VOICE
+  ==================================================== -->
+
+  <section class="hero" id="voice">
+
+    <div class="orb-wrap">
+
+      <div class="orb-ring"></div>
+
+      <div class="orb" id="orb">
+        <div class="orb-icon">🎙️</div>
+      </div>
+
+    </div>
+
+    <div class="hero-status" id="voiceStatus">
+      Ready to listen
+    </div>
+
+    <div class="hero-sub" id="voiceSub">
+      Speak naturally. Ask questions, create automations,
+      retrieve information, or request actions.
+    </div>
+
+    <div class="voice-actions">
+
+      <button
+        class="primary"
+        id="voiceButton">
+        🎙 Start Voice
+      </button>
+
+      <button
+        class="secondary"
+        id="speakButton">
+        🔊 Test Voice
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================
+       COMMAND + LIVE
+  ==================================================== -->
+
+  <section class="grid">
+
+    <div class="card">
+
+      <div class="card-head">
+        <h2 class="card-title">Command Center</h2>
+        <span class="card-meta">Natural language</span>
+      </div>
+
+      <div class="command">
+
+        <input
+          id="commandInput"
+          autocomplete="off"
+          placeholder="Tell OmniAI what you want...">
+
+        <button
+          class="execute"
+          id="executeButton">
+          Execute
+        </button>
+
+      </div>
+
+      <div
+        class="result"
+        id="result"
+        aria-live="polite">
+        Awaiting your command...
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="card-head">
+        <h2 class="card-title">Real-Time Intelligence</h2>
+        <span
+          class="card-meta"
+          id="liveClock">
+          LIVE
+        </span>
+      </div>
+
+      <div class="live-list">
+
+        <div class="live-item">
+          <div class="dot"></div>
+          <div>
+            <div class="live-text">
+              Information verification enabled
             </div>
+            <div class="live-time">
+              Source-aware architecture
+            </div>
+          </div>
         </div>
 
-        <nav class="nav">
-            <button class="active">◉ Dashboard</button>
-            <button>◌ Voice Assistant</button>
-            <button>☎ Telephony</button>
-            <button>⚡ Automations</button>
-            <button>◎ AI Network</button>
-            <button>◈ Devices</button>
-            <button>◫ Applications</button>
-            <button>◍ Real-Time World</button>
-            <button>⚙ Settings</button>
-        </nav>
-
-        <div class="status">
-            <div class="status-title">System status</div>
-
-            <div class="status-row">
-                <span>AI Core</span>
-                <span class="online">● Online</span>
+        <div class="live-item">
+          <div class="dot"></div>
+          <div>
+            <div class="live-text">
+              Action verification enabled
             </div>
-
-            <div class="status-row">
-                <span>Voice</span>
-                <span class="online">● Ready</span>
+            <div class="live-time">
+              Results should be confirmed
             </div>
-
-            <div class="status-row">
-                <span>Automation</span>
-                <span class="online">● Active</span>
-            </div>
+          </div>
         </div>
 
-    </aside>
-
-
-    <!-- MAIN -->
-    <main>
-
-        <div class="topbar">
-            <div>
-                <h1>Universal AI Assistant</h1>
-                <p>Command your authorized digital and physical environment.</p>
+        <div class="live-item">
+          <div class="dot"></div>
+          <div>
+            <div class="live-text">
+              Authorized connector model
             </div>
-
-            <div class="top-actions">
-                <button class="icon-btn" title="Notifications">🔔</button>
-                <button class="icon-btn" title="Security">🔐</button>
+            <div class="live-time">
+              External services require credentials
             </div>
+          </div>
         </div>
 
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================
+       CONNECTORS
+  ==================================================== -->
+
+  <section
+    class="card full"
+    id="apps">
 
-        <!-- VOICE HERO -->
-        <section class="hero">
+    <div class="card-head">
+      <h2 class="card-title">Connected Capabilities</h2>
+      <span class="card-meta">Authorized connections</span>
+    </div>
 
-            <div class="orb" id="orb">
-                <div class="mic-symbol">🎙️</div>
-            </div>
+    <div class="connectors">
 
-            <h2 id="voiceStatus">Ready to listen</h2>
-
-            <p id="voiceText">
-                Say anything you want the assistant to do.
-            </p>
+      <div class="connector">
+        <div class="connector-icon">🌐</div>
+        <div class="connector-name">Internet</div>
+        <div class="connector-status">● Available</div>
+      </div>
 
-            <button class="voice-button" id="voiceButton">
-                Start Voice
-            </button>
-
-        </section>
+      <div class="connector">
+        <div class="connector-icon">☎️</div>
+        <div class="connector-name">Telephony</div>
+        <div class="connector-status">● Integration ready</div>
+      </div>
 
+      <div class="connector">
+        <div class="connector-icon">📧</div>
+        <div class="connector-name">Email</div>
+        <div class="connector-status">● Integration ready</div>
+      </div>
 
-        <section class="dashboard">
-
-            <!-- COMMAND -->
-            <div class="card">
-
-                <div class="card-title">
-                    <h3>Command Center</h3>
-                    <span>Natural language</span>
-                </div>
-
-                <div class="command-box">
-                    <input
-                        id="commandInput"
-                        placeholder="Tell OmniAI what you want..."
-                    >
-
-                    <button class="send" id="sendButton">
-                        Execute
-                    </button>
-                </div>
-
-                <div class="result" id="result">
-                    Awaiting your command...
-                </div>
-
-            </div>
-
-
-            <!-- LIVE INFORMATION -->
-            <div class="card">
-
-                <div class="card-title">
-                    <h3>Real-Time Intelligence</h3>
-                    <span id="liveStatus">LIVE</span>
-                </div>
-
-                <div class="activity">
-
-                    <div class="activity-item">
-                        <div class="activity-dot"></div>
-                        <div>
-                            <div class="activity-text">
-                                Real-time information layer ready
-                            </div>
-                            <div class="activity-time">
-                                Waiting for data connection
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="activity-item">
-                        <div class="activity-dot"></div>
-                        <div>
-                            <div class="activity-text">
-                                Source verification enabled
-                            </div>
-                            <div class="activity-time">
-                                Anti-hallucination policy active
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="activity-item">
-                        <div class="activity-dot"></div>
-                        <div>
-                            <div class="activity-text">
-                                Action verification enabled
-                            </div>
-                            <div class="activity-time">
-                                Results will be checked
-                            </div>
-                        </div>
-                    </div>
+      <div class="connector">
+        <div class="connector-icon">📅</div>
+        <div class="connector-name">Calendar</div>
+        <div class="connector-status">● Integration ready</div>
+      </div>
 
-                </div>
+      <div class="connector">
+        <div class="connector-icon">🏠</div>
+        <div class="connector-name">Smart Home</div>
+        <div class="connector-status">● Integration ready</div>
+      </div>
 
-            </div>
+      <div class="connector">
+        <div class="connector-icon">🤖</div>
+        <div class="connector-name">AI Models</div>
+        <div class="connector-status">● Gateway ready</div>
+      </div>
 
-        </section>
+      <div class="connector">
+        <div class="connector-icon">🗄️</div>
+        <div class="connector-name">Databases</div>
+        <div class="connector-status">● Gateway ready</div>
+      </div>
 
+      <div class="connector">
+        <div class="connector-icon">⚙️</div>
+        <div class="connector-name">APIs</div>
+        <div class="connector-status">● Gateway ready</div>
+      </div>
 
-        <!-- CONNECTORS -->
-        <section class="card" style="margin-top:18px">
+      <div class="connector">
+        <div class="connector-icon">📡</div>
+        <div class="connector-name">IoT</div>
+        <div class="connector-status">● Gateway ready</div>
+      </div>
 
-            <div class="card-title">
-                <h3>Connected Capabilities</h3>
-                <span>Authorized connections only</span>
-            </div>
+      <div class="connector">
+        <div class="connector-icon">☁️</div>
+        <div class="connector-name">Cloud</div>
+        <div class="connector-status">● Gateway ready</div>
+      </div>
 
-            <div class="connectors">
+    </div>
 
-                <div class="connector">
-                    <div class="connector-icon">🌐</div>
-                    <div class="connector-name">Internet</div>
-                    <div class="connector-status">Ready</div>
-                </div>
+  </section>
 
-                <div class="connector">
-                    <div class="connector-icon">☎️</div>
-                    <div class="connector-name">Telephony</div>
-                    <div class="connector-status">Ready</div>
-                </div>
 
-                <div class="connector">
-                    <div class="connector-icon">📧</div>
-                    <div class="connector-name">Email</div>
-                    <div class="connector-status">Ready</div>
-                </div>
+  <!-- ===================================================
+       AUTOMATION
+  ==================================================== -->
 
-                <div class="connector">
-                    <div class="connector-icon">📅</div>
-                    <div class="connector-name">Calendar</div>
-                    <div class="connector-status">Ready</div>
-                </div>
+  <section
+    class="card full"
+    id="automation">
 
-                <div class="connector">
-                    <div class="connector-icon">🏠</div>
-                    <div class="connector-name">Smart Home</div>
-                    <div class="connector-status">Ready</div>
-                </div>
+    <div class="card-head">
+      <h2 class="card-title">Automation Engine</h2>
+      <span class="card-meta">Event → Reason → Action → Verify</span>
+    </div>
 
-                <div class="connector">
-                    <div class="connector-icon">🤖</div>
-                    <div class="connector-name">AI Network</div>
-                    <div class="connector-status">Ready</div>
-                </div>
+    <div class="workflow">
 
-                <div class="connector">
-                    <div class="connector-icon">🗄️</div>
-                    <div class="connector-name">Databases</div>
-                    <div class="connector-status">Ready</div>
-                </div>
+      <div class="node">📥 Event</div>
+      <div class="arrow">→</div>
 
-                <div class="connector">
-                    <div class="connector-icon">⚙️</div>
-                    <div class="connector-name">APIs</div>
-                    <div class="connector-status">Ready</div>
-                </div>
+      <div class="node">🧠 Understand</div>
+      <div class="arrow">→</div>
 
-                <div class="connector">
-                    <div class="connector-icon">📡</div>
-                    <div class="connector-name">IoT Devices</div>
-                    <div class="connector-status">Ready</div>
-                </div>
+      <div class="node">📋 Plan</div>
+      <div class="arrow">→</div>
 
-            </div>
+      <div class="node">⚡ Execute</div>
+      <div class="arrow">→</div>
 
-        </section>
+      <div class="node">✓ Verify</div>
+      <div class="arrow">→</div>
 
+      <div class="node">📢 Report</div>
 
-        <!-- AUTOMATION -->
-        <section class="card automation">
+    </div>
 
-            <div class="card-title">
-                <h3>Automation Engine</h3>
-                <span>Event → Reason → Action → Verify</span>
-            </div>
+  </section>
 
-            <div class="workflow">
 
-                <div class="node">📥 Event detected</div>
+  <!-- ===================================================
+       SECURITY
+  ==================================================== -->
 
-                <div class="arrow">→</div>
+  <section class="card full">
 
-                <div class="node">🧠 AI understands</div>
+    <div class="card-head">
+      <h2 class="card-title">Trust & Verification</h2>
+      <span class="card-meta">Zero-guessing policy</span>
+    </div>
 
-                <div class="arrow">→</div>
+    <div class="security">
 
-                <div class="node">📋 Plan created</div>
+      <div class="security-box">
+        <strong>✓ Source Verification</strong>
+        <span>
+          Verify important information before presenting it
+          as fact.
+        </span>
+      </div>
 
-                <div class="arrow">→</div>
+      <div class="security-box">
+        <strong>✓ Cross Checking</strong>
+        <span>
+          Compare independent sources when appropriate.
+        </span>
+      </div>
 
-                <div class="node">⚡ Action executed</div>
+      <div class="security-box">
+        <strong>✓ Action Verification</strong>
+        <span>
+          Confirm that external actions actually succeeded.
+        </span>
+      </div>
 
-                <div class="arrow">→</div>
+      <div class="security-box">
+        <strong>🔐 Permission Control</strong>
+        <span>
+          External systems require legitimate authorization.
+        </span>
+      </div>
 
-                <div class="node">✓ Result verified</div>
+    </div>
 
-            </div>
+  </section>
 
-        </section>
+</main>
 
+</div>
 
-        <!-- SECURITY -->
-        <section class="card" style="margin-top:18px">
 
-            <div class="card-title">
-                <h3>Trust & Verification</h3>
-                <span>Zero-guessing policy</span>
-            </div>
+<!-- =====================================================
+     TOAST
+===================================================== -->
 
-            <div class="security">
+<div
+  class="toast"
+  id="toast"
+  role="status"
+  aria-live="polite">
+</div>
 
-                <div class="security-item">
-                    <strong>✓ Source Verification</strong>
-                    <span>Check information before answering</span>
-                </div>
 
-                <div class="security-item">
-                    <strong>✓ Cross Checking</strong>
-                    <span>Compare important information</span>
-                </div>
+<!-- =====================================================
+     MODAL
+===================================================== -->
 
-                <div class="security-item">
-                    <strong>✓ Action Verification</strong>
-                    <span>Confirm actions actually succeeded</span>
-                </div>
+<div
+  class="modal"
+  id="modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modalTitle">
 
-                <div class="security-item">
-                    <strong>🔐 Permission Control</strong>
-                    <span>Authorized access only</span>
-                </div>
+  <div class="modal-box">
 
-            </div>
+    <div class="modal-head">
 
-        </section>
+      <h3 id="modalTitle">
+        OmniAI
+      </h3>
 
-    </main>
+      <button
+        class="modal-close"
+        id="modalClose"
+        aria-label="Close">
+        ×
+      </button>
+
+    </div>
+
+    <div
+      class="modal-body"
+      id="modalBody">
+    </div>
+
+  </div>
 
 </div>
 
 
 <script>
-/*
-==========================================================
- OMNI AI FRONTEND
-==========================================================
+"use strict";
 
-This frontend intentionally does NOT contain API keys.
+/* =====================================================
+   OMNIAI APPLICATION CORE
+===================================================== */
 
-Connect these functions to your backend:
+const OmniAI = (() => {
 
-POST /api/agent
-POST /api/voice/session
-POST /api/telephony/call
-GET  /api/realtime
-GET  /api/connectors
-POST /api/automations
-==========================================================
-*/
-
-
-const orb = document.getElementById("orb");
-const voiceButton = document.getElementById("voiceButton");
-const voiceStatus = document.getElementById("voiceStatus");
-const voiceText = document.getElementById("voiceText");
-
-const commandInput = document.getElementById("commandInput");
-const sendButton = document.getElementById("sendButton");
-const result = document.getElementById("result");
-
-let listening = false;
-let recognition = null;
+  const state = {
+    listening: false,
+    processing: false,
+    recognition: null,
+    speechSupported: "speechSynthesis" in window,
+    recognitionSupported:
+      "SpeechRecognition" in window ||
+      "webkitSpeechRecognition" in window,
+    history: []
+  };
 
 
-/* -----------------------------------------------
-   SPEECH RECOGNITION
------------------------------------------------- */
+  const $ = selector =>
+    document.querySelector(selector);
 
-if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
 
-    const SpeechRecognition =
+  const escapeHTML = value =>
+    String(value)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+
+
+  /* ===================================================
+     UI
+  ==================================================== */
+
+  function setVoiceStatus(title, subtitle) {
+
+    $("#voiceStatus").textContent = title;
+    $("#voiceSub").textContent = subtitle;
+
+  }
+
+
+  function toast(message) {
+
+    const element = $("#toast");
+
+    element.textContent = message;
+    element.classList.add("show");
+
+    clearTimeout(toast.timer);
+
+    toast.timer = setTimeout(() => {
+      element.classList.remove("show");
+    },3000);
+
+  }
+
+
+  function showModal(title, html) {
+
+    $("#modalTitle").textContent = title;
+    $("#modalBody").innerHTML = html;
+    $("#modal").classList.add("show");
+
+  }
+
+
+  function closeModal() {
+
+    $("#modal").classList.remove("show");
+
+  }
+
+
+  /* ===================================================
+     TEXT TO SPEECH
+  ==================================================== */
+
+  function speak(text) {
+
+    if (!state.speechSupported) {
+
+      toast("Speech synthesis is not supported.");
+
+      return false;
+
+    }
+
+    try {
+
+      window.speechSynthesis.cancel();
+
+      const utterance =
+        new SpeechSynthesisUtterance(text);
+
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+
+      utterance.onstart = () => {
+        setVoiceStatus(
+          "Speaking",
+          "You can interrupt the assistant at any time."
+        );
+      };
+
+      utterance.onend = () => {
+
+        if (!state.listening) {
+
+          setVoiceStatus(
+            "Ready to listen",
+            "Speak naturally or type a command."
+          );
+
+        }
+
+      };
+
+      utterance.onerror = () => {
+
+        setVoiceStatus(
+          "Voice unavailable",
+          "The browser could not complete speech playback."
+        );
+
+      };
+
+      window.speechSynthesis.speak(utterance);
+
+      return true;
+
+    } catch(error) {
+
+      console.error(error);
+
+      toast("Unable to start speech.");
+
+      return false;
+
+    }
+
+  }
+
+
+  /* ===================================================
+     SPEECH RECOGNITION
+  ==================================================== */
+
+  function initializeRecognition() {
+
+    if (!state.recognitionSupported) {
+
+      return false;
+
+    }
+
+    try {
+
+      const Recognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
 
-    recognition = new SpeechRecognition();
+      const recognition = new Recognition();
 
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    recognition.lang = "en-US";
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = "en-US";
 
-    recognition.onstart = () => {
+      recognition.onstart = () => {
 
-        listening = true;
+        state.listening = true;
 
-        orb.classList.add("listening");
+        $("#orb").classList.add("listening");
 
-        voiceStatus.textContent = "Listening...";
+        $("#sideVoice").textContent = "● Listening";
 
-        voiceText.textContent =
-            "Speak naturally. I'm listening.";
+        $("#voiceButton").textContent =
+          "■ Stop Listening";
 
-        voiceButton.textContent = "Stop Listening";
-    };
+        setVoiceStatus(
+          "Listening...",
+          "I'm listening to your command."
+        );
+
+      };
 
 
-    recognition.onresult = event => {
+      recognition.onresult = event => {
 
         let transcript = "";
 
-        for (
-            let i = event.resultIndex;
-            i < event.results.length;
-            i++
-        ) {
+        for(
+          let i = event.resultIndex;
+          i < event.results.length;
+          i++
+        ){
 
-            transcript +=
-                event.results[i][0].transcript;
+          transcript +=
+            event.results[i][0].transcript;
+
         }
 
-        commandInput.value = transcript;
-    };
+        $("#commandInput").value =
+          transcript.trim();
+
+      };
 
 
-    recognition.onend = () => {
+      recognition.onerror = event => {
 
-        listening = false;
+        console.warn(
+          "Speech recognition:",
+          event.error
+        );
 
-        orb.classList.remove("listening");
+        state.listening = false;
 
-        voiceStatus.textContent = "Processing...";
+        $("#orb").classList.remove("listening");
 
-        voiceButton.textContent = "Start Voice";
+        $("#sideVoice").textContent = "● Ready";
 
-        const command = commandInput.value.trim();
+        $("#voiceButton").textContent =
+          "🎙 Start Voice";
 
-        if (command) {
+        if(event.error === "not-allowed"){
 
-            executeCommand(command);
+          toast(
+            "Microphone permission was denied."
+          );
 
         } else {
 
-            voiceStatus.textContent = "Ready to listen";
+          toast(
+            "Voice recognition encountered an error."
+          );
 
-            voiceText.textContent =
-                "Say anything you want the assistant to do.";
         }
-    };
+
+        setVoiceStatus(
+          "Ready to listen",
+          "Try your command again."
+        );
+
+      };
 
 
-    recognition.onerror = event => {
+      recognition.onend = () => {
 
-        console.error("Speech error:", event.error);
+        state.listening = false;
 
-        listening = false;
+        $("#orb").classList.remove("listening");
 
-        orb.classList.remove("listening");
+        $("#sideVoice").textContent =
+          "● Ready";
 
-        voiceStatus.textContent = "Voice error";
+        $("#voiceButton").textContent =
+          "🎙 Start Voice";
 
-        voiceText.textContent =
-            "Please try again.";
-    };
+        const command =
+          $("#commandInput").value.trim();
 
-}
+        if(command){
+
+          execute(command);
+
+        } else {
+
+          setVoiceStatus(
+            "Ready to listen",
+            "Speak naturally or type a command."
+          );
+
+        }
+
+      };
 
 
-/* -----------------------------------------------
-   VOICE BUTTON
------------------------------------------------- */
+      state.recognition = recognition;
 
-voiceButton.addEventListener("click", () => {
+      return true;
 
-    if (!recognition) {
+    } catch(error){
 
-        alert(
-            "Speech recognition is not supported by this browser."
+      console.error(error);
+
+      return false;
+
+    }
+
+  }
+
+
+  function toggleVoice(){
+
+    if(!state.recognition){
+
+      if(!initializeRecognition()){
+
+        showModal(
+          "Voice unavailable",
+          `
+          <p>Your browser does not expose the required
+          speech recognition API.</p>
+
+          <p>
+          You can still use the text command interface.
+          A production deployment can connect WebRTC
+          or a realtime voice backend instead.
+          </p>
+          `
         );
 
         return;
-    }
 
-    if (listening) {
-
-        recognition.stop();
-
-    } else {
-
-        commandInput.value = "";
-
-        recognition.start();
+      }
 
     }
 
-});
+    if(state.listening){
 
+      try{
+        state.recognition.stop();
+      }catch(error){
+        console.warn(error);
+      }
 
-/* -----------------------------------------------
-   COMMAND EXECUTION
------------------------------------------------- */
-
-sendButton.addEventListener("click", () => {
-
-    const command = commandInput.value.trim();
-
-    if (!command) {
-
-        result.textContent =
-            "Please enter a command.";
-
-        return;
-    }
-
-    executeCommand(command);
-
-});
-
-
-commandInput.addEventListener("keydown", event => {
-
-    if (event.key === "Enter") {
-
-        sendButton.click();
+      return;
 
     }
 
-});
+    $("#commandInput").value = "";
+
+    try{
+
+      state.recognition.start();
+
+    }catch(error){
+
+      console.warn(error);
+
+      toast(
+        "Voice recognition is already starting."
+      );
+
+    }
+
+  }
 
 
-async function executeCommand(command) {
+  /* ===================================================
+     COMMAND ENGINE
+  ==================================================== */
 
-    result.innerHTML =
-        `<strong>Command received:</strong><br>
-         ${escapeHTML(command)}
-         <br><br>
-         🧠 AI is planning the required actions...`;
+  async function execute(command){
 
-    voiceStatus.textContent = "Thinking...";
-    voiceText.textContent = command;
+    if(state.processing){
 
-    /*
-    --------------------------------------------------
-    REAL BACKEND CONNECTION
-    --------------------------------------------------
+      toast("Another command is already processing.");
 
-    Uncomment and connect to your server:
+      return;
 
-    const response = await fetch("/api/agent", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            command: command
-        })
+    }
+
+    const cleanCommand =
+      String(command).trim();
+
+    if(!cleanCommand){
+
+      toast("Please enter a command.");
+
+      return;
+
+    }
+
+    state.processing = true;
+
+    $("#executeButton").disabled = true;
+
+    setVoiceStatus(
+      "Thinking...",
+      "Understanding your request."
+    );
+
+    $("#result").innerHTML = `
+      <strong>Request received</strong><br>
+      ${escapeHTML(cleanCommand)}
+      <br><br>
+      🧠 Analyzing request...
+    `;
+
+    addHistory(cleanCommand);
+
+    try{
+
+      const localResult =
+        await localCommandRouter(cleanCommand);
+
+      renderResult(localResult);
+
+      if(localResult.speak){
+
+        speak(localResult.message);
+
+      }
+
+    }catch(error){
+
+      console.error(error);
+
+      renderResult({
+        success:false,
+        message:
+          "The request could not be completed safely.",
+        details:
+          "The system encountered an internal error."
+      });
+
+    }finally{
+
+      state.processing = false;
+
+      $("#executeButton").disabled = false;
+
+      if(!state.listening){
+
+        setVoiceStatus(
+          "Ready to listen",
+          "Your assistant is ready for another command."
+        );
+
+      }
+
+    }
+
+  }
+
+
+  /* ===================================================
+     LOCAL DEMO AGENT
+     Fully functional without external services.
+  ==================================================== */
+
+  async function localCommandRouter(command){
+
+    const lower =
+      command.toLowerCase();
+
+    await delay(450);
+
+
+    /* TIME */
+
+    if(
+      lower.includes("what time") ||
+      lower.includes("current time")
+    ){
+
+      const time =
+        new Date().toLocaleTimeString(
+          undefined,
+          {
+            hour:"numeric",
+            minute:"2-digit",
+            second:"2-digit"
+          }
+        );
+
+      return {
+        success:true,
+        message:`The current local time is ${time}.`,
+        speak:true
+      };
+
+    }
+
+
+    /* DATE */
+
+    if(
+      lower.includes("today's date") ||
+      lower.includes("what date") ||
+      lower === "date"
+    ){
+
+      const date =
+        new Date().toLocaleDateString(
+          undefined,
+          {
+            weekday:"long",
+            year:"numeric",
+            month:"long",
+            day:"numeric"
+          }
+        );
+
+      return {
+        success:true,
+        message:`Today is ${date}.`,
+        speak:true
+      };
+
+    }
+
+
+    /* GREETING */
+
+    if(
+      /^(hi|hello|hey|good morning|good evening)\b/i
+        .test(lower)
+    ){
+
+      return {
+        success:true,
+        message:
+          "Hello. I'm ready for your next command.",
+        speak:true
+      };
+
+    }
+
+
+    /* CLEAR */
+
+    if(
+      lower.includes("clear screen") ||
+      lower.includes("clear command")
+    ){
+
+      $("#commandInput").value = "";
+
+      return {
+        success:true,
+        message:"The command field has been cleared.",
+        speak:true
+      };
+
+    }
+
+
+    /* AUTOMATION */
+
+    if(
+      lower.includes("automate") ||
+      lower.includes("every day") ||
+      lower.includes("whenever")
+    ){
+
+      return {
+        success:true,
+        message:
+          "I understand this as an automation request. " +
+          "In the production agent, the workflow engine " +
+          "would convert the request into a trigger, " +
+          "conditions, actions, and verification steps.",
+        details:
+          "No external action was taken by this standalone demo.",
+        speak:true
+      };
+
+    }
+
+
+    /* EXTERNAL REQUEST */
+
+    return {
+      success:true,
+      message:
+        "I understood your request: " +
+        `"${command}"`,
+      details:
+        "The standalone application is ready for a secure " +
+        "backend agent connection. External actions are not " +
+        "pretended to have happened.",
+      speak:true
+    };
+
+  }
+
+
+  /* ===================================================
+     RESULT
+  ==================================================== */
+
+  function renderResult(data){
+
+    const icon =
+      data.success ? "✓" : "⚠";
+
+    $("#result").innerHTML = `
+      <strong>${icon} ${escapeHTML(data.message)}</strong>
+      ${
+        data.details
+        ?
+        `<br><br>
+         <span>${escapeHTML(data.details)}</span>`
+        :
+        ""
+      }
+    `;
+
+  }
+
+
+  /* ===================================================
+     HISTORY
+  ==================================================== */
+
+  function addHistory(command){
+
+    state.history.unshift({
+      command,
+      time:new Date()
     });
 
-    const data = await response.json();
+    if(state.history.length > 50){
 
-    result.textContent = data.message;
+      state.history.length = 50;
 
-    --------------------------------------------------
-    */
-
-    // Demo response
-
-    setTimeout(() => {
-
-        result.innerHTML =
-            `✓ Request understood.<br><br>
-             <strong>Requested:</strong>
-             ${escapeHTML(command)}
-             <br><br>
-             <span style="color:#94a3b8">
-             Backend AI orchestration is required
-             to execute this command.
-             </span>`;
-
-        voiceStatus.textContent = "Ready";
-
-        voiceText.textContent =
-            "Command processed by the interface.";
-
-    }, 900);
-
-}
-
-
-/* -----------------------------------------------
-   TEXT TO SPEECH
------------------------------------------------- */
-
-function speak(text) {
-
-    if (!("speechSynthesis" in window)) {
-
-        return;
     }
 
-    window.speechSynthesis.cancel();
-
-    const utterance =
-        new SpeechSynthesisUtterance(text);
-
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-
-    window.speechSynthesis.speak(utterance);
-}
+  }
 
 
-/* -----------------------------------------------
-   SECURITY
------------------------------------------------- */
+  /* ===================================================
+     HELPERS
+  ==================================================== */
 
-function escapeHTML(value) {
+  function delay(ms){
 
-    return value
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
+    return new Promise(
+      resolve => setTimeout(resolve,ms)
+    );
+
+  }
 
 
-/* -----------------------------------------------
-   LIVE STATUS DEMO
------------------------------------------------- */
+  /* ===================================================
+     REAL BACKEND API HOOK
+  ==================================================== */
 
-setInterval(() => {
+  async function callBackendAgent(command){
 
-    const live =
-        document.getElementById("liveStatus");
+    /*
+      Production example:
 
-    live.textContent =
-        "LIVE • " +
-        new Date().toLocaleTimeString();
+      const response = await fetch("/api/agent", {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        credentials:"include",
+        body:JSON.stringify({
+          command
+        })
+      });
 
-}, 1000);
+      if(!response.ok){
+        throw new Error(
+          `Backend returned ${response.status}`
+        );
+      }
+
+      return await response.json();
+    */
+
+    throw new Error(
+      "Backend agent endpoint is not configured."
+    );
+
+  }
+
+
+  /* ===================================================
+     EVENTS
+  ==================================================== */
+
+  function bindEvents(){
+
+    $("#voiceButton")
+      .addEventListener(
+        "click",
+        toggleVoice
+      );
+
+
+    $("#speakButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          speak(
+            "Hello. Your OmniAI voice interface is working."
+          );
+
+        }
+      );
+
+
+    $("#executeButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          execute(
+            $("#commandInput").value
+          );
+
+        }
+      );
+
+
+    $("#commandInput")
+      .addEventListener(
+        "keydown",
+        event => {
+
+          if(event.key === "Enter"){
+
+            event.preventDefault();
+
+            execute(
+              $("#commandInput").value
+            );
+
+          }
+
+        }
+      );
+
+
+    $("#modalClose")
+      .addEventListener(
+        "click",
+        closeModal
+      );
+
+
+    $("#modal")
+      .addEventListener(
+        "click",
+        event => {
+
+          if(event.target === $("#modal")){
+
+            closeModal();
+
+          }
+
+        }
+      );
+
+
+    $("#settingsButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          showModal(
+            "OmniAI Settings",
+            `
+            <p>
+            <strong>Voice:</strong>
+            Browser speech APIs
+            </p>
+
+            <p>
+            <strong>Security:</strong>
+            External actions require authorized
+            backend integrations.
+            </p>
+
+            <p>
+            <strong>Verification:</strong>
+            The interface never claims that an external
+            action happened unless the backend confirms it.
+            </p>
+
+            <p>
+            <strong>Production:</strong>
+            Connect your AI gateway, realtime voice
+            service, telephony provider, application APIs,
+            device gateway, and automation engine.
+            </p>
+            `
+          );
+
+        }
+      );
+
+
+    $("#securityButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          showModal(
+            "Security & Verification",
+            `
+            <p>
+            🔐 Authorized access only
+            </p>
+
+            <p>
+            ✓ Never expose API secrets in frontend code.
+            </p>
+
+            <p>
+            ✓ Authenticate external integrations on the server.
+            </p>
+
+            <p>
+            ✓ Verify consequential actions.
+            </p>
+
+            <p>
+            ✓ Do not claim an action succeeded without
+            receiving confirmation from the external system.
+            </p>
+            `
+          );
+
+        }
+      );
+
+
+    $("#notificationButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          toast(
+            "No new system notifications."
+          );
+
+        }
+      );
+
+
+    document
+      .querySelectorAll(".nav button[data-section]")
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            document
+              .querySelectorAll(".nav button")
+              .forEach(item =>
+                item.classList.remove("active")
+              );
+
+            button.classList.add("active");
+
+            const section =
+              button.dataset.section;
+
+            const target =
+              document.getElementById(section);
+
+            if(target){
+
+              target.scrollIntoView({
+                behavior:"smooth",
+                block:"start"
+              });
+
+            }else{
+
+              toast(
+                `${section} module is ready for integration.`
+              );
+
+            }
+
+          }
+        );
+
+      });
+
+  }
+
+
+  /* ===================================================
+     LIVE CLOCK
+  ==================================================== */
+
+  function updateClock(){
+
+    const now = new Date();
+
+    $("#liveClock").textContent =
+      "LIVE • " +
+      now.toLocaleTimeString(
+        undefined,
+        {
+          hour:"2-digit",
+          minute:"2-digit",
+          second:"2-digit"
+        }
+      );
+
+  }
+
+
+  /* ===================================================
+     STARTUP
+  ==================================================== */
+
+  function init(){
+
+    bindEvents();
+
+    updateClock();
+
+    setInterval(
+      updateClock,
+      1000
+    );
+
+    setVoiceStatus(
+      "Ready to listen",
+      "Speak naturally or type a command."
+    );
+
+    console.log(
+      "OmniAI initialized successfully."
+    );
+
+  }
+
+
+  return {
+    init,
+    execute,
+    speak,
+    callBackendAgent
+  };
+
+})();
+
+
+/* =====================================================
+   START APPLICATION
+===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  OmniAI.init
+);
 
 </script>
 
