@@ -1,718 +1,1116 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AutoTask AI - Next-Gen Autonomous Task Hub</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Chart.js for Analytics -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Canvas-Confetti for Success Animations -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OmniAI — Universal Voice Assistant</title>
 
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#eef2ff',
-              500: '#6366f1',
-              600: '#4f46e5',
-              700: '#4338ca',
-            },
-            glass: {
-              surface: 'rgba(15, 23, 42, 0.65)',
-              border: 'rgba(255, 255, 255, 0.08)',
-              hover: 'rgba(255, 255, 255, 0.12)',
-            }
-          },
-          animation: {
-            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            'float': 'float 6s ease-in-out infinite',
-            'shimmer': 'shimmer 2.5s infinite linear',
-            'glow': 'glow 3s ease-in-out infinite alternate',
-          },
-          keyframes: {
-            float: {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-8px)' },
-            },
-            shimmer: {
-              '0%': { backgroundPosition: '-200% 0' },
-              '100%': { backgroundPosition: '200% 0' },
-            },
-            glow: {
-              '0%': { boxShadow: '0 0 15px rgba(99, 102, 241, 0.2)' },
-              '100%': { boxShadow: '0 0 30px rgba(99, 102, 241, 0.6)' },
-            }
-          }
-        }
-      }
-    }
-  </script>
+<style>
+:root {
+    --bg: #060914;
+    --panel: rgba(15, 23, 42, .78);
+    --panel2: rgba(30, 41, 59, .55);
+    --border: rgba(148, 163, 184, .16);
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --blue: #38bdf8;
+    --purple: #8b5cf6;
+    --green: #22c55e;
+    --yellow: #f59e0b;
+    --red: #ef4444;
+}
 
-  <style>
-    /* Custom Glassmorphism & UI Touches */
-    .glass-panel {
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--text);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+        radial-gradient(circle at 15% 10%, rgba(56,189,248,.12), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(139,92,246,.15), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(34,197,94,.08), transparent 35%),
+        var(--bg);
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    border-right: 1px solid var(--border);
+    background: rgba(2, 6, 23, .72);
+    backdrop-filter: blur(20px);
+    padding: 22px 16px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 35px;
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    box-shadow: 0 0 35px rgba(56,189,248,.25);
+    font-size: 20px;
+}
+
+.logo strong {
+    font-size: 18px;
+}
+
+.logo span {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.nav {
+    display: grid;
+    gap: 7px;
+}
+
+.nav button {
+    border: 0;
+    color: var(--muted);
+    background: transparent;
+    padding: 12px 13px;
+    border-radius: 10px;
+    text-align: left;
+    transition: .2s;
+}
+
+.nav button:hover,
+.nav button.active {
+    color: white;
+    background: rgba(56,189,248,.1);
+}
+
+.status {
+    margin-top: 35px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(15,23,42,.55);
+}
+
+.status-title {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+}
+
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+.online {
+    color: var(--green);
+}
+
+/* MAIN */
+
+main {
+    padding: 25px;
+    max-width: 1500px;
+    width: 100%;
+    margin: auto;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.topbar h1 {
+    margin: 0;
+    font-size: 25px;
+}
+
+.topbar p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.top-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: white;
+    border-radius: 10px;
+}
+
+/* HERO */
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 430px;
+    border: 1px solid var(--border);
+    border-radius: 25px;
+    background:
+        linear-gradient(145deg, rgba(15,23,42,.92), rgba(8,15,31,.86));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+        rgba(56,189,248,.14),
+        rgba(139,92,246,.08) 40%,
+        transparent 70%);
+    animation: breathe 5s ease-in-out infinite;
+}
+
+@keyframes breathe {
+    0%,100% { transform: scale(.9); opacity: .7; }
+    50% { transform: scale(1.1); opacity: 1; }
+}
+
+.orb {
+    position: relative;
+    width: 145px;
+    height: 145px;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 35% 30%, #fff, #38bdf8 9%, #2563eb 30%, #4c1d95 65%, #111827);
+    box-shadow:
+        0 0 40px rgba(56,189,248,.4),
+        0 0 100px rgba(139,92,246,.25),
+        inset -20px -25px 50px rgba(0,0,0,.45);
+    display: grid;
+    place-items: center;
+    transition: .3s;
+}
+
+.orb.listening {
+    animation: pulse 1.3s infinite;
+}
+
+@keyframes pulse {
+    0%,100% {
+        transform: scale(1);
+        box-shadow: 0 0 40px rgba(56,189,248,.4),
+                    0 0 100px rgba(139,92,246,.25);
     }
-    
-    .glass-card {
-      background: rgba(30, 41, 59, 0.5);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 60px rgba(56,189,248,.7),
+                    0 0 140px rgba(139,92,246,.4);
     }
-    
-    .glass-card:hover {
-      background: rgba(30, 41, 59, 0.8);
-      border-color: rgba(99, 102, 241, 0.3);
-      transform: translateY(-2px) scale(1.005);
-      box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+.mic-symbol {
+    font-size: 42px;
+}
+
+.hero h2 {
+    margin: 25px 0 7px;
+    position: relative;
+}
+
+.hero p {
+    position: relative;
+    color: var(--muted);
+    max-width: 600px;
+}
+
+.voice-button {
+    position: relative;
+    margin-top: 18px;
+    border: 0;
+    border-radius: 999px;
+    padding: 13px 25px;
+    color: white;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--blue), var(--purple));
+    box-shadow: 0 10px 35px rgba(56,189,248,.18);
+}
+
+/* GRID */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.card {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    backdrop-filter: blur(15px);
+    border-radius: 18px;
+    padding: 18px;
+}
+
+.card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.card-title h3 {
+    margin: 0;
+    font-size: 15px;
+}
+
+.card-title span {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+/* COMMAND */
+
+.command-box {
+    display: flex;
+    gap: 8px;
+}
+
+.command-box input {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid var(--border);
+    background: rgba(2,6,23,.7);
+    color: white;
+    border-radius: 11px;
+    padding: 12px;
+    outline: none;
+}
+
+.command-box input:focus {
+    border-color: rgba(56,189,248,.5);
+}
+
+.send {
+    border: 0;
+    border-radius: 11px;
+    padding: 0 18px;
+    color: white;
+    background: var(--purple);
+}
+
+.result {
+    margin-top: 12px;
+    min-height: 60px;
+    padding: 12px;
+    border-radius: 11px;
+    background: rgba(2,6,23,.45);
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* CONNECTORS */
+
+.connectors {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+}
+
+.connector {
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel2);
+}
+
+.connector-icon {
+    font-size: 20px;
+}
+
+.connector-name {
+    margin-top: 7px;
+    font-size: 12px;
+}
+
+.connector-status {
+    color: var(--green);
+    font-size: 10px;
+    margin-top: 4px;
+}
+
+/* ACTIVITY */
+
+.activity {
+    display: grid;
+    gap: 9px;
+}
+
+.activity-item {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(2,6,23,.35);
+}
+
+.activity-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.activity-text {
+    font-size: 12px;
+}
+
+.activity-time {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+/* AUTOMATION */
+
+.automation {
+    margin-top: 18px;
+}
+
+.workflow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.node {
+    border: 1px solid var(--border);
+    background: rgba(15,23,42,.65);
+    border-radius: 11px;
+    padding: 11px 14px;
+    font-size: 12px;
+}
+
+.arrow {
+    color: var(--blue);
+}
+
+/* SECURITY */
+
+.security {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.security-item {
+    padding: 13px;
+    border-radius: 12px;
+    background: rgba(2,6,23,.35);
+}
+
+.security-item strong {
+    display: block;
+    font-size: 13px;
+}
+
+.security-item span {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+    .app {
+        grid-template-columns: 1fr;
     }
 
-    .shimmer-btn {
-      background: linear-gradient(90deg, #4f46e5 0%, #818cf8 50%, #4f46e5 100%);
-      background-size: 200% 100%;
-      animation: shimmer 3s infinite;
+    .sidebar {
+        display: none;
     }
 
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
-    ::-webkit-scrollbar-thumb { background: rgba(51, 65, 85, 0.5); border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.5); }
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
 
-    /* Drag and Drop animations */
-    .task-card.dragging {
-      opacity: 0.4;
-      transform: scale(0.98);
+    .security {
+        grid-template-columns: repeat(2, 1fr);
     }
-    
-    .drag-over {
-      background: rgba(99, 102, 241, 0.1) !important;
-      border-color: rgba(99, 102, 241, 0.4) !important;
+}
+
+@media (max-width: 600px) {
+    main {
+        padding: 14px;
     }
-  </style>
+
+    .connectors {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero {
+        min-height: 390px;
+    }
+
+    .orb {
+        width: 120px;
+        height: 120px;
+    }
+
+    .security {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans overflow-x-hidden selection:bg-indigo-500 selection:text-white">
 
-  <!-- Ambient Glow Backgrounds -->
-  <div class="fixed top-0 left-1/4 w-96 h-96 bg-indigo-600/15 rounded-full blur-[128px] pointer-events-none animation-pulse-slow"></div>
-  <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-purple-600/15 rounded-full blur-[128px] pointer-events-none animation-pulse-slow" style="animation-delay: 2s;"></div>
+<body>
 
-  <!-- Navigation Bar -->
-  <header class="border-b border-slate-800/80 glass-panel sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-3.5 flex flex-wrap justify-between items-center gap-4">
-      
-      <!-- Brand Logo -->
-      <div class="flex items-center space-x-3 group cursor-pointer" onclick="triggerConfetti()">
-        <div class="p-2.5 bg-indigo-600/20 text-indigo-400 rounded-xl border border-indigo-500/30 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-indigo-500/10">
-          <i data-lucide="zap" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-lg font-bold tracking-tight text-white group-hover:text-indigo-300 transition-colors">AutoTask AI</h1>
-            <span class="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">PRO</span>
-          </div>
-          <p class="text-[11px] text-slate-400">Autonomous Task & Workflow Hub</p>
-        </div>
-      </div>
+<div class="app">
 
-      <!-- Quick Metrics -->
-      <div class="hidden md:flex items-center space-x-6 text-xs text-slate-400 border-x border-slate-800/80 px-6 py-1">
-        <div class="flex items-center gap-2">
-          <div class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></div>
-          <span>Sync Status: <strong class="text-slate-200" id="sync-status-text">Active</strong></span>
-        </div>
-        <div>
-          Auto-Resolved Today: <strong class="text-indigo-400" id="resolved-count-metric">12</strong>
-        </div>
-      </div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
 
-      <!-- Top Actions -->
-      <div class="flex items-center space-x-3">
-        <!-- Sound Toggle -->
-        <button onclick="toggleSound()" id="sound-btn" title="Toggle Sound Feedback" class="p-2 bg-slate-900 border border-slate-800 rounded-lg text-slate-400 hover:text-slate-200 transition">
-          <i data-lucide="volume-2" class="w-4 h-4"></i>
-        </button>
-
-        <!-- Mode Toggle -->
-        <button id="toggle-sim-btn" onclick="toggleSimulationMode()" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-800 bg-slate-900/80 text-slate-300 hover:border-slate-700 transition flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-indigo-400" id="mode-dot"></span>
-          Mode: <span id="mode-text" class="text-indigo-400">Simulation</span>
-        </button>
-
-        <!-- Sync Button -->
-        <button id="sync-btn" onclick="syncAllTasks()" class="shimmer-btn px-4 py-2 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg shadow-indigo-600/25 active:scale-95 transition-transform">
-          <i data-lucide="refresh-cw" id="sync-icon" class="w-4 h-4"></i>
-          <span>Auto-Detect & Sync</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Container -->
-  <main class="max-w-7xl mx-auto px-6 py-8 flex-grow w-full space-y-8 z-10">
-
-    <!-- Credentials Panel (Live Mode) -->
-    <div id="credentials-panel" class="hidden glass-panel rounded-2xl p-6 border-amber-500/30 transition-all duration-300">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
-          <i data-lucide="key" class="w-4 h-4 text-amber-400"></i> OAuth Tokens Configuration
-        </h2>
-        <span class="text-xs text-slate-400">Tokens remain local in browser memory</span>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1.5">GitHub Personal Access Token</label>
-          <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition">
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1.5">Google Access Token (OAuth2)</label>
-          <input type="password" id="google-token" placeholder="ya29.a0xxxxxxxxxxxx" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition">
-        </div>
-      </div>
-    </div>
-
-    <!-- Overview Widgets Bar -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      
-      <!-- Widget 1: Efficiency Score -->
-      <div class="glass-panel rounded-2xl p-5 flex items-center justify-between">
-        <div class="space-y-1">
-          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Productivity Pulse</span>
-          <div class="text-2xl font-black text-white flex items-baseline gap-2">
-            <span>94%</span>
-            <span class="text-xs font-semibold text-emerald-400 flex items-center gap-0.5">
-              <i data-lucide="trending-up" class="w-3 h-3"></i> +12%
-            </span>
-          </div>
-          <p class="text-[11px] text-slate-400">4 tasks auto-structured by AI</p>
-        </div>
-        <div class="w-16 h-16">
-          <canvas id="pulseChart"></canvas>
-        </div>
-      </div>
-
-      <!-- Widget 2: Platform Status -->
-      <div class="glass-panel rounded-2xl p-5 flex items-center justify-between">
-        <div class="space-y-2 w-full">
-          <div class="flex justify-between items-center text-xs">
-            <span class="font-semibold text-slate-400 uppercase tracking-wider">Connected Engines</span>
-            <span class="text-indigo-400 font-bold">2/2 Online</span>
-          </div>
-          <div class="flex items-center gap-3 pt-1">
-            <div class="flex-1 flex items-center justify-between px-3 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-xs">
-              <span class="flex items-center gap-2 text-slate-300">
-                <i class="fa-brands fa-github text-white"></i> GitHub
-              </span>
-              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-            </div>
-            <div class="flex-1 flex items-center justify-between px-3 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-xs">
-              <span class="flex items-center gap-2 text-slate-300">
-                <i class="fa-solid fa-envelope text-rose-400"></i> Gmail
-              </span>
-              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Widget 3: Instant AI Smart Action -->
-      <div class="glass-panel rounded-2xl p-5 flex flex-col justify-between">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-semibold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> AI Auto-pilot
-          </span>
-          <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full border border-indigo-500/30">Ready</span>
-        </div>
-        <p class="text-xs text-slate-300 mb-3">Auto-generate PR summaries and reply drafts for all open items.</p>
-        <button onclick="runAIAutopilot()" class="w-full py-1.5 px-3 bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 rounded-xl text-xs font-bold text-indigo-200 transition flex items-center justify-center gap-2">
-          <i data-lucide="bot" class="w-3.5 h-3.5"></i> Batch Process Tasks
-        </button>
-      </div>
-
-    </div>
-
-    <!-- Main Kanban Drag-and-Drop Columns -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-      <!-- Column 1: Backlog / Detected -->
-      <section class="glass-panel rounded-2xl p-5 flex flex-col min-h-[500px] border-slate-800/80">
-        <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-800/80">
-          <div class="flex items-center space-x-2.5">
-            <div class="p-2 bg-indigo-500/10 text-indigo-400 rounded-xl border border-indigo-500/20">
-              <i data-lucide="inbox" class="w-4 h-4"></i>
-            </div>
+        <div class="logo">
+            <div class="logo-icon">✦</div>
             <div>
-              <h2 class="text-sm font-bold text-white uppercase tracking-wider">Detected Backlog</h2>
-              <p class="text-[11px] text-slate-400">Incoming from GitHub & Email</p>
+                <strong>OmniAI</strong>
+                <span>Universal Agent</span>
             </div>
-          </div>
-          <span id="backlog-count" class="bg-slate-800 text-indigo-300 text-xs px-2.5 py-0.5 rounded-full font-bold border border-slate-700">0</span>
         </div>
 
-        <div id="col-backlog" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'backlog')" class="kanban-col space-y-3 flex-grow transition-colors rounded-xl p-1">
-          <!-- Populated dynamically -->
-        </div>
-      </section>
+        <nav class="nav">
+            <button class="active">◉ Dashboard</button>
+            <button>◌ Voice Assistant</button>
+            <button>☎ Telephony</button>
+            <button>⚡ Automations</button>
+            <button>◎ AI Network</button>
+            <button>◈ Devices</button>
+            <button>◫ Applications</button>
+            <button>◍ Real-Time World</button>
+            <button>⚙ Settings</button>
+        </nav>
 
-      <!-- Column 2: AI Structuring / In Progress -->
-      <section class="glass-panel rounded-2xl p-5 flex flex-col min-h-[500px] border-slate-800/80">
-        <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-800/80">
-          <div class="flex items-center space-x-2.5">
-            <div class="p-2 bg-amber-500/10 text-amber-400 rounded-xl border border-amber-500/20">
-              <i data-lucide="cpu" class="w-4 h-4"></i>
+        <div class="status">
+            <div class="status-title">System status</div>
+
+            <div class="status-row">
+                <span>AI Core</span>
+                <span class="online">● Online</span>
             </div>
+
+            <div class="status-row">
+                <span>Voice</span>
+                <span class="online">● Ready</span>
+            </div>
+
+            <div class="status-row">
+                <span>Automation</span>
+                <span class="online">● Active</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main>
+
+        <div class="topbar">
             <div>
-              <h2 class="text-sm font-bold text-white uppercase tracking-wider">In Execution</h2>
-              <p class="text-[11px] text-slate-400">Active / Auto-drafting</p>
+                <h1>Universal AI Assistant</h1>
+                <p>Command your authorized digital and physical environment.</p>
             </div>
-          </div>
-          <span id="inprogress-count" class="bg-slate-800 text-amber-300 text-xs px-2.5 py-0.5 rounded-full font-bold border border-slate-700">0</span>
-        </div>
 
-        <div id="col-inprogress" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'inprogress')" class="kanban-col space-y-3 flex-grow transition-colors rounded-xl p-1">
-          <!-- Populated dynamically -->
-        </div>
-      </section>
-
-      <!-- Column 3: Completed / Automated -->
-      <section class="glass-panel rounded-2xl p-5 flex flex-col min-h-[500px] border-slate-800/80">
-        <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-800/80">
-          <div class="flex items-center space-x-2.5">
-            <div class="p-2 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20">
-              <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+            <div class="top-actions">
+                <button class="icon-btn" title="Notifications">🔔</button>
+                <button class="icon-btn" title="Security">🔐</button>
             </div>
-            <div>
-              <h2 class="text-sm font-bold text-white uppercase tracking-wider">Automated & Done</h2>
-              <p class="text-[11px] text-slate-400">Resolved or Dispatched</p>
+        </div>
+
+
+        <!-- VOICE HERO -->
+        <section class="hero">
+
+            <div class="orb" id="orb">
+                <div class="mic-symbol">🎙️</div>
             </div>
-          </div>
-          <span id="completed-count" class="bg-slate-800 text-emerald-300 text-xs px-2.5 py-0.5 rounded-full font-bold border border-slate-700">0</span>
-        </div>
 
-        <div id="col-completed" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'completed')" class="kanban-col space-y-3 flex-grow transition-colors rounded-xl p-1">
-          <!-- Populated dynamically -->
-        </div>
-      </section>
+            <h2 id="voiceStatus">Ready to listen</h2>
 
-    </div>
-  </main>
+            <p id="voiceText">
+                Say anything you want the assistant to do.
+            </p>
 
-  <!-- Interactive AI Drawer Modal -->
-  <div id="ai-drawer" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden opacity-0 transition-opacity duration-300 flex justify-end">
-    <div class="w-full max-w-lg bg-slate-900 border-l border-slate-800 h-full p-6 flex flex-col justify-between shadow-2xl transform translate-x-full transition-transform duration-300" id="ai-drawer-content">
-      <div>
-        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
-          <div class="flex items-center gap-2 text-indigo-400">
-            <i data-lucide="bot" class="w-5 h-5"></i>
-            <h3 class="font-bold text-white" id="drawer-title">AI Action Center</h3>
-          </div>
-          <button onclick="closeDrawer()" class="text-slate-400 hover:text-white p-1 rounded-lg">
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
-        </div>
+            <button class="voice-button" id="voiceButton">
+                Start Voice
+            </button>
 
-        <div class="py-6 space-y-4">
-          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2">
-            <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Source Analysis</span>
-            <p class="text-xs text-slate-300 leading-relaxed" id="drawer-description">Analyzing issue context and code changes...</p>
-          </div>
+        </section>
 
-          <div class="space-y-2">
-            <label class="text-xs font-semibold text-slate-400">AI Suggested Output</label>
-            <textarea id="drawer-output" rows="6" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-mono leading-relaxed" placeholder="Generating suggested response..."></textarea>
-          </div>
-        </div>
-      </div>
 
-      <div class="flex gap-3 pt-4 border-t border-slate-800">
-        <button onclick="closeDrawer()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition">
-          Cancel
-        </button>
-        <button onclick="executeAIDrawerAction()" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-indigo-600/30">
-          Approve & Dispatch
-        </button>
-      </div>
-    </div>
-  </div>
+        <section class="dashboard">
 
-  <!-- Audio Effects using Web Audio API -->
-  <script>
-    let soundEnabled = true;
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            <!-- COMMAND -->
+            <div class="card">
 
-    function playSound(type) {
-      if (!soundEnabled) return;
-      if (audioCtx.state === 'suspended') audioCtx.resume();
+                <div class="card-title">
+                    <h3>Command Center</h3>
+                    <span>Natural language</span>
+                </div>
 
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
+                <div class="command-box">
+                    <input
+                        id="commandInput"
+                        placeholder="Tell OmniAI what you want..."
+                    >
 
-      if (type === 'pop') {
-        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.08);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.08);
-      } else if (type === 'success') {
-        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.08); // E5
-        osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.16); // G5
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.3);
-      }
-    }
+                    <button class="send" id="sendButton">
+                        Execute
+                    </button>
+                </div>
 
-    function toggleSound() {
-      soundEnabled = !soundEnabled;
-      const btn = document.getElementById('sound-btn');
-      btn.innerHTML = soundEnabled 
-        ? `<i data-lucide="volume-2" class="w-4 h-4"></i>` 
-        : `<i data-lucide="volume-x" class="w-4 h-4 text-rose-400"></i>`;
-      lucide.createIcons();
-    }
-  </script>
+                <div class="result" id="result">
+                    Awaiting your command...
+                </div>
 
-  <!-- Application State & Interactive Logic -->
-  <script>
-    let isSimulation = true;
-    let activeDrawerTask = null;
+            </div>
 
-    let tasks = [
-      {
-        id: 'gh-101',
-        title: 'Fix memory leak in websocket message queue',
-        source: 'GitHub',
-        type: 'Issue #402',
-        url: 'https://github.com',
-        priority: 'High',
-        status: 'backlog',
-        time: '5 mins ago',
-        summary: 'Memory footprint scales exponentially when clients disconnect abruptly. Needs cleanup hook in connection handler.'
-      },
-      {
-        id: 'gh-102',
-        title: 'PR #189: Implement JWT rotation & refresh tokens',
-        source: 'GitHub',
-        type: 'Pull Request Review',
-        url: 'https://github.com',
-        priority: 'Normal',
-        status: 'inprogress',
-        time: '42 mins ago',
-        summary: 'Adds standard RFC OAuth refresh rotation to security middleware.'
-      },
-      {
-        id: 'gmail-201',
-        title: 'Client Escalation: API response latency > 800ms',
-        source: 'Email',
-        type: 'From: VP Engineering',
-        url: 'https://mail.google.com',
-        priority: 'High',
-        status: 'backlog',
-        time: '12 mins ago',
-        summary: 'Enterprise client reporting slow dashboard load times in EU region. Requesting immediate patch.'
-      },
-      {
-        id: 'gmail-202',
-        title: 'Weekly Sprint Retrospective & Objectives Summary',
-        source: 'Email',
-        type: 'From: Product Lead',
-        url: 'https://mail.google.com',
-        priority: 'Normal',
-        status: 'completed',
-        time: '2 hours ago',
-        summary: 'Automated AI response sent: Sprint goals completed on schedule.'
-      }
-    ];
 
-    // Toggle Simulation vs Live API
-    function toggleSimulationMode() {
-      isSimulation = !isSimulation;
-      const modeText = document.getElementById('mode-text');
-      const modeDot = document.getElementById('mode-dot');
-      const credentialsPanel = document.getElementById('credentials-panel');
+            <!-- LIVE INFORMATION -->
+            <div class="card">
 
-      if (isSimulation) {
-        modeText.textContent = 'Simulation';
-        modeText.className = 'text-indigo-400';
-        modeDot.className = 'w-2 h-2 rounded-full bg-indigo-400';
-        credentialsPanel.classList.add('hidden');
-      } else {
-        modeText.textContent = 'Live API';
-        modeText.className = 'text-amber-400';
-        modeDot.className = 'w-2 h-2 rounded-full bg-amber-400';
-        credentialsPanel.classList.remove('hidden');
-      }
-      playSound('pop');
-    }
+                <div class="card-title">
+                    <h3>Real-Time Intelligence</h3>
+                    <span id="liveStatus">LIVE</span>
+                </div>
 
-    // Task Sync Logic
-    async function syncAllTasks() {
-      const syncIcon = document.getElementById('sync-icon');
-      const syncText = document.getElementById('sync-status-text');
-      
-      syncIcon.classList.add('animate-spin');
-      syncText.textContent = "Scanning...";
-      playSound('pop');
+                <div class="activity">
 
-      if (!isSimulation) {
-        const ghToken = document.getElementById('gh-token').value.trim();
-        const googleToken = document.getElementById('google-token').value.trim();
+                    <div class="activity-item">
+                        <div class="activity-dot"></div>
+                        <div>
+                            <div class="activity-text">
+                                Real-time information layer ready
+                            </div>
+                            <div class="activity-time">
+                                Waiting for data connection
+                            </div>
+                        </div>
+                    </div>
 
-        if (ghToken || googleToken) {
-          const liveTasks = await fetchLiveTasks(ghToken, googleToken);
-          if (liveTasks.length > 0) tasks = liveTasks;
+                    <div class="activity-item">
+                        <div class="activity-dot"></div>
+                        <div>
+                            <div class="activity-text">
+                                Source verification enabled
+                            </div>
+                            <div class="activity-time">
+                                Anti-hallucination policy active
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-dot"></div>
+                        <div>
+                            <div class="activity-text">
+                                Action verification enabled
+                            </div>
+                            <div class="activity-time">
+                                Results will be checked
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONNECTORS -->
+        <section class="card" style="margin-top:18px">
+
+            <div class="card-title">
+                <h3>Connected Capabilities</h3>
+                <span>Authorized connections only</span>
+            </div>
+
+            <div class="connectors">
+
+                <div class="connector">
+                    <div class="connector-icon">🌐</div>
+                    <div class="connector-name">Internet</div>
+                    <div class="connector-status">Ready</div>
+                </div>
+
+                <div class="connector">
+                    <div class="connector-icon">☎️</div>
+                    <div class="connector-name">Telephony</div>
+                    <div class="connector-status">Ready</div>
+                </div>
+
+                <div class="connector">
+                    <div class="connector-icon">📧</div>
+                    <div class="connector-name">Email</div>
+                    <div class="connector-status">Ready</div>
+                </div>
+
+                <div class="connector">
+                    <div class="connector-icon">📅</div>
+                    <div class="connector-name">Calendar</div>
+                    <div class="connector-status">Ready</div>
+                </div>
+
+                <div class="connector">
+                    <div class="connector-icon">🏠</div>
+                    <div class="connector-name">Smart Home</div>
+                    <div class="connector-status">Ready</div>
+                </div>
+
+                <div class="connector">
+                    <div class="connector-icon">🤖</div>
+                    <div class="connector-name">AI Network</div>
+                    <div class="connector-status">Ready</div>
+                </div>
+
+                <div class="connector">
+                    <div class="connector-icon">🗄️</div>
+                    <div class="connector-name">Databases</div>
+                    <div class="connector-status">Ready</div>
+                </div>
+
+                <div class="connector">
+                    <div class="connector-icon">⚙️</div>
+                    <div class="connector-name">APIs</div>
+                    <div class="connector-status">Ready</div>
+                </div>
+
+                <div class="connector">
+                    <div class="connector-icon">📡</div>
+                    <div class="connector-name">IoT Devices</div>
+                    <div class="connector-status">Ready</div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- AUTOMATION -->
+        <section class="card automation">
+
+            <div class="card-title">
+                <h3>Automation Engine</h3>
+                <span>Event → Reason → Action → Verify</span>
+            </div>
+
+            <div class="workflow">
+
+                <div class="node">📥 Event detected</div>
+
+                <div class="arrow">→</div>
+
+                <div class="node">🧠 AI understands</div>
+
+                <div class="arrow">→</div>
+
+                <div class="node">📋 Plan created</div>
+
+                <div class="arrow">→</div>
+
+                <div class="node">⚡ Action executed</div>
+
+                <div class="arrow">→</div>
+
+                <div class="node">✓ Result verified</div>
+
+            </div>
+
+        </section>
+
+
+        <!-- SECURITY -->
+        <section class="card" style="margin-top:18px">
+
+            <div class="card-title">
+                <h3>Trust & Verification</h3>
+                <span>Zero-guessing policy</span>
+            </div>
+
+            <div class="security">
+
+                <div class="security-item">
+                    <strong>✓ Source Verification</strong>
+                    <span>Check information before answering</span>
+                </div>
+
+                <div class="security-item">
+                    <strong>✓ Cross Checking</strong>
+                    <span>Compare important information</span>
+                </div>
+
+                <div class="security-item">
+                    <strong>✓ Action Verification</strong>
+                    <span>Confirm actions actually succeeded</span>
+                </div>
+
+                <div class="security-item">
+                    <strong>🔐 Permission Control</strong>
+                    <span>Authorized access only</span>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+/*
+==========================================================
+ OMNI AI FRONTEND
+==========================================================
+
+This frontend intentionally does NOT contain API keys.
+
+Connect these functions to your backend:
+
+POST /api/agent
+POST /api/voice/session
+POST /api/telephony/call
+GET  /api/realtime
+GET  /api/connectors
+POST /api/automations
+==========================================================
+*/
+
+
+const orb = document.getElementById("orb");
+const voiceButton = document.getElementById("voiceButton");
+const voiceStatus = document.getElementById("voiceStatus");
+const voiceText = document.getElementById("voiceText");
+
+const commandInput = document.getElementById("commandInput");
+const sendButton = document.getElementById("sendButton");
+const result = document.getElementById("result");
+
+let listening = false;
+let recognition = null;
+
+
+/* -----------------------------------------------
+   SPEECH RECOGNITION
+------------------------------------------------ */
+
+if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    recognition = new SpeechRecognition();
+
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+
+    recognition.onstart = () => {
+
+        listening = true;
+
+        orb.classList.add("listening");
+
+        voiceStatus.textContent = "Listening...";
+
+        voiceText.textContent =
+            "Speak naturally. I'm listening.";
+
+        voiceButton.textContent = "Stop Listening";
+    };
+
+
+    recognition.onresult = event => {
+
+        let transcript = "";
+
+        for (
+            let i = event.resultIndex;
+            i < event.results.length;
+            i++
+        ) {
+
+            transcript +=
+                event.results[i][0].transcript;
         }
-      } else {
-        await new Promise(r => setTimeout(r, 600));
-      }
 
-      syncIcon.classList.remove('animate-spin');
-      syncText.textContent = "Active";
-      renderKanban();
-      playSound('success');
-    }
+        commandInput.value = transcript;
+    };
 
-    // Live API Fetcher
-    async function fetchLiveTasks(ghToken, googleToken) {
-      let fetched = [];
-      if (ghToken) {
-        try {
-          const res = await fetch('https://api.github.com/user/issues?state=open&filter=assigned', {
-            headers: { Authorization: `Bearer ${ghToken}` }
-          });
-          if (res.ok) {
-            const data = await res.json();
-            fetched.push(...data.map(i => ({
-              id: `gh-${i.id}`,
-              title: i.title,
-              source: 'GitHub',
-              type: i.pull_request ? 'Pull Request' : 'Issue',
-              url: i.html_url,
-              priority: 'High',
-              status: 'backlog',
-              time: 'Just now',
-              summary: i.body || 'No description provided.'
-            })));
-          }
-        } catch (e) { console.error(e); }
-      }
-      return fetched;
-    }
 
-    // Render Kanban Cards
-    function renderKanban() {
-      const colBacklog = document.getElementById('col-backlog');
-      const colInprogress = document.getElementById('col-inprogress');
-      const colCompleted = document.getElementById('col-completed');
+    recognition.onend = () => {
 
-      const backlogTasks = tasks.filter(t => t.status === 'backlog');
-      const inprogressTasks = tasks.filter(t => t.status === 'inprogress');
-      const completedTasks = tasks.filter(t => t.status === 'completed');
+        listening = false;
 
-      document.getElementById('backlog-count').textContent = backlogTasks.length;
-      document.getElementById('inprogress-count').textContent = inprogressTasks.length;
-      document.getElementById('completed-count').textContent = completedTasks.length;
+        orb.classList.remove("listening");
 
-      colBacklog.innerHTML = backlogTasks.map(t => createCardHTML(t)).join('');
-      colInprogress.innerHTML = inprogressTasks.map(t => createCardHTML(t)).join('');
-      colCompleted.innerHTML = completedTasks.map(t => createCardHTML(t)).join('');
+        voiceStatus.textContent = "Processing...";
 
-      lucide.createIcons();
-    }
+        voiceButton.textContent = "Start Voice";
 
-    function createCardHTML(task) {
-      const isGH = task.source === 'GitHub';
-      const iconClass = isGH ? 'fa-brands fa-github text-white' : 'fa-solid fa-envelope text-rose-400';
-      const priorityBadge = task.priority === 'High' 
-        ? `<span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">Urgent</span>`
-        : `<span class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">Standard</span>`;
+        const command = commandInput.value.trim();
 
-      return `
-        <div 
-          id="${task.id}" 
-          draggable="true" 
-          ondragstart="handleDragStart(event, '${task.id}')"
-          ondragend="handleDragEnd(event)"
-          class="task-card glass-card p-4 rounded-xl cursor-grab active:cursor-grabbing space-y-3"
-        >
-          <div class="flex items-center justify-between gap-2">
-            <span class="text-xs font-semibold text-indigo-300 flex items-center gap-1.5 truncate">
-              <i class="${iconClass}"></i> ${task.type}
-            </span>
-            ${priorityBadge}
-          </div>
+        if (command) {
 
-          <h3 class="text-xs font-bold text-white leading-snug">${task.title}</h3>
+            executeCommand(command);
 
-          <p class="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">${task.summary}</p>
-
-          <div class="flex items-center justify-between pt-2 border-t border-slate-800/80 text-[11px]">
-            <span class="text-slate-500">${task.time}</span>
-            <div class="flex items-center space-x-2">
-              <button onclick="openAIDrawer('${task.id}')" class="text-indigo-400 hover:text-indigo-300 font-semibold flex items-center gap-1 bg-indigo-500/10 hover:bg-indigo-500/20 px-2 py-1 rounded-lg border border-indigo-500/20 transition">
-                <i data-lucide="bot" class="w-3 h-3"></i> AI Assist
-              </button>
-              <a href="${task.url}" target="_blank" class="text-slate-400 hover:text-white p-1">
-                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // Drag and Drop Logic
-    function handleDragStart(e, taskId) {
-      e.dataTransfer.setData('text/plain', taskId);
-      e.target.classList.add('dragging');
-      playSound('pop');
-    }
-
-    function handleDragEnd(e) {
-      e.target.classList.remove('dragging');
-    }
-
-    function handleDragOver(e) {
-      e.preventDefault();
-      e.currentTarget.classList.add('drag-over');
-    }
-
-    function handleDragLeave(e) {
-      e.currentTarget.classList.remove('drag-over');
-    }
-
-    function handleDrop(e, targetStatus) {
-      e.preventDefault();
-      e.currentTarget.classList.remove('drag-over');
-      const taskId = e.dataTransfer.getData('text/plain');
-      const task = tasks.find(t => t.id === taskId);
-      
-      if (task && task.status !== targetStatus) {
-        task.status = targetStatus;
-        renderKanban();
-        playSound('success');
-
-        if (targetStatus === 'completed') {
-          triggerConfetti();
-        }
-      }
-    }
-
-    // AI Drawer Actions
-    function openAIDrawer(taskId) {
-      activeDrawerTask = tasks.find(t => t.id === taskId);
-      if (!activeDrawerTask) return;
-
-      const drawer = document.getElementById('ai-drawer');
-      const content = document.getElementById('ai-drawer-content');
-      
-      document.getElementById('drawer-title').textContent = `AI Assist: ${activeDrawerTask.title}`;
-      document.getElementById('drawer-description').textContent = activeDrawerTask.summary;
-      
-      const outputArea = document.getElementById('drawer-output');
-      outputArea.value = "Generating context-aware draft...";
-
-      drawer.classList.remove('hidden');
-      setTimeout(() => {
-        drawer.classList.remove('opacity-0');
-        content.classList.remove('translate-x-full');
-      }, 10);
-
-      playSound('pop');
-
-      // AI Draft Simulation
-      setTimeout(() => {
-        if (activeDrawerTask.source === 'GitHub') {
-          outputArea.value = `## Proposed AI Resolution\n- Identified root cause in event listener.\n- Applied automated patch branch: fix/${activeDrawerTask.id}\n- Unit tests pass with 100% coverage. Ready for merge.`;
         } else {
-          outputArea.value = `Hello Sarah,\n\nThanks for flagging the API latency issue. I have initiated our automated diagnostic suite and scaled up the EU server cluster. Latency has normalized back to 120ms.\n\nBest,\nAutomated Workflow Engine`;
+
+            voiceStatus.textContent = "Ready to listen";
+
+            voiceText.textContent =
+                "Say anything you want the assistant to do.";
         }
-      }, 500);
+    };
+
+
+    recognition.onerror = event => {
+
+        console.error("Speech error:", event.error);
+
+        listening = false;
+
+        orb.classList.remove("listening");
+
+        voiceStatus.textContent = "Voice error";
+
+        voiceText.textContent =
+            "Please try again.";
+    };
+
+}
+
+
+/* -----------------------------------------------
+   VOICE BUTTON
+------------------------------------------------ */
+
+voiceButton.addEventListener("click", () => {
+
+    if (!recognition) {
+
+        alert(
+            "Speech recognition is not supported by this browser."
+        );
+
+        return;
     }
 
-    function closeDrawer() {
-      const drawer = document.getElementById('ai-drawer');
-      const content = document.getElementById('ai-drawer-content');
-      
-      content.classList.add('translate-x-full');
-      drawer.classList.add('opacity-0');
-      setTimeout(() => drawer.classList.add('hidden'), 300);
-      playSound('pop');
+    if (listening) {
+
+        recognition.stop();
+
+    } else {
+
+        commandInput.value = "";
+
+        recognition.start();
+
     }
 
-    function executeAIDrawerAction() {
-      if (activeDrawerTask) {
-        activeDrawerTask.status = 'completed';
-        renderKanban();
-        closeDrawer();
-        triggerConfetti();
-        playSound('success');
-      }
+});
+
+
+/* -----------------------------------------------
+   COMMAND EXECUTION
+------------------------------------------------ */
+
+sendButton.addEventListener("click", () => {
+
+    const command = commandInput.value.trim();
+
+    if (!command) {
+
+        result.textContent =
+            "Please enter a command.";
+
+        return;
     }
 
-    function runAIAutopilot() {
-      tasks.forEach(t => {
-        if (t.status === 'backlog') t.status = 'inprogress';
-      });
-      renderKanban();
-      playSound('success');
+    executeCommand(command);
+
+});
+
+
+commandInput.addEventListener("keydown", event => {
+
+    if (event.key === "Enter") {
+
+        sendButton.click();
+
     }
 
-    function triggerConfetti() {
-      confetti({
-        particleCount: 60,
-        spread: 70,
-        origin: { y: 0.7 },
-        colors: ['#6366f1', '#818cf8', '#34d399']
-      });
-    }
+});
 
-    // Initialize Pulse Chart
-    function initChart() {
-      const ctx = document.getElementById('pulseChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          datasets: [{
-            data: [94, 6],
-            backgroundColor: ['#6366f1', 'rgba(255, 255, 255, 0.05)'],
-            borderWidth: 0
-          }]
+
+async function executeCommand(command) {
+
+    result.innerHTML =
+        `<strong>Command received:</strong><br>
+         ${escapeHTML(command)}
+         <br><br>
+         🧠 AI is planning the required actions...`;
+
+    voiceStatus.textContent = "Thinking...";
+    voiceText.textContent = command;
+
+    /*
+    --------------------------------------------------
+    REAL BACKEND CONNECTION
+    --------------------------------------------------
+
+    Uncomment and connect to your server:
+
+    const response = await fetch("/api/agent", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
         },
-        options: {
-          cutout: '80%',
-          plugins: { tooltip: { enabled: false }, legend: { display: false } },
-          responsive: true,
-          maintainAspectRatio: false
-        }
-      });
+        body: JSON.stringify({
+            command: command
+        })
+    });
+
+    const data = await response.json();
+
+    result.textContent = data.message;
+
+    --------------------------------------------------
+    */
+
+    // Demo response
+
+    setTimeout(() => {
+
+        result.innerHTML =
+            `✓ Request understood.<br><br>
+             <strong>Requested:</strong>
+             ${escapeHTML(command)}
+             <br><br>
+             <span style="color:#94a3b8">
+             Backend AI orchestration is required
+             to execute this command.
+             </span>`;
+
+        voiceStatus.textContent = "Ready";
+
+        voiceText.textContent =
+            "Command processed by the interface.";
+
+    }, 900);
+
+}
+
+
+/* -----------------------------------------------
+   TEXT TO SPEECH
+------------------------------------------------ */
+
+function speak(text) {
+
+    if (!("speechSynthesis" in window)) {
+
+        return;
     }
 
-    // Initialization
-    window.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-      initChart();
-      renderKanban();
-    });
-  </script>
+    window.speechSynthesis.cancel();
+
+    const utterance =
+        new SpeechSynthesisUtterance(text);
+
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+
+    window.speechSynthesis.speak(utterance);
+}
+
+
+/* -----------------------------------------------
+   SECURITY
+------------------------------------------------ */
+
+function escapeHTML(value) {
+
+    return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+/* -----------------------------------------------
+   LIVE STATUS DEMO
+------------------------------------------------ */
+
+setInterval(() => {
+
+    const live =
+        document.getElementById("liveStatus");
+
+    live.textContent =
+        "LIVE • " +
+        new Date().toLocaleTimeString();
+
+}, 1000);
+
+</script>
+
 </body>
 </html>
