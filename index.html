@@ -1,754 +1,1896 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AURA-X | Autonomous AI Presenter & Command Hub</title>
-  <style>
-    :root {
-      --bg-dark: #05070f;
-      --panel-bg: rgba(13, 17, 28, 0.75);
-      --accent-cyan: #00f3ff;
-      --accent-magenta: #ff0055;
-      --accent-purple: #8a2be2;
-      --text-main: #f0f4f8;
-      --text-muted: #64748b;
-      --border-glow: rgba(0, 243, 255, 0.3);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ÆTHER — Infinite Voice Command AI</title>
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    }
+<style>
+:root{
+  --bg:#03040b;
+  --panel:rgba(12,16,32,.72);
+  --panel2:rgba(20,26,49,.62);
+  --line:rgba(255,255,255,.10);
+  --text:#f5f7ff;
+  --muted:#8d96b8;
+  --cyan:#58f6ff;
+  --violet:#9b72ff;
+  --pink:#ff4fd8;
+  --green:#52ffb2;
+  --yellow:#ffe66d;
+  --danger:#ff5d7a;
+  --shadow:0 25px 100px rgba(0,0,0,.55);
+}
 
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(138, 43, 226, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.15) 0%, transparent 40%);
-    }
+*{box-sizing:border-box}
 
-    /* Header */
-    header {
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
-      z-index: 10;
-    }
+html,body{
+  margin:0;
+  width:100%;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 800;
-      font-size: 1.25rem;
-      letter-spacing: 2px;
-      background: linear-gradient(45deg, var(--accent-cyan), var(--accent-magenta));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+body{
+  overflow-x:hidden;
+  background:
+    radial-gradient(circle at 15% 15%,rgba(88,246,255,.12),transparent 28%),
+    radial-gradient(circle at 85% 10%,rgba(155,114,255,.14),transparent 28%),
+    radial-gradient(circle at 50% 100%,rgba(255,79,216,.10),transparent 30%),
+    #03040b;
+}
 
-    .status-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      padding: 0.35rem 0.8rem;
-      border-radius: 20px;
-      background: rgba(0, 243, 255, 0.1);
-      border: 1px solid var(--border-glow);
-    }
+/* BACKGROUND */
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent-cyan);
-      box-shadow: 0 0 10px var(--accent-cyan);
-      animation: pulse 2s infinite;
-    }
+#space{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+}
 
-    /* Main Grid Layout */
-    main {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 1.5rem;
-      padding: 1.5rem;
-      height: calc(100vh - 70px);
-    }
+.grid{
+  position:absolute;
+  inset:-50%;
+  opacity:.20;
+  background-image:
+    linear-gradient(rgba(88,246,255,.10) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(88,246,255,.10) 1px,transparent 1px);
+  background-size:55px 55px;
+  transform:perspective(700px) rotateX(62deg) translateY(30%);
+  animation:gridMove 18s linear infinite;
+}
 
-    /* Presenter Viewport */
-    .viewport-container {
-      position: relative;
-      background: var(--panel-bg);
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    }
+@keyframes gridMove{
+  to{transform:perspective(700px) rotateX(62deg) translateY(34%)}
+}
 
-    #avatarCanvas {
-      width: 100%;
-      height: 100%;
-      max-width: 800px;
-      max-height: 800px;
-      object-fit: contain;
-    }
+.orb{
+  position:absolute;
+  width:35vw;
+  height:35vw;
+  border-radius:50%;
+  filter:blur(90px);
+  opacity:.16;
+  animation:float 12s ease-in-out infinite alternate;
+}
 
-    .overlay-controls {
-      position: absolute;
-      bottom: 2rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      background: rgba(5, 7, 15, 0.8);
-      padding: 0.75rem 1.5rem;
-      border-radius: 40px;
-      border: 1px solid var(--border-glow);
-      backdrop-filter: blur(10px);
-    }
+.o1{background:var(--cyan);left:-15vw;top:10vh}
+.o2{background:var(--violet);right:-15vw;top:35vh;animation-delay:-4s}
+.o3{background:var(--pink);left:35vw;bottom:-25vw;animation-delay:-8s}
 
-    .btn-mic {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      border: none;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-      color: white;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
-      transition: all 0.3s ease;
-    }
+@keyframes float{
+  to{transform:translate(4vw,-5vh) scale(1.12)}
+}
 
-    .btn-mic:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 30px rgba(0, 243, 255, 0.7);
-    }
+/* APP */
 
-    .btn-mic.listening {
-      background: linear-gradient(135deg, var(--accent-magenta), #ff5500);
-      animation: mic-pulse 1.2s infinite;
-    }
+.app{
+  position:relative;
+  z-index:1;
+  min-height:100vh;
+  padding:18px;
+}
 
-    /* Control Panel Sidebar */
-    .sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
+.shell{
+  width:min(1700px,100%);
+  margin:auto;
+  border:1px solid var(--line);
+  border-radius:30px;
+  overflow:hidden;
+  background:rgba(3,5,14,.68);
+  backdrop-filter:blur(28px);
+  box-shadow:var(--shadow);
+}
 
-    .panel {
-      background: var(--panel-bg);
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 1.25rem;
-      backdrop-filter: blur(12px);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
+/* HEADER */
 
-    .panel-title {
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+header{
+  height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+  border-bottom:1px solid var(--line);
+  background:rgba(255,255,255,.025);
+}
 
-    /* Command Log */
-    .log-container {
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      max-height: 250px;
-      padding-right: 0.5rem;
-    }
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:900;
+  letter-spacing:.18em;
+}
 
-    .log-entry {
-      font-size: 0.85rem;
-      padding: 0.6rem 0.8rem;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.03);
-      border-left: 3px solid var(--accent-cyan);
-    }
+.logo{
+  width:38px;
+  height:38px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  color:#000;
+  font-size:18px;
+  background:conic-gradient(from 180deg,var(--cyan),var(--violet),var(--pink),var(--cyan));
+  box-shadow:0 0 35px rgba(88,246,255,.35);
+}
 
-    .log-entry.system { border-left-color: var(--accent-purple); }
-    .log-entry.user { border-left-color: var(--accent-cyan); }
-    .log-entry.action { border-left-color: var(--accent-magenta); }
+.brand small{
+  display:block;
+  color:var(--muted);
+  font-size:9px;
+  letter-spacing:.3em;
+  margin-top:2px;
+}
 
-    /* Controls Form */
-    select, input, button {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--text-main);
-      padding: 0.6rem 0.8rem;
-      border-radius: 8px;
-      outline: none;
-      font-size: 0.9rem;
-    }
+.headerRight{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 
-    select option {
-      background: var(--bg-dark);
-      color: var(--text-main);
-    }
+.status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#b8ffd9;
+  font-size:12px;
+  padding:9px 13px;
+  border:1px solid rgba(82,255,178,.18);
+  border-radius:999px;
+  background:rgba(82,255,178,.06);
+}
 
-    .input-group {
-      display: flex;
-      gap: 0.5rem;
-    }
+.dot{
+  width:7px;
+  height:7px;
+  background:var(--green);
+  border-radius:50%;
+  box-shadow:0 0 14px var(--green);
+}
 
-    .input-group input {
-      flex: 1;
-    }
+.iconBtn,.btn{
+  border:1px solid var(--line);
+  color:var(--text);
+  background:rgba(255,255,255,.055);
+  cursor:pointer;
+  transition:.2s;
+}
 
-    .btn-action {
-      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
+.iconBtn{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+}
 
-    .btn-action:hover {
-      opacity: 0.9;
-    }
+.iconBtn:hover,.btn:hover{
+  border-color:rgba(88,246,255,.45);
+  transform:translateY(-1px);
+  box-shadow:0 0 25px rgba(88,246,255,.10);
+}
 
-    /* Animations */
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
+/* MAIN */
 
-    @keyframes mic-pulse {
-      0% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.7); }
-      70% { box-shadow: 0 0 0 20px rgba(255, 0, 85, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0); }
-    }
+.main{
+  display:grid;
+  grid-template-columns:1.35fr .65fr;
+  min-height:760px;
+}
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
-  </style>
+.left{
+  border-right:1px solid var(--line);
+  padding:20px;
+}
+
+.right{
+  padding:20px;
+}
+
+/* PRESENTER */
+
+.presenter{
+  position:relative;
+  min-height:575px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:26px;
+  background:
+    radial-gradient(circle at 50% 30%,rgba(155,114,255,.20),transparent 30%),
+    linear-gradient(145deg,rgba(17,21,44,.9),rgba(4,7,18,.95));
+}
+
+.presenter:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(transparent 95%,rgba(88,246,255,.06) 96%),
+    linear-gradient(90deg,transparent 95%,rgba(88,246,255,.04) 96%);
+  background-size:100% 8px,8px 100%;
+  pointer-events:none;
+  opacity:.45;
+}
+
+.presenterTop{
+  position:absolute;
+  left:20px;
+  right:20px;
+  top:18px;
+  display:flex;
+  justify-content:space-between;
+  z-index:5;
+}
+
+.badge{
+  padding:8px 11px;
+  border-radius:999px;
+  background:rgba(0,0,0,.3);
+  border:1px solid var(--line);
+  color:#bfc8ea;
+  font-size:10px;
+  letter-spacing:.12em;
+}
+
+.presenterStage{
+  position:absolute;
+  inset:65px 0 0;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+}
+
+/* DIGITAL HUMAN */
+
+.avatar{
+  position:relative;
+  width:min(440px,75vw);
+  height:500px;
+  animation:bodyFloat 5s ease-in-out infinite;
+  transform-origin:50% 100%;
+}
+
+@keyframes bodyFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-7px)}
+}
+
+.halo{
+  position:absolute;
+  width:360px;
+  height:360px;
+  left:50%;
+  top:50px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(88,246,255,.16),transparent 63%);
+  box-shadow:0 0 80px rgba(155,114,255,.10);
+}
+
+/* hair */
+
+.hair{
+  position:absolute;
+  z-index:4;
+  width:230px;
+  height:260px;
+  left:50%;
+  top:20px;
+  transform:translateX(-50%);
+  border-radius:48% 48% 38% 38%;
+  background:
+    radial-gradient(circle at 30% 20%,#72618e,#161321 55%,#07080f 90%);
+  box-shadow:0 20px 70px rgba(0,0,0,.7);
+}
+
+.hair:after{
+  content:"";
+  position:absolute;
+  width:45px;
+  height:180px;
+  left:12px;
+  top:60px;
+  border-radius:40px;
+  background:linear-gradient(90deg,#20182b,#09090e);
+  transform:rotate(8deg);
+}
+
+/* neck */
+
+.neck{
+  position:absolute;
+  width:62px;
+  height:90px;
+  left:50%;
+  top:295px;
+  transform:translateX(-50%);
+  background:linear-gradient(90deg,#8b4e45,#d58b79,#9d5c51);
+  border-radius:20px;
+  z-index:2;
+}
+
+/* face */
+
+.face{
+  position:absolute;
+  z-index:3;
+  width:190px;
+  height:245px;
+  left:50%;
+  top:62px;
+  transform:translateX(-50%);
+  border-radius:48% 48% 46% 46%;
+  background:
+    radial-gradient(circle at 35% 35%,rgba(255,255,255,.18),transparent 8%),
+    linear-gradient(115deg,#9d5b50,#e1a08c 48%,#a85f53);
+  box-shadow:inset -20px -10px 45px rgba(76,28,32,.28),
+             0 20px 50px rgba(0,0,0,.35);
+  transform-origin:50% 75%;
+  transition:transform .5s ease;
+}
+
+.hairline{
+  position:absolute;
+  left:0;
+  top:-3px;
+  width:100%;
+  height:78px;
+  background:#17131e;
+  border-radius:50% 50% 42% 35%;
+  clip-path:polygon(0 0,100% 0,93% 48%,78% 38%,67% 53%,50% 32%,35% 52%,20% 40%,7% 60%);
+}
+
+/* ears */
+
+.ear{
+  position:absolute;
+  width:27px;
+  height:45px;
+  top:112px;
+  background:#b86f60;
+  border-radius:50%;
+}
+
+.ear.leftEar{left:-18px}
+.ear.rightEar{right:-18px}
+
+/* eyes */
+
+.eye{
+  position:absolute;
+  top:104px;
+  width:53px;
+  height:29px;
+}
+
+.eyeL{left:31px}
+.eyeR{right:31px}
+
+.eyeSocket{
+  width:100%;
+  height:100%;
+  background:#f5f4ef;
+  border-radius:50%;
+  overflow:hidden;
+  border:2px solid rgba(90,38,42,.35);
+  transition:height .09s;
+}
+
+.pupil{
+  position:absolute;
+  width:13px;
+  height:13px;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:#261c2d;
+  box-shadow:0 0 0 5px rgba(90,54,55,.2);
+  transition:.35s;
+}
+
+.brow{
+  position:absolute;
+  top:-11px;
+  width:48px;
+  height:7px;
+  border-radius:20px;
+  background:#442c34;
+}
+
+.eyeL .brow{left:1px;transform:rotate(4deg)}
+.eyeR .brow{right:1px;transform:rotate(-4deg)}
+
+/* nose */
+
+.nose{
+  position:absolute;
+  top:123px;
+  left:50%;
+  width:20px;
+  height:55px;
+  transform:translateX(-50%);
+  border-right:2px solid rgba(116,57,52,.35);
+  border-bottom:2px solid rgba(116,57,52,.35);
+  border-radius:0 0 18px 0;
+}
+
+/* mouth */
+
+.mouth{
+  position:absolute;
+  left:50%;
+  top:190px;
+  width:65px;
+  height:15px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:#5c1c29;
+  border:3px solid #722538;
+  overflow:hidden;
+  transition:
+    height .06s linear,
+    width .08s linear,
+    transform .08s linear;
+}
+
+.teeth{
+  position:absolute;
+  left:5px;
+  right:5px;
+  top:-2px;
+  height:7px;
+  border-radius:0 0 8px 8px;
+  background:#fff5ef;
+  opacity:0;
+}
+
+.lip{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-4px;
+  height:7px;
+  background:#8d3145;
+  border-radius:50%;
+}
+
+/* body */
+
+.body{
+  position:absolute;
+  z-index:1;
+  left:50%;
+  top:320px;
+  transform:translateX(-50%);
+  width:310px;
+  height:260px;
+  border-radius:48% 48% 0 0;
+  background:
+    linear-gradient(135deg,#111528,#252849 50%,#0a0d18);
+  box-shadow:inset 0 15px 40px rgba(255,255,255,.06);
+}
+
+.shoulderGlow{
+  position:absolute;
+  left:50%;
+  top:0;
+  transform:translateX(-50%);
+  width:240px;
+  height:50px;
+  background:linear-gradient(90deg,transparent,var(--violet),transparent);
+  opacity:.25;
+  filter:blur(12px);
+}
+
+.arm{
+  position:absolute;
+  width:80px;
+  height:220px;
+  top:330px;
+  z-index:0;
+  background:linear-gradient(135deg,#111528,#252849);
+  border-radius:50px;
+  transform-origin:top center;
+  transition:transform .6s cubic-bezier(.2,.8,.2,1);
+}
+
+.armL{left:54px;transform:rotate(14deg)}
+.armR{right:54px;transform:rotate(-14deg)}
+
+.avatar.gesture .armL{transform:rotate(-25deg) translateY(-15px)}
+.avatar.gesture .armR{transform:rotate(30deg) translateY(-10px)}
+
+.avatar.tilt .face{
+  transform:translateX(-50%) rotate(-4deg);
+}
+
+.avatar.smile .mouth{
+  width:75px;
+  height:10px;
+  border-radius:0 0 50% 50%;
+}
+
+.avatar.surprised .mouth{
+  width:35px;
+  height:30px;
+}
+
+.avatar.thinking .eyeL .pupil,
+.avatar.thinking .eyeR .pupil{
+  transform:translate(-20%,-80%);
+}
+
+/* SPEAKING */
+
+.avatar.speaking .face{
+  animation:facePulse .35s ease-in-out infinite alternate;
+}
+
+@keyframes facePulse{
+  from{filter:brightness(1)}
+  to{filter:brightness(1.04)}
+}
+
+/* voice visualizer */
+
+.wave{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:180px;
+  height:50px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+}
+
+.bar{
+  width:3px;
+  height:8px;
+  border-radius:10px;
+  background:linear-gradient(var(--cyan),var(--violet));
+  opacity:.45;
+  transition:height .07s;
+}
+
+.avatar.speaking ~ .wave .bar{
+  opacity:1;
+  animation:wave .45s ease-in-out infinite alternate;
+}
+
+@keyframes wave{
+  from{height:7px}
+  to{height:35px}
+}
+
+/* COMMAND BAR */
+
+.command{
+  margin-top:16px;
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:rgba(255,255,255,.035);
+}
+
+.commandRow{
+  display:flex;
+  gap:10px;
+}
+
+.inputWrap{
+  flex:1;
+  position:relative;
+}
+
+#commandInput{
+  width:100%;
+  height:52px;
+  padding:0 50px 0 17px;
+  border:1px solid rgba(255,255,255,.10);
+  outline:none;
+  color:white;
+  background:rgba(0,0,0,.28);
+  border-radius:14px;
+  font-size:14px;
+}
+
+#commandInput:focus{
+  border-color:rgba(88,246,255,.5);
+  box-shadow:0 0 25px rgba(88,246,255,.08);
+}
+
+.mic{
+  position:absolute;
+  right:6px;
+  top:6px;
+  width:40px;
+  height:40px;
+  border:0;
+  border-radius:10px;
+  color:white;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--violet),var(--pink));
+}
+
+.mic.listening{
+  animation:micPulse 1s infinite;
+  box-shadow:0 0 30px rgba(255,79,216,.45);
+}
+
+@keyframes micPulse{
+  50%{transform:scale(1.08)}
+}
+
+.execute{
+  width:135px;
+  border-radius:14px;
+  border:0;
+  color:#02030a;
+  font-weight:800;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--cyan),#a9ffef);
+}
+
+/* RIGHT PANEL */
+
+.sectionTitle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:0 0 12px;
+  font-size:13px;
+  letter-spacing:.08em;
+}
+
+.sectionTitle span{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:500;
+}
+
+.cards{
+  display:grid;
+  gap:10px;
+}
+
+.card{
+  position:relative;
+  padding:15px;
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  cursor:pointer;
+  transition:.22s;
+}
+
+.card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(88,246,255,.25);
+  background:rgba(88,246,255,.055);
+}
+
+.cardIcon{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:rgba(88,246,255,.08);
+  margin-bottom:9px;
+}
+
+.card strong{
+  display:block;
+  font-size:12px;
+}
+
+.card p{
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.5;
+}
+
+.card .run{
+  position:absolute;
+  right:12px;
+  top:12px;
+  font-size:9px;
+  color:var(--cyan);
+}
+
+/* ACTIVITY */
+
+.activity{
+  margin-top:18px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.activityHead{
+  padding:14px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+}
+
+#log{
+  height:180px;
+  overflow:auto;
+  padding:12px;
+}
+
+.logItem{
+  display:flex;
+  gap:9px;
+  padding:7px 4px;
+  font-size:10px;
+  color:#c4cae0;
+  border-bottom:1px solid rgba(255,255,255,.035);
+}
+
+.logDot{
+  width:5px;
+  height:5px;
+  margin-top:4px;
+  flex:none;
+  border-radius:50%;
+  background:var(--cyan);
+  box-shadow:0 0 10px var(--cyan);
+}
+
+/* CONTROLS */
+
+.controls{
+  margin-top:18px;
+}
+
+.control{
+  display:grid;
+  grid-template-columns:95px 1fr 35px;
+  align-items:center;
+  gap:10px;
+  margin:10px 0;
+  font-size:10px;
+  color:#aeb6d4;
+}
+
+input[type=range]{
+  width:100%;
+  accent-color:var(--cyan);
+}
+
+.value{
+  text-align:right;
+  color:var(--cyan);
+}
+
+/* FOOTER */
+
+footer{
+  padding:12px 20px;
+  border-top:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  color:#69718f;
+  font-size:9px;
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  z-index:100;
+  right:25px;
+  bottom:25px;
+  max-width:330px;
+  padding:14px 17px;
+  border:1px solid rgba(88,246,255,.25);
+  border-radius:15px;
+  background:rgba(8,12,27,.9);
+  backdrop-filter:blur(20px);
+  box-shadow:0 15px 60px rgba(0,0,0,.5);
+  transform:translateY(30px);
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+  font-size:11px;
+}
+
+.toast.show{
+  transform:translateY(0);
+  opacity:1;
+}
+
+/* MOBILE */
+
+@media(max-width:950px){
+  .main{grid-template-columns:1fr}
+  .left{border-right:0;border-bottom:1px solid var(--line)}
+  .right{padding-top:18px}
+}
+
+@media(max-width:600px){
+  .app{padding:7px}
+  header{padding:0 13px}
+  .status{display:none}
+  .brand{font-size:12px}
+  .presenter{min-height:500px}
+  .avatar{transform:scale(.82);transform-origin:center bottom}
+  .commandRow{flex-direction:column}
+  .execute{height:50px;width:100%}
+  footer{flex-direction:column;gap:5px}
+}
+</style>
 </head>
+
 <body>
 
-  <header>
-    <div class="brand">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
-        <path d="M12 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4z"/>
-      </svg>
-      AURA-X AI PRESENTER
-    </div>
-    <div class="status-badge">
-      <div class="status-dot"></div>
-      <span id="statusText">System Ready</span>
-    </div>
-  </header>
+<div id="space">
+  <div class="grid"></div>
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+</div>
 
-  <main>
-    <!-- Presenter Render Viewport -->
-    <div class="viewport-container">
-      <canvas id="avatarCanvas" width="800" height="800"></canvas>
-      
-      <div class="overlay-controls">
-        <button class="btn-mic" id="micBtn" title="Toggle Voice Commands">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-            <line x1="12" y1="19" x2="12" y2="23"/>
-            <line x1="8" y1="23" x2="16" y2="23"/>
-          </svg>
-        </button>
-        <div style="font-size: 0.85rem; color: var(--text-muted);">
-          Click to speak or type a command below
-        </div>
-      </div>
+<div class="app">
+<div class="shell">
+
+<header>
+  <div class="brand">
+    <div class="logo">✦</div>
+    <div>
+      ÆTHER
+      <small>INFINITE VOICE COMMAND SYSTEM</small>
+    </div>
+  </div>
+
+  <div class="headerRight">
+    <div class="status">
+      <i class="dot"></i>
+      NEURAL CORE ONLINE
+    </div>
+    <button class="iconBtn" id="themeBtn" title="Change atmosphere">◐</button>
+    <button class="iconBtn" id="clearBtn" title="Clear activity">⌫</button>
+  </div>
+</header>
+
+<div class="main">
+
+<section class="left">
+
+  <div class="presenter">
+
+    <div class="presenterTop">
+      <div class="badge">AI PRESENTER • LIVE</div>
+      <div class="badge" id="moodLabel">CALM / READY</div>
     </div>
 
-    <!-- Control & Command Hub -->
-    <div class="sidebar">
-      
-      <!-- Presenter Config -->
-      <div class="panel">
-        <div class="panel-title">Presenter Engine Settings</div>
-        <label style="font-size: 0.8rem; color: var(--text-muted);">Voice Synthesizer</label>
-        <select id="voiceSelect"></select>
-        
-        <div style="display: flex; gap: 1rem;">
-          <div style="flex: 1;">
-            <label style="font-size: 0.8rem; color: var(--text-muted);">Pitch</label>
-            <input type="range" id="pitchVal" min="0.5" max="1.5" step="0.1" value="1.1" style="width: 100%;">
+    <div class="presenterStage">
+
+      <div class="avatar" id="avatar">
+
+        <div class="halo"></div>
+
+        <div class="hair"></div>
+
+        <div class="neck"></div>
+
+        <div class="face" id="face">
+
+          <div class="hairline"></div>
+
+          <div class="ear leftEar"></div>
+          <div class="ear rightEar"></div>
+
+          <div class="eye eyeL">
+            <div class="brow"></div>
+            <div class="eyeSocket">
+              <div class="pupil"></div>
+            </div>
           </div>
-          <div style="flex: 1;">
-            <label style="font-size: 0.8rem; color: var(--text-muted);">Rate</label>
-            <input type="range" id="rateVal" min="0.5" max="1.5" step="0.1" value="1.0" style="width: 100%;">
+
+          <div class="eye eyeR">
+            <div class="brow"></div>
+            <div class="eyeSocket">
+              <div class="pupil"></div>
+            </div>
           </div>
+
+          <div class="nose"></div>
+
+          <div class="mouth" id="mouth">
+            <div class="teeth"></div>
+            <div class="lip"></div>
+          </div>
+
         </div>
+
+        <div class="body">
+          <div class="shoulderGlow"></div>
+        </div>
+
+        <div class="arm armL"></div>
+        <div class="arm armR"></div>
+
       </div>
 
-      <!-- Command Console -->
-      <div class="panel" style="flex: 1;">
-        <div class="panel-title">Autonomous Execution Log</div>
-        <div class="log-container" id="logContainer">
-          <div class="log-entry system">System initialized. Voice engine connected.</div>
-        </div>
-        
-        <div class="input-group">
-          <input type="text" id="textCommand" placeholder="Type command (e.g., 'open google', 'change theme')..." />
-          <button class="btn-action" id="sendBtn">Execute</button>
-        </div>
-      </div>
+      <div class="wave" id="wave"></div>
 
     </div>
-  </main>
+  </div>
 
-  <script>
-    /**
-     * PROCEDURAL AI PRESENTER ENGINE (Canvas-based Rigging)
-     * Renders lip-syncing, eye movement, head tilts, posture shifts, and breathing.
-     */
-    class AIPresenter {
-      constructor(canvasId) {
-        this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext('2d');
-        
-        // Motion States
-        this.time = 0;
-        this.blinkState = 0; // 0 (open) to 1 (closed)
-        this.blinkTimer = 0;
-        this.eyeTargetX = 0;
-        this.eyeTargetY = 0;
-        this.eyeX = 0;
-        this.eyeY = 0;
-        this.headTiltTarget = 0;
-        this.headTilt = 0;
-        
-        // Lip Sync & Audio States
-        this.mouthOpenness = 0;
-        this.isSpeaking = false;
-        
-        // Gesture States
-        this.handYTarget = 0;
-        this.handY = 0;
+  <div class="command">
 
-        this.init();
-      }
+    <div class="commandRow">
 
-      init() {
-        this.scheduleEvents();
-        this.render();
-      }
+      <div class="inputWrap">
+        <input
+          id="commandInput"
+          autocomplete="off"
+          placeholder="Say or type anything… e.g. “Introduce yourself”"
+        >
+        <button class="mic" id="micBtn" title="Voice command">🎙</button>
+      </div>
 
-      scheduleEvents() {
-        // Random blinking
-        setInterval(() => {
-          if (Math.random() > 0.3) this.triggerBlink();
-        }, 3500);
+      <button class="execute" id="executeBtn">
+        EXECUTE ✦
+      </button>
 
-        // Micro eye gaze shifts
-        setInterval(() => {
-          this.eyeTargetX = (Math.random() - 0.5) * 12;
-          this.eyeTargetY = (Math.random() - 0.5) * 6;
-        }, 2500);
+    </div>
 
-        // Subtle head turns
-        setInterval(() => {
-          this.headTiltTarget = (Math.random() - 0.5) * 0.08;
-        }, 4000);
-      }
+  </div>
 
-      triggerBlink() {
-        let duration = 150;
-        let start = Date.now();
-        let animate = () => {
-          let elapsed = Date.now() - start;
-          if (elapsed < duration / 2) {
-            this.blinkState = elapsed / (duration / 2);
-            requestAnimationFrame(animate);
-          } else if (elapsed < duration) {
-            this.blinkState = 1 - (elapsed - duration / 2) / (duration / 2);
-            requestAnimationFrame(animate);
-          } else {
-            this.blinkState = 0;
-          }
-        };
-        animate();
-      }
+</section>
 
-      setSpeechMouthLevel(level) {
-        this.mouthOpenness = level;
-      }
 
-      render() {
-        this.time += 0.03;
-        const ctx = this.ctx;
-        const w = this.canvas.width;
-        const h = this.canvas.height;
+<aside class="right">
 
-        // Smooth Interpolations
-        this.eyeX += (this.eyeTargetX - this.eyeX) * 0.08;
-        this.eyeY += (this.eyeTargetY - this.eyeY) * 0.08;
-        this.headTilt += (this.headTiltTarget - this.headTilt) * 0.05;
+  <div class="sectionTitle">
+    COMMAND MATRIX
+    <span>READY FOR INPUT</span>
+  </div>
 
-        // Procedural Motion Calculations
-        const breathingOffset = Math.sin(this.time * 1.5) * 4;
-        const postureShift = Math.cos(this.time * 0.8) * 2;
+  <div class="cards">
 
-        ctx.clearRect(0, 0, w, h);
+    <div class="card" data-command="Introduce yourself">
+      <div class="cardIcon">👩‍🚀</div>
+      <strong>Present Yourself</strong>
+      <p>Activate presenter mode and introduce the AI.</p>
+      <span class="run">RUN →</span>
+    </div>
 
-        ctx.save();
-        // Center pivot for head tilt
-        ctx.translate(w / 2, h / 2 + postureShift);
-        ctx.rotate(this.headTilt);
+    <div class="card" data-command="Give me a motivational message">
+      <div class="cardIcon">⚡</div>
+      <strong>Motivate Me</strong>
+      <p>Generate an energetic spoken motivation.</p>
+      <span class="run">RUN →</span>
+    </div>
 
-        // --- TORSO / CLOTHING ---
-        ctx.fillStyle = '#1e1b4b'; // Sleek dark blazer
-        ctx.beginPath();
-        ctx.moveTo(-180, 280 + breathingOffset);
-        ctx.quadraticCurveTo(0, 180 + breathingOffset, 180, 280 + breathingOffset);
-        ctx.lineTo(250, 400);
-        ctx.lineTo(-250, 400);
-        ctx.closePath();
-        ctx.fill();
+    <div class="card" data-command="Tell me the system status">
+      <div class="cardIcon">◈</div>
+      <strong>System Status</strong>
+      <p>Read the current browser AI interface status.</p>
+      <span class="run">RUN →</span>
+    </div>
 
-        // Inner shirt
-        ctx.fillStyle = '#e0e7ff';
-        ctx.beginPath();
-        ctx.moveTo(-40, 210 + breathingOffset);
-        ctx.lineTo(0, 260 + breathingOffset);
-        ctx.lineTo(40, 210 + breathingOffset);
-        ctx.closePath();
-        ctx.fill();
+    <div class="card" data-command="Enter presentation mode">
+      <div class="cardIcon">✨</div>
+      <strong>Presentation Mode</strong>
+      <p>Switch the presenter into an expressive presentation state.</p>
+      <span class="run">RUN →</span>
+    </div>
 
-        // --- NECK ---
-        ctx.fillStyle = '#f3d0b7';
-        ctx.fillRect(-35, 110, 70, 90);
+    <div class="card" data-command="Make yourself smile">
+      <div class="cardIcon">😊</div>
+      <strong>Expressive Mode</strong>
+      <p>Change facial expression and body language.</p>
+      <span class="run">RUN →</span>
+    </div>
 
-        // --- FACE BASE ---
-        ctx.fillStyle = '#fcd5ce';
-        ctx.beginPath();
-        ctx.ellipse(0, 30, 110, 145, 0, 0, Math.PI * 2);
-        ctx.fill();
+    <div class="card" data-command="Start a futuristic demonstration">
+      <div class="cardIcon">🪄</div>
+      <strong>Magic Demo</strong>
+      <p>Run a sequence of presenter animation states.</p>
+      <span class="run">RUN →</span>
+    </div>
 
-        // --- HAIR (Back) ---
-        ctx.fillStyle = '#2a1a1f';
-        ctx.beginPath();
-        ctx.ellipse(0, 10, 135, 160, 0, 0, Math.PI * 2);
-        ctx.fill();
-        // Re-draw face over back hair
-        ctx.fillStyle = '#fcd5ce';
-        ctx.beginPath();
-        ctx.ellipse(0, 30, 110, 140, 0, 0, Math.PI * 2);
-        ctx.fill();
+  </div>
 
-        // --- EYES ---
-        const drawEye = (cx) => {
-          ctx.save();
-          ctx.translate(cx, -10);
 
-          // Eye White
-          ctx.fillStyle = '#ffffff';
-          ctx.beginPath();
-          ctx.ellipse(0, 0, 22, 12 * (1 - this.blinkState), 0, 0, Math.PI * 2);
-          ctx.fill();
+  <div class="controls">
 
-          if (this.blinkState < 0.8) {
-            // Iris
-            ctx.fillStyle = '#4338ca';
-            ctx.beginPath();
-            ctx.arc(this.eyeX * 0.5, this.eyeY * 0.5, 9, 0, Math.PI * 2);
-            ctx.fill();
+    <div class="sectionTitle">
+      MOTION ENGINE
+      <span>LIVE PARAMETERS</span>
+    </div>
 
-            // Pupil
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath();
-            ctx.arc(this.eyeX * 0.5, this.eyeY * 0.5, 4, 0, Math.PI * 2);
-            ctx.fill();
+    <div class="control">
+      <label>Expression</label>
+      <input id="expression" type="range" min="0" max="100" value="72">
+      <div class="value" id="expressionVal">72</div>
+    </div>
 
-            // Reflection Highlight
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(this.eyeX * 0.5 - 3, this.eyeY * 0.5 - 3, 2.5, 0, Math.PI * 2);
-            ctx.fill();
-          }
+    <div class="control">
+      <label>Eye Motion</label>
+      <input id="eyeMotion" type="range" min="0" max="100" value="65">
+      <div class="value" id="eyeMotionVal">65</div>
+    </div>
 
-          // Eyelashes / Lid Line
-          ctx.strokeStyle = '#1e1b18';
-          ctx.lineWidth = 3;
-          ctx.beginPath();
-          ctx.ellipse(0, 0, 23, 12 * (1 - this.blinkState), 0, Math.PI, Math.PI * 2);
-          ctx.stroke();
+    <div class="control">
+      <label>Gesture</label>
+      <input id="gesture" type="range" min="0" max="100" value="58">
+      <div class="value" id="gestureVal">58</div>
+    </div>
 
-          ctx.restore();
-        };
+    <div class="control">
+      <label>Breathing</label>
+      <input id="breathing" type="range" min="0" max="100" value="70">
+      <div class="value" id="breathingVal">70</div>
+    </div>
 
-        drawEye(-45);
-        drawEye(45);
+  </div>
 
-        // --- EYEBROWS ---
-        ctx.strokeStyle = '#3a2522';
-        ctx.lineWidth = 3.5;
-        ctx.beginPath();
-        ctx.quadraticCurveTo(-45, -35 + (this.mouthOpenness * 2), -25, -30);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.quadraticCurveTo(45, -35 + (this.mouthOpenness * 2), 25, -30);
-        ctx.stroke();
 
-        // --- NOSE ---
-        ctx.strokeStyle = '#e29578';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(0, -5);
-        ctx.lineTo(-3, 35);
-        ctx.lineTo(4, 37);
-        ctx.stroke();
+  <div class="activity">
 
-        // --- MOUTH & LIP SYNC ---
-        ctx.save();
-        ctx.translate(0, 85);
-        
-        let mOpen = Math.max(2, this.mouthOpenness * 28);
+    <div class="activityHead">
+      <strong>LIVE ACTIVITY</strong>
+      <span id="activityCount">0 EVENTS</span>
+    </div>
 
-        // Lips Outer
-        ctx.fillStyle = '#e63946';
-        ctx.beginPath();
-        ctx.ellipse(0, 0, 26, 6 + mOpen * 0.5, 0, 0, Math.PI * 2);
-        ctx.fill();
+    <div id="log"></div>
 
-        // Cavity
-        if (mOpen > 4) {
-          ctx.fillStyle = '#3a090d';
-          ctx.beginPath();
-          ctx.ellipse(0, 0, 20, mOpen * 0.6, 0, 0, Math.PI * 2);
-          ctx.fill();
+  </div>
 
-          // Teeth
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(-12, -mOpen * 0.4, 24, 4);
-        }
+</aside>
 
-        ctx.restore();
+</div>
 
-        // --- HAIR (Front Frame) ---
-        ctx.fillStyle = '#2a1a1f';
-        ctx.beginPath();
-        ctx.moveTo(-110, -30);
-        ctx.quadraticCurveTo(-60, -120, 0, -80);
-        ctx.quadraticCurveTo(60, -120, 110, -30);
-        ctx.quadraticCurveTo(120, 80, 130, 150);
-        ctx.quadraticCurveTo(80, 0, 80, -40);
-        ctx.quadraticCurveTo(-80, 0, -80, -40);
-        ctx.quadraticCurveTo(-120, 80, -110, -30);
-        ctx.fill();
+<footer>
+  <span>ÆTHER CORE / BROWSER RUNTIME</span>
+  <span>VOICE • MOTION • PRESENCE • AUTOMATION</span>
+</footer>
 
-        ctx.restore();
+</div>
+</div>
 
-        requestAnimationFrame(() => this.render());
-      }
-    }
+<div class="toast" id="toast"></div>
 
-    /**
-     * VOICEBOT & COMMAND AUTOMATION ENGINE
-     */
-    class CommandHub {
-      constructor(presenter) {
-        this.presenter = presenter;
-        this.synth = window.speechSynthesis;
-        this.recognition = null;
-        this.selectedVoice = null;
-        
-        this.initSpeech();
-        this.setupEventListeners();
-      }
 
-      initSpeech() {
-        // Voice Synth Setup
-        const populateVoices = () => {
-          const voices = this.synth.getVoices();
-          const voiceSelect = document.getElementById('voiceSelect');
-          voiceSelect.innerHTML = '';
-          
-          // Filter for realistic female voices first
-          voices.forEach((voice, i) => {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = `${voice.name} (${voice.lang})`;
-            if (voice.name.includes('Zira') || voice.name.includes('Samantha') || voice.name.includes('Female') || voice.name.includes('Google UK English Female')) {
-              option.selected = true;
-              this.selectedVoice = voice;
-            }
-            voiceSelect.appendChild(option);
-          });
+<script>
+/* =========================================================
+   ÆTHER — FRONT-END VOICE / PRESENTER ENGINE
+   ========================================================= */
 
-          if (!this.selectedVoice && voices.length > 0) {
-            this.selectedVoice = voices[0];
-          }
-        };
+const avatar = document.getElementById("avatar");
+const mouth = document.getElementById("mouth");
+const input = document.getElementById("commandInput");
+const micBtn = document.getElementById("micBtn");
+const executeBtn = document.getElementById("executeBtn");
+const log = document.getElementById("log");
+const toast = document.getElementById("toast");
+const moodLabel = document.getElementById("moodLabel");
 
-        populateVoices();
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-          speechSynthesis.onvoiceschanged = populateVoices;
-        }
+let speaking = false;
+let recognition = null;
+let eventCount = 0;
+let speechTimer = null;
+let currentTheme = 0;
 
-        // Voice Recognition Setup
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-          this.recognition = new SpeechRecognition();
-          this.recognition.continuous = false;
-          this.recognition.interimResults = false;
+const themes = [
+  {
+    cyan:"#58f6ff",
+    violet:"#9b72ff",
+    pink:"#ff4fd8"
+  },
+  {
+    cyan:"#75ff9c",
+    violet:"#35b7ff",
+    pink:"#00f5d4"
+  },
+  {
+    cyan:"#ffe66d",
+    violet:"#ff7b54",
+    pink:"#ff3cac"
+  }
+];
 
-          this.recognition.onstart = () => {
-            document.getElementById('micBtn').classList.add('listening');
-            this.updateStatus("Listening...");
-          };
 
-          this.recognition.onresult = (event) => {
-            const cmd = event.results[0][0].transcript;
-            this.log(`User: "${cmd}"`, 'user');
-            this.processCommand(cmd);
-          };
+/* =========================================================
+   WAVEFORM
+   ========================================================= */
 
-          this.recognition.onend = () => {
-            document.getElementById('micBtn').classList.remove('listening');
-            this.updateStatus("System Ready");
-          };
-        } else {
-          this.log("Speech Recognition API not supported in this browser.", 'system');
-        }
-      }
+const wave = document.getElementById("wave");
 
-      speak(text) {
-        if (this.synth.speaking) this.synth.cancel();
+for(let i=0;i<42;i++){
+  const b=document.createElement("div");
+  b.className="bar";
+  b.style.animationDelay=(i*.025)+"s";
+  wave.appendChild(b);
+}
 
-        const utterance = new SpeechSynthesisUtterance(text);
-        const voices = this.synth.getVoices();
-        const voiceIdx = document.getElementById('voiceSelect').value;
-        
-        if (voices[voiceIdx]) utterance.voice = voices[voiceIdx];
-        utterance.pitch = parseFloat(document.getElementById('pitchVal').value);
-        utterance.rate = parseFloat(document.getElementById('rateVal').value);
 
-        // Procedural Lip Sync Syncing
-        utterance.onboundary = (event) => {
-          if (event.name === 'word') {
-            // Trigger randomized speech mouth opening
-            this.presenter.setSpeechMouthLevel(Math.random() * 0.7 + 0.3);
-            setTimeout(() => this.presenter.setSpeechMouthLevel(0.1), 150);
-          }
-        };
+/* =========================================================
+   LOG
+   ========================================================= */
 
-        utterance.onstart = () => {
-          this.presenter.isSpeaking = true;
-          this.updateStatus("Speaking...");
-        };
+function addLog(message){
 
-        utterance.onend = () => {
-          this.presenter.isSpeaking = false;
-          this.presenter.setSpeechMouthLevel(0);
-          this.updateStatus("System Ready");
-        };
+  eventCount++;
 
-        this.synth.speak(utterance);
-      }
+  document.getElementById("activityCount").textContent =
+    eventCount + (eventCount===1 ? " EVENT" : " EVENTS");
 
-      processCommand(commandStr) {
-        const cmd = commandStr.toLowerCase();
-        this.log(`Automating: Executing simultaneous instruction pipeline...`, 'action');
+  const item=document.createElement("div");
+  item.className="logItem";
 
-        // Dynamic Automated Actions Engine
-        if (cmd.includes('hello') || cmd.includes('hi')) {
-          this.speak("Hello! I am your AI presenter. I am ready to process your unlimited commands instantly.");
-        } 
-        else if (cmd.includes('time')) {
-          const now = new Date().toLocaleTimeString();
-          this.speak(`The current system time is ${now}`);
-        }
-        else if (cmd.includes('open google')) {
-          this.speak("Opening Google search engine.");
-          window.open('https://www.google.com', '_blank');
-        }
-        else if (cmd.includes('open youtube')) {
-          this.speak("Opening YouTube.");
-          window.open('https://www.youtube.com', '_blank');
-        }
-        else if (cmd.includes('background') || cmd.includes('theme')) {
-          document.body.style.backgroundImage = 'radial-gradient(circle at 50% 50%, #1e1b4b 0%, #000000 100%)';
-          this.speak("Visual atmosphere updated smoothly.");
-        }
-        else {
-          // Autonomous fallback command simulation
-          this.speak(`Command received: "${commandStr}". Executing autonomous AI workflows across system pipelines.`);
-        }
-      }
+  item.innerHTML=
+    `<span class="logDot"></span><span>${escapeHTML(message)}</span>`;
 
-      log(msg, type = 'system') {
-        const container = document.getElementById('logContainer');
-        const entry = document.createElement('div');
-        entry.className = `log-entry ${type}`;
-        entry.textContent = msg;
-        container.appendChild(entry);
-        container.scrollTop = container.scrollHeight;
-      }
+  log.prepend(item);
 
-      updateStatus(str) {
-        document.getElementById('statusText').textContent = str;
-      }
+  while(log.children.length>30){
+    log.lastChild.remove();
+  }
+}
 
-      setupEventListeners() {
-        document.getElementById('micBtn').addEventListener('click', () => {
-          if (this.recognition) {
-            this.recognition.start();
-          }
-        });
+function escapeHTML(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;");
+}
 
-        document.getElementById('sendBtn').addEventListener('click', () => {
-          const input = document.getElementById('textCommand');
-          if (input.value.trim()) {
-            this.log(`User: "${input.value}"`, 'user');
-            this.processCommand(input.value);
-            input.value = '';
-          }
-        });
 
-        document.getElementById('textCommand').addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
-            document.getElementById('sendBtn').click();
-          }
-        });
-      }
-    }
+/* =========================================================
+   TOAST
+   ========================================================= */
 
-    // Initialize App
-    window.addEventListener('DOMContentLoaded', () => {
-      const presenter = new AIPresenter('avatarCanvas');
-      const hub = new CommandHub(presenter);
+let toastTimer;
+
+function showToast(message){
+
+  toast.textContent=message;
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer=setTimeout(()=>{
+    toast.classList.remove("show");
+  },2600);
+}
+
+
+/* =========================================================
+   SPEECH SYNTHESIS
+   ========================================================= */
+
+function getFemaleVoice(){
+
+  const voices=speechSynthesis.getVoices();
+
+  const preferred=[
+    "Samantha",
+    "Karen",
+    "Moira",
+    "Google UK English Female",
+    "Google US English",
+    "Microsoft Zira",
+    "Microsoft Jenny",
+    "Microsoft Aria"
+  ];
+
+  for(const name of preferred){
+
+    const found=voices.find(v =>
+      v.name.toLowerCase().includes(name.toLowerCase())
+    );
+
+    if(found) return found;
+  }
+
+  return voices.find(v =>
+    /female|woman|zira|jenny|aria|samantha/i.test(v.name)
+  ) || voices[0];
+}
+
+
+/* =========================================================
+   REALISTIC BROWSER-SIDE LIP SYNC
+   ========================================================= */
+
+function setMouth(value){
+
+  const amount=Math.max(0,Math.min(1,value));
+
+  const height=7 + amount*31;
+  const width=45 + amount*32;
+
+  mouth.style.height=height+"px";
+  mouth.style.width=width+"px";
+
+  const teeth=mouth.querySelector(".teeth");
+  teeth.style.opacity=amount>.55 ? ".85" : "0";
+}
+
+function stopSpeaking(){
+
+  speaking=false;
+
+  avatar.classList.remove("speaking");
+
+  clearInterval(speechTimer);
+
+  setMouth(0);
+
+  moodLabel.textContent="CALM / READY";
+}
+
+function speak(text){
+
+  if(!("speechSynthesis" in window)){
+    showToast("Speech synthesis is not supported by this browser.");
+    return;
+  }
+
+  speechSynthesis.cancel();
+  clearInterval(speechTimer);
+
+  const utterance=new SpeechSynthesisUtterance(text);
+
+  const voice=getFemaleVoice();
+
+  if(voice) utterance.voice=voice;
+
+  utterance.rate=.96;
+  utterance.pitch=1.08;
+  utterance.volume=1;
+
+  utterance.onstart=()=>{
+
+    speaking=true;
+
+    avatar.classList.add("speaking");
+
+    moodLabel.textContent="SPEAKING / LIVE";
+
+    addLog("Presenter voice activated");
+
+    /*
+      Browser speech synthesis does not expose actual phoneme
+      amplitudes consistently. This animated mouth engine therefore
+      creates convincing speech-like mouth movement while audio plays.
+    */
+
+    speechTimer=setInterval(()=>{
+
+      if(!speaking) return;
+
+      const t=Date.now()/1000;
+
+      const motion=
+        .25+
+        Math.abs(Math.sin(t*10))*0.35+
+        Math.abs(Math.sin(t*17))*0.25+
+        Math.random()*.15;
+
+      setMouth(motion);
+
+    },65);
+  };
+
+  utterance.onend=()=>{
+    stopSpeaking();
+    setMouth(0);
+  };
+
+  utterance.onerror=()=>{
+    stopSpeaking();
+    addLog("Speech engine reported an error");
+  };
+
+  speechSynthesis.speak(utterance);
+}
+
+
+/* =========================================================
+   COMMAND ENGINE
+   ========================================================= */
+
+function executeCommand(raw){
+
+  const command=raw.trim();
+
+  if(!command){
+    showToast("Give ÆTHER a command first.");
+    return;
+  }
+
+  addLog("Command received: "+command);
+
+  input.value="";
+
+  const c=command.toLowerCase();
+
+  if(
+    c.includes("introduce") ||
+    c.includes("who are you") ||
+    c.includes("yourself")
+  ){
+
+    avatar.classList.add("smile");
+
+    speak(
+      "Hello. I am ÆTHER, your browser-based voice command interface. " +
+      "I can listen to commands, speak responses, animate a digital presenter, " +
+      "and orchestrate the interactive tools available inside this page."
+    );
+
+    addLog("Presenter introduction executed");
+    return;
+  }
+
+
+  if(
+    c.includes("motivat") ||
+    c.includes("inspire")
+  ){
+
+    avatar.classList.add("smile");
+    avatar.classList.add("gesture");
+
+    speak(
+      "You do not need to see the entire path before taking the next step. " +
+      "Start. Build momentum. Turn the impossible into a sequence of possible actions."
+    );
+
+    addLog("Motivation sequence launched");
+    return;
+  }
+
+
+  if(
+    c.includes("status") ||
+    c.includes("system")
+  ){
+
+    avatar.classList.add("thinking");
+
+    speak(
+      "System status: presenter online. Voice synthesis available. " +
+      "Command recognition available when supported by your browser. " +
+      "Motion engine online. Interface responsive. Browser automation sandbox active."
+    );
+
+    addLog("System diagnostics completed");
+    return;
+  }
+
+
+  if(
+    c.includes("presentation") ||
+    c.includes("present")
+  ){
+
+    runPresentation();
+    return;
+  }
+
+
+  if(
+    c.includes("smile") ||
+    c.includes("happy")
+  ){
+
+    avatar.classList.remove("thinking","surprised");
+    avatar.classList.add("smile");
+
+    moodLabel.textContent="EXPRESSIVE / HAPPY";
+
+    speak("Absolutely. Let's make this moment count.");
+
+    addLog("Happy expression activated");
+    return;
+  }
+
+
+  if(
+    c.includes("surpris") ||
+    c.includes("wow")
+  ){
+
+    avatar.classList.remove("smile","thinking");
+    avatar.classList.add("surprised");
+
+    moodLabel.textContent="EXPRESSIVE / SURPRISED";
+
+    speak("Wow. Now that is an interesting command.");
+
+    addLog("Surprise expression activated");
+    return;
+  }
+
+
+  if(
+    c.includes("magic") ||
+    c.includes("demo")
+  ){
+
+    runMagicDemo();
+    return;
+  }
+
+
+  if(
+    c.includes("clear") ||
+    c.includes("reset")
+  ){
+
+    resetAvatar();
+
+    speak("Interface reset. I am ready for your next command.");
+
+    addLog("Presenter reset");
+    return;
+  }
+
+
+  /*
+    Generic command behavior.
+    A production version can replace this section with an API call
+    to an actual LLM/agent backend.
+  */
+
+  avatar.classList.remove("smile","surprised");
+  avatar.classList.add("thinking");
+
+  const response=
+    "I received your command: " +
+    command +
+    ". The browser interface is ready to connect this command to your own AI agent or automation backend.";
+
+  speak(response);
+
+  addLog("Generic command routed to agent layer");
+}
+
+
+/* =========================================================
+   PRESENTATION SEQUENCE
+   ========================================================= */
+
+function runPresentation(){
+
+  addLog("Presentation sequence initiated");
+
+  avatar.classList.remove("thinking","surprised");
+  avatar.classList.add("smile","gesture");
+
+  moodLabel.textContent="PRESENTATION / ACTIVE";
+
+  speak(
+    "Welcome to ÆTHER. This is an interactive digital presenter experience " +
+    "combining voice, expressive facial animation, gaze, gestures and responsive commands."
+  );
+
+  setTimeout(()=>{
+    avatar.classList.add("tilt");
+  },1300);
+
+  setTimeout(()=>{
+    avatar.classList.remove("tilt");
+  },2800);
+
+  setTimeout(()=>{
+    avatar.classList.remove("gesture");
+  },4500);
+}
+
+
+/* =========================================================
+   MAGIC DEMO
+   ========================================================= */
+
+function runMagicDemo(){
+
+  addLog("Magic motion sequence started");
+
+  avatar.classList.remove(
+    "smile",
+    "surprised",
+    "thinking",
+    "tilt",
+    "gesture"
+  );
+
+  avatar.classList.add("gesture");
+
+  moodLabel.textContent="MAGIC / ACTIVE";
+
+  speak(
+    "Watch closely. Expression, gaze, posture, breathing and gesture are moving together."
+  );
+
+  setTimeout(()=>{
+    avatar.classList.add("smile");
+  },900);
+
+  setTimeout(()=>{
+    avatar.classList.add("tilt");
+  },1800);
+
+  setTimeout(()=>{
+    avatar.classList.remove("tilt");
+  },3000);
+
+  setTimeout(()=>{
+    avatar.classList.remove("gesture");
+  },4200);
+
+  setTimeout(()=>{
+    avatar.classList.remove("smile");
+    moodLabel.textContent="CALM / READY";
+  },5500);
+}
+
+
+/* =========================================================
+   VOICE RECOGNITION
+   ========================================================= */
+
+function setupRecognition(){
+
+  const SpeechRecognition=
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if(!SpeechRecognition){
+
+    micBtn.addEventListener("click",()=>{
+      showToast(
+        "Speech recognition is unavailable. Type your command instead."
+      );
     });
-  </script>
+
+    return;
+  }
+
+  recognition=new SpeechRecognition();
+
+  recognition.continuous=false;
+  recognition.interimResults=true;
+  recognition.lang="en-US";
+
+  recognition.onstart=()=>{
+    micBtn.classList.add("listening");
+    micBtn.textContent="◉";
+    addLog("Listening for voice command…");
+  };
+
+  recognition.onresult=(event)=>{
+
+    let transcript="";
+
+    for(
+      let i=event.resultIndex;
+      i<event.results.length;
+      i++
+    ){
+      transcript+=event.results[i][0].transcript;
+    }
+
+    input.value=transcript;
+
+    const result=event.results[event.results.length-1];
+
+    if(result.isFinal){
+      executeCommand(transcript);
+    }
+  };
+
+  recognition.onerror=(event)=>{
+    addLog("Voice recognition: "+event.error);
+  };
+
+  recognition.onend=()=>{
+    micBtn.classList.remove("listening");
+    micBtn.textContent="🎙";
+  };
+
+  micBtn.addEventListener("click",()=>{
+
+    try{
+      recognition.start();
+    }catch(e){
+      recognition.stop();
+    }
+
+  });
+}
+
+setupRecognition();
+
+
+/* =========================================================
+   COMMAND INPUT
+   ========================================================= */
+
+executeBtn.addEventListener("click",()=>{
+  executeCommand(input.value);
+});
+
+input.addEventListener("keydown",(e)=>{
+  if(e.key==="Enter"){
+    executeCommand(input.value);
+  }
+});
+
+
+/* =========================================================
+   QUICK COMMAND CARDS
+   ========================================================= */
+
+document.querySelectorAll(".card").forEach(card=>{
+
+  card.addEventListener("click",()=>{
+
+    const command=card.dataset.command;
+
+    input.value=command;
+
+    executeCommand(command);
+  });
+
+});
+
+
+/* =========================================================
+   BLINK ENGINE
+   ========================================================= */
+
+function blink(){
+
+  if(speaking && Math.random()<.3) return;
+
+  document.querySelectorAll(".eyeSocket").forEach(eye=>{
+    eye.style.height="2px";
+
+    setTimeout(()=>{
+      eye.style.height="100%";
+    },90);
+  });
+}
+
+function scheduleBlink(){
+
+  const delay=2500+Math.random()*4500;
+
+  setTimeout(()=>{
+    blink();
+    scheduleBlink();
+  },delay);
+}
+
+scheduleBlink();
+
+
+/* =========================================================
+   NATURAL EYE MOVEMENT
+   ========================================================= */
+
+setInterval(()=>{
+
+  const motion=
+    Number(document.getElementById("eyeMotion").value)/100;
+
+  const x=(Math.random()*2-1)*10*motion;
+  const y=(Math.random()*2-1)*6*motion;
+
+  document.querySelectorAll(".pupil").forEach(pupil=>{
+    pupil.style.transform=
+      `translate(calc(-50% + ${x}px),calc(-50% + ${y}px))`;
+  });
+
+},1800);
+
+
+/* =========================================================
+   BREATHING / POSTURE
+   ========================================================= */
+
+setInterval(()=>{
+
+  const amount=
+    Number(document.getElementById("breathing").value)/100;
+
+  const scale=1+(Math.sin(Date.now()/1500)*.006*amount);
+
+  avatar.style.transform=
+    `scale(${scale}) translateY(${Math.sin(Date.now()/1800)*2*amount}px)`;
+
+},60);
+
+
+/* =========================================================
+   RANDOM MICRO EXPRESSIONS
+   ========================================================= */
+
+setInterval(()=>{
+
+  if(speaking) return;
+
+  const expression=
+    Number(document.getElementById("expression").value)/100;
+
+  if(Math.random()<.35*expression){
+
+    avatar.classList.add("smile");
+
+    setTimeout(()=>{
+      avatar.classList.remove("smile");
+    },700+Math.random()*1000);
+
+  }
+
+},3000);
+
+
+/* =========================================================
+   GESTURE ENGINE
+   ========================================================= */
+
+setInterval(()=>{
+
+  const amount=
+    Number(document.getElementById("gesture").value)/100;
+
+  if(Math.random()<.12*amount){
+
+    avatar.classList.add("gesture");
+
+    setTimeout(()=>{
+      avatar.classList.remove("gesture");
+    },900+Math.random()*1500);
+
+  }
+
+},2200);
+
+
+/* =========================================================
+   SLIDER UI
+   ========================================================= */
+
+["expression","eyeMotion","gesture","breathing"].forEach(id=>{
+
+  const slider=document.getElementById(id);
+  const value=document.getElementById(id+"Val");
+
+  slider.addEventListener("input",()=>{
+    value.textContent=slider.value;
+  });
+
+});
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+function resetAvatar(){
+
+  avatar.classList.remove(
+    "speaking",
+    "smile",
+    "surprised",
+    "thinking",
+    "tilt",
+    "gesture"
+  );
+
+  stopSpeaking();
+
+  moodLabel.textContent="CALM / READY";
+  setMouth(0);
+}
+
+
+/* =========================================================
+   CLEAR ACTIVITY
+   ========================================================= */
+
+document.getElementById("clearBtn").addEventListener("click",()=>{
+
+  log.innerHTML="";
+  eventCount=0;
+
+  document.getElementById("activityCount").textContent="0 EVENTS";
+
+  showToast("Activity stream cleared.");
+});
+
+
+/* =========================================================
+   ATMOSPHERE THEMES
+   ========================================================= */
+
+document.getElementById("themeBtn").addEventListener("click",()=>{
+
+  currentTheme=(currentTheme+1)%themes.length;
+
+  const t=themes[currentTheme];
+
+  document.documentElement.style.setProperty("--cyan",t.cyan);
+  document.documentElement.style.setProperty("--violet",t.violet);
+  document.documentElement.style.setProperty("--pink",t.pink);
+
+  addLog("Atmosphere changed");
+
+  showToast("Visual atmosphere transformed.");
+});
+
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+   ========================================================= */
+
+document.addEventListener("keydown",(e)=>{
+
+  if(e.ctrlKey && e.key==="Enter"){
+    executeCommand(input.value);
+  }
+
+  if(e.key==="Escape"){
+    speechSynthesis.cancel();
+    resetAvatar();
+  }
+
+});
+
+
+/* =========================================================
+   INITIAL STATE
+   ========================================================= */
+
+window.speechSynthesis?.addEventListener?.(
+  "voiceschanged",
+  ()=>speechSynthesis.getVoices()
+);
+
+addLog("ÆTHER interface initialized");
+addLog("Motion engine online");
+addLog("Presenter ready");
+addLog("Awaiting command…");
+
+</script>
+
 </body>
 </html>
