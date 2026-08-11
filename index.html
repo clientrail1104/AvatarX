@@ -3,25 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#050512">
-<title>∞ COSMOS — Voice Command OS</title>
+<title>∞ COSMOS — Voice Command Intelligence</title>
 
 <style>
 :root{
-  --bg:#03030b;
-  --panel:rgba(12,13,35,.62);
-  --panel2:rgba(19,20,53,.72);
-  --line:rgba(255,255,255,.10);
-  --text:#f8f8ff;
-  --muted:#9c9dbd;
-  --cyan:#5cf7ff;
-  --violet:#9b6cff;
-  --pink:#ff5edb;
-  --blue:#5887ff;
-  --green:#55ffb0;
-  --gold:#ffd66b;
-  --danger:#ff5f78;
-  --shadow:0 25px 100px rgba(0,0,0,.5);
+  --bg:#03040b;
+  --glass:rgba(12,16,34,.58);
+  --glass2:rgba(255,255,255,.055);
+  --line:rgba(255,255,255,.12);
+  --text:#f5f7ff;
+  --muted:#8f98b8;
+  --cyan:#55eaff;
+  --violet:#9d6cff;
+  --pink:#ff4fd8;
+  --green:#50ffa8;
+  --orange:#ffbd66;
+  --shadow:0 30px 100px rgba(0,0,0,.55);
 }
 
 *{box-sizing:border-box}
@@ -32,99 +29,69 @@ html,body{
   height:100%;
   overflow:hidden;
   font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text);
   background:var(--bg);
+  color:var(--text);
 }
 
 body{
-  background:
-    radial-gradient(circle at 50% 45%,rgba(103,61,255,.14),transparent 25%),
-    radial-gradient(circle at 20% 20%,rgba(0,238,255,.10),transparent 22%),
-    radial-gradient(circle at 80% 80%,rgba(255,0,205,.08),transparent 25%),
-    #03030b;
+  position:relative;
 }
 
-/* COSMIC BACKGROUND */
-.space{
+canvas#space{
   position:fixed;
   inset:0;
+  z-index:0;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  width:700px;
+  height:700px;
+  left:50%;
+  top:42%;
+  transform:translate(-50%,-50%);
+  background:
+    radial-gradient(circle,
+      rgba(85,234,255,.16) 0%,
+      rgba(157,108,255,.13) 23%,
+      rgba(255,79,216,.08) 38%,
+      transparent 70%);
+  filter:blur(20px);
   pointer-events:none;
-  overflow:hidden;
+  z-index:1;
 }
 
-.nebula{
-  position:absolute;
-  width:70vw;
-  height:70vw;
-  border-radius:50%;
-  filter:blur(100px);
-  opacity:.12;
-  animation:nebula 18s ease-in-out infinite alternate;
-}
-
-.n1{
-  background:#6f3cff;
-  left:-20vw;
-  top:-25vw;
-}
-
-.n2{
-  background:#00d9ff;
-  right:-25vw;
-  top:15vh;
-  animation-delay:-6s;
-}
-
-.n3{
-  background:#ff27cf;
-  bottom:-35vw;
-  left:30vw;
-  animation-delay:-11s;
-}
-
-@keyframes nebula{
-  from{transform:scale(1) rotate(0)}
-  to{transform:scale(1.2) rotate(25deg)}
-}
-
-.stars{
-  position:absolute;
-  inset:0;
-  background-image:
-    radial-gradient(1px 1px at 10% 20%,#fff,transparent),
-    radial-gradient(1px 1px at 20% 80%,#fff,transparent),
-    radial-gradient(1px 1px at 40% 30%,#fff,transparent),
-    radial-gradient(1px 1px at 70% 20%,#fff,transparent),
-    radial-gradient(1px 1px at 80% 70%,#fff,transparent),
-    radial-gradient(1px 1px at 90% 40%,#fff,transparent),
-    radial-gradient(1px 1px at 55% 90%,#fff,transparent),
-    radial-gradient(1px 1px at 35% 65%,#fff,transparent);
-  background-size:180px 180px;
-  opacity:.35;
-  animation:stars 40s linear infinite;
-}
-
-@keyframes stars{
-  to{transform:translate(-180px,180px)}
-}
-
-/* APP */
 .app{
   position:relative;
   z-index:2;
   width:100%;
   height:100%;
+  padding:18px;
   display:grid;
-  grid-template-rows:76px 1fr 82px;
-  padding:14px;
+  grid-template-columns:280px minmax(420px,1fr) 320px;
+  grid-template-rows:74px minmax(0,1fr);
+  gap:14px;
 }
 
-/* TOP BAR */
+.glass{
+  background:
+    linear-gradient(135deg,
+      rgba(255,255,255,.075),
+      rgba(255,255,255,.025));
+  border:1px solid var(--line);
+  box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.08);
+  backdrop-filter:blur(25px) saturate(145%);
+  -webkit-backdrop-filter:blur(25px) saturate(145%);
+}
+
 .topbar{
+  grid-column:1/-1;
+  border-radius:24px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:0 18px;
+  padding:0 22px;
 }
 
 .brand{
@@ -139,361 +106,468 @@ body{
   border-radius:14px;
   display:grid;
   place-items:center;
-  font-size:20px;
   background:
-    radial-gradient(circle,#fff 0 5%,transparent 6%),
-    conic-gradient(from 180deg,var(--cyan),var(--violet),var(--pink),var(--cyan));
-  box-shadow:
-    0 0 25px rgba(92,247,255,.35),
-    inset 0 0 20px rgba(255,255,255,.25);
-  animation:spin 8s linear infinite;
+    conic-gradient(from 180deg,
+      var(--cyan),
+      var(--violet),
+      var(--pink),
+      var(--cyan));
+  box-shadow:0 0 35px rgba(85,234,255,.3);
+  color:#050711;
+  font-weight:1000;
 }
 
-@keyframes spin{to{transform:rotate(360deg)}}
-
-.brand strong{
-  letter-spacing:.22em;
-  font-size:13px;
+.brand h1{
+  font-size:15px;
+  margin:0;
+  letter-spacing:.18em;
 }
 
-.brand small{
+.brand span{
   display:block;
   color:var(--muted);
+  font-size:10px;
+  margin-top:3px;
   letter-spacing:.1em;
-  font-size:9px;
-  margin-top:2px;
 }
 
 .status{
   display:flex;
   align-items:center;
-  gap:8px;
-  color:#b9bbd8;
-  font-size:11px;
-  letter-spacing:.08em;
-}
-
-.statusDot{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 14px var(--green);
-}
-
-/* MAIN */
-.main{
-  min-height:0;
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 360px;
-  gap:14px;
-}
-
-.panel{
-  border:1px solid var(--line);
-  background:linear-gradient(
-    135deg,
-    rgba(17,18,48,.66),
-    rgba(7,8,22,.60)
-  );
-  backdrop-filter:blur(30px);
-  -webkit-backdrop-filter:blur(30px);
-  border-radius:28px;
-  box-shadow:var(--shadow);
-}
-
-/* COMMAND CORE */
-.core{
-  position:relative;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-}
-
-.core::before{
-  content:"";
-  position:absolute;
-  width:550px;
-  height:550px;
-  border-radius:50%;
-  background:
-    conic-gradient(
-      from 0deg,
-      transparent,
-      rgba(92,247,255,.18),
-      transparent,
-      rgba(155,108,255,.18),
-      transparent
-    );
-  filter:blur(10px);
-  animation:orbit 12s linear infinite;
-}
-
-@keyframes orbit{
-  to{transform:rotate(360deg)}
-}
-
-.eyebrow{
-  position:relative;
-  color:#aeb1d3;
-  font-size:10px;
-  letter-spacing:.3em;
-  text-transform:uppercase;
-  margin-bottom:22px;
-}
-
-.core h1{
-  position:relative;
-  margin:0;
-  text-align:center;
-  font-size:clamp(32px,5vw,76px);
-  line-height:.95;
-  letter-spacing:-.06em;
-  max-width:800px;
-}
-
-.gradient{
-  background:linear-gradient(
-    90deg,
-    #fff,
-    var(--cyan),
-    #fff,
-    var(--pink),
-    #fff
-  );
-  background-size:300% auto;
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  animation:shine 7s linear infinite;
-}
-
-@keyframes shine{
-  to{background-position:300% center}
-}
-
-.subtitle{
-  position:relative;
-  margin:20px 0 35px;
-  color:var(--muted);
-  text-align:center;
-  max-width:620px;
-  font-size:13px;
-  line-height:1.7;
-}
-
-/* VOICE ORB */
-.orbWrap{
-  position:relative;
-  width:220px;
-  height:220px;
-  display:grid;
-  place-items:center;
-}
-
-.ring{
-  position:absolute;
-  inset:0;
-  border-radius:50%;
-  border:1px solid rgba(92,247,255,.2);
-  animation:ring 5s linear infinite;
-}
-
-.ring:nth-child(2){
-  inset:14px;
-  border-color:rgba(155,108,255,.25);
-  animation-direction:reverse;
-  animation-duration:7s;
-}
-
-.ring:nth-child(3){
-  inset:28px;
-  border-color:rgba(255,94,219,.22);
-  animation-duration:9s;
-}
-
-@keyframes ring{
-  to{transform:rotate(360deg)}
-}
-
-.orb{
-  position:relative;
-  width:130px;
-  height:130px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.22);
-  background:
-    radial-gradient(circle at 35% 30%,#fff,rgba(255,255,255,.2) 5%,transparent 10%),
-    radial-gradient(circle,#733cff 0%,#25146c 35%,#050513 72%);
-  box-shadow:
-    0 0 35px rgba(120,70,255,.7),
-    0 0 100px rgba(92,247,255,.24),
-    inset 0 0 40px rgba(92,247,255,.18);
-  cursor:pointer;
-  transition:.3s;
-}
-
-.orb:hover{
-  transform:scale(1.05);
-  box-shadow:
-    0 0 50px rgba(120,70,255,.9),
-    0 0 130px rgba(92,247,255,.35);
-}
-
-.orb.listening{
-  animation:pulse 1s ease-in-out infinite;
-  box-shadow:
-    0 0 55px rgba(92,247,255,.95),
-    0 0 140px rgba(92,247,255,.45);
-}
-
-@keyframes pulse{
-  50%{transform:scale(1.12)}
-}
-
-.orbIcon{
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  font-size:36px;
-}
-
-.orbLabel{
-  position:absolute;
-  bottom:-27px;
-  left:0;
-  right:0;
-  text-align:center;
-  font-size:9px;
-  color:#aaaed0;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-}
-
-/* INPUT */
-.commandBox{
-  position:relative;
-  width:min(700px,90%);
-  margin-top:42px;
-}
-
-.commandBox input{
-  width:100%;
-  height:52px;
-  padding:0 58px 0 20px;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:18px;
-  outline:none;
-  color:#fff;
-  background:rgba(255,255,255,.045);
-  font-size:13px;
-  box-shadow:inset 0 0 30px rgba(255,255,255,.02);
-}
-
-.commandBox input:focus{
-  border-color:rgba(92,247,255,.5);
-  box-shadow:
-    0 0 0 4px rgba(92,247,255,.05),
-    0 0 35px rgba(92,247,255,.08);
-}
-
-.send{
-  position:absolute;
-  right:6px;
-  top:6px;
-  width:40px;
-  height:40px;
-  border:0;
-  border-radius:13px;
-  color:#03030b;
-  background:linear-gradient(135deg,var(--cyan),#fff);
-  cursor:pointer;
-  font-weight:800;
-}
-
-/* QUICK COMMANDS */
-.quick{
-  position:relative;
-  display:flex;
-  gap:7px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-top:14px;
-}
-
-.chip{
-  border:1px solid rgba(255,255,255,.09);
-  background:rgba(255,255,255,.035);
-  color:#bfc1db;
-  border-radius:999px;
-  padding:7px 11px;
-  font-size:9px;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.chip:hover{
-  color:#fff;
-  border-color:rgba(92,247,255,.35);
-  background:rgba(92,247,255,.06);
-}
-
-/* RIGHT SIDE */
-.side{
-  min-height:0;
-  display:grid;
-  grid-template-rows:1fr 1fr;
-  gap:14px;
-}
-
-.section{
-  min-height:0;
-  padding:18px;
-  overflow:hidden;
-}
-
-.sectionHead{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:14px;
-}
-
-.sectionHead strong{
+  gap:9px;
+  color:#aab2ce;
   font-size:11px;
   letter-spacing:.12em;
 }
 
-.sectionHead span{
-  font-size:9px;
-  color:#767997;
+.statusDot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 15px var(--green);
+  animation:pulse 1.6s infinite;
 }
 
-.activity{
-  height:calc(100% - 30px);
+@keyframes pulse{
+  50%{transform:scale(1.6);opacity:.5}
+}
+
+/* LEFT */
+
+.left{
+  min-height:0;
+  border-radius:24px;
+  padding:16px;
   overflow:auto;
-  padding-right:5px;
 }
 
-.activity::-webkit-scrollbar{
-  width:3px;
-}
-.activity::-webkit-scrollbar-thumb{
-  background:#292a48;
-  border-radius:99px;
+.sectionTitle{
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  color:#77809f;
+  margin:4px 4px 12px;
 }
 
-.event{
-  display:grid;
-  grid-template-columns:28px 1fr;
+.commandCard{
+  padding:13px;
+  border-radius:17px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.07);
+  margin-bottom:9px;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.commandCard:hover{
+  transform:translateX(4px);
+  background:rgba(85,234,255,.07);
+  border-color:rgba(85,234,255,.25);
+}
+
+.commandCard b{
+  display:block;
+  font-size:12px;
+}
+
+.commandCard small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-top:5px;
+  line-height:1.5;
+}
+
+/* CENTER */
+
+.center{
+  min-width:0;
+  min-height:0;
+  border-radius:24px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+.hero{
+  flex:1;
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+.rings{
+  position:absolute;
+  width:min(58vw,580px);
+  height:min(58vw,580px);
+  border-radius:50%;
+  border:1px solid rgba(85,234,255,.13);
+  box-shadow:
+    0 0 70px rgba(85,234,255,.06),
+    inset 0 0 70px rgba(157,108,255,.05);
+  animation:spin 30s linear infinite;
+}
+
+.rings:before,
+.rings:after{
+  content:"";
+  position:absolute;
+  inset:10%;
+  border-radius:50%;
+  border:1px dashed rgba(157,108,255,.2);
+}
+
+.rings:after{
+  inset:22%;
+  border-color:rgba(255,79,216,.2);
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+.avatarStage{
+  position:relative;
+  width:330px;
+  height:440px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.avatarGlow{
+  position:absolute;
+  width:270px;
+  height:270px;
+  border-radius:50%;
+  background:radial-gradient(circle,
+    rgba(85,234,255,.3),
+    rgba(157,108,255,.16) 40%,
+    transparent 70%);
+  filter:blur(20px);
+  animation:breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe{
+  50%{transform:scale(1.18);opacity:.7}
+}
+
+/*
+  Stylized human presenter.
+  Replace .avatarFace with an actual video/image/model
+  if you want a photorealistic human presenter.
+*/
+
+.avatar{
+  position:relative;
+  width:210px;
+  height:310px;
+  filter:drop-shadow(0 0 35px rgba(85,234,255,.18));
+}
+
+.hair{
+  position:absolute;
+  width:190px;
+  height:130px;
+  left:10px;
+  top:10px;
+  background:linear-gradient(135deg,#17132e,#37265f 45%,#090a15);
+  border-radius:100px 100px 45px 45px;
+  z-index:5;
+}
+
+.face{
+  position:absolute;
+  width:148px;
+  height:190px;
+  left:31px;
+  top:49px;
+  background:
+    radial-gradient(circle at 65% 25%,rgba(255,255,255,.18),transparent 14%),
+    linear-gradient(145deg,#d99c7d,#9e624f);
+  border-radius:48% 48% 45% 45% / 43% 43% 57% 57%;
+  z-index:4;
+  box-shadow:inset -15px -15px 35px rgba(0,0,0,.22);
+}
+
+.ear{
+  position:absolute;
+  width:24px;
+  height:48px;
+  top:115px;
+  background:#a86c58;
+  border-radius:50%;
+  z-index:2;
+}
+
+.ear.leftEar{left:23px}
+.ear.rightEar{right:23px}
+
+.eye{
+  position:absolute;
+  top:86px;
+  width:36px;
+  height:18px;
+  background:#fff;
+  border-radius:50%;
+  overflow:hidden;
+}
+
+.eye:after{
+  content:"";
+  position:absolute;
+  width:9px;
+  height:12px;
+  top:3px;
+  left:14px;
+  border-radius:50%;
+  background:#111322;
+  box-shadow:0 0 5px #55eaff;
+}
+
+.eye.leftEye{left:55px}
+.eye.rightEye{right:55px}
+
+.brow{
+  position:absolute;
+  width:37px;
+  height:5px;
+  top:73px;
+  border-radius:10px;
+  background:#40241e;
+}
+
+.brow.leftBrow{left:55px;transform:rotate(-5deg)}
+.brow.rightBrow{right:55px;transform:rotate(5deg)}
+
+.nose{
+  position:absolute;
+  width:18px;
+  height:38px;
+  left:65px;
+  top:104px;
+  border-right:2px solid rgba(72,35,28,.45);
+  border-bottom:2px solid rgba(72,35,28,.3);
+  border-radius:0 0 14px 0;
+}
+
+.mouth{
+  position:absolute;
+  width:44px;
+  height:12px;
+  left:52px;
+  top:155px;
+  border-bottom:3px solid #632d37;
+  border-radius:0 0 50% 50%;
+  transition:.08s;
+}
+
+.avatar.speaking .mouth{
+  height:20px;
+  width:34px;
+  left:57px;
+  top:151px;
+  border:2px solid #461b2a;
+  background:#210f18;
+  border-radius:50%;
+  animation:lip .16s infinite alternate;
+}
+
+@keyframes lip{
+  to{transform:scaleY(.45) scaleX(1.15)}
+}
+
+.neck{
+  position:absolute;
+  width:60px;
+  height:75px;
+  left:75px;
+  top:205px;
+  background:#9a5e4c;
+  z-index:2;
+}
+
+.body{
+  position:absolute;
+  width:210px;
+  height:125px;
+  left:0;
+  top:225px;
+  background:
+    linear-gradient(135deg,#11172d,#1c3158 48%,#080b18);
+  border-radius:90px 90px 20px 20px;
+  z-index:3;
+  border:1px solid rgba(85,234,255,.15);
+}
+
+.body:after{
+  content:"∞";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  font-size:42px;
+  color:var(--cyan);
+  text-shadow:0 0 25px var(--cyan);
+  opacity:.5;
+}
+
+.scan{
+  position:absolute;
+  width:150px;
+  height:3px;
+  left:30px;
+  top:125px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  opacity:.5;
+  animation:scan 3s ease-in-out infinite;
+  z-index:10;
+}
+
+@keyframes scan{
+  0%,100%{top:70px}
+  50%{top:185px}
+}
+
+.presenterName{
+  position:absolute;
+  bottom:17px;
+  text-align:center;
+  left:0;
+  right:0;
+}
+
+.presenterName b{
+  font-size:13px;
+  letter-spacing:.18em;
+}
+
+.presenterName span{
+  display:block;
+  font-size:9px;
+  color:var(--cyan);
+  margin-top:5px;
+  letter-spacing:.2em;
+}
+
+/* COMMAND BAR */
+
+.commandZone{
+  padding:14px;
+}
+
+.commandBar{
+  min-height:66px;
+  display:flex;
+  align-items:center;
   gap:10px;
-  padding:11px 0;
-  border-bottom:1px solid rgba(255,255,255,.055);
-  animation:appear .35s ease;
+  padding:9px;
+  border-radius:20px;
+  background:rgba(0,0,0,.3);
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:inset 0 0 30px rgba(85,234,255,.025);
+}
+
+.commandInput{
+  flex:1;
+  min-width:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:white;
+  font-size:14px;
+  padding:12px;
+}
+
+.commandInput::placeholder{color:#69728f}
+
+.iconButton{
+  width:44px;
+  height:44px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);
+  color:#dce5ff;
+  border-radius:14px;
+  cursor:pointer;
+  font-size:17px;
+  transition:.2s;
+}
+
+.iconButton:hover{
+  background:rgba(85,234,255,.12);
+  border-color:rgba(85,234,255,.35);
+  transform:translateY(-2px);
+}
+
+.mic{
+  width:52px;
+  height:52px;
+  border-radius:17px;
+  border:0;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  color:#050712;
+  font-size:20px;
+  cursor:pointer;
+  box-shadow:0 0 35px rgba(85,234,255,.25);
+}
+
+.mic.listening{
+  animation:micPulse .8s infinite alternate;
+  background:linear-gradient(135deg,#ff5b80,#ff4fd8);
+}
+
+@keyframes micPulse{
+  to{box-shadow:0 0 50px rgba(255,79,216,.8)}
+}
+
+/* RIGHT */
+
+.right{
+  min-height:0;
+  border-radius:24px;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+}
+
+.console{
+  flex:1;
+  min-height:0;
+  overflow:auto;
+  padding-right:3px;
+}
+
+.log{
+  padding:11px 12px;
+  margin-bottom:8px;
+  border-radius:14px;
+  background:rgba(255,255,255,.035);
+  border-left:2px solid var(--cyan);
+  animation:appear .3s ease;
 }
 
 @keyframes appear{
@@ -501,411 +575,291 @@ body{
   to{opacity:1;transform:none}
 }
 
-.eventIcon{
-  width:28px;
-  height:28px;
-  border-radius:9px;
-  display:grid;
-  place-items:center;
-  background:rgba(92,247,255,.08);
-  color:var(--cyan);
-  font-size:11px;
-}
-
-.eventText{
-  min-width:0;
-}
-
-.eventText b{
-  display:block;
-  font-size:10px;
-  font-weight:600;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.eventText small{
-  display:block;
-  color:#737694;
-  font-size:8px;
-  margin-top:3px;
-}
-
-/* CAPABILITIES */
-.capabilities{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-}
-
-.cap{
-  padding:12px;
-  border-radius:15px;
-  background:rgba(255,255,255,.035);
-  border:1px solid rgba(255,255,255,.06);
-  transition:.2s;
-}
-
-.cap:hover{
-  transform:translateY(-2px);
-  border-color:rgba(92,247,255,.2);
-}
-
-.capIcon{
-  font-size:17px;
-  margin-bottom:8px;
-}
-
-.cap b{
-  display:block;
+.log small{
+  color:#68718f;
   font-size:9px;
 }
 
-.cap small{
-  display:block;
-  color:#777997;
-  font-size:7px;
-  margin-top:4px;
-}
-
-/* FOOTER */
-.footer{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:0 18px;
-}
-
-.footerStats{
-  display:flex;
-  gap:18px;
-}
-
-.stat small{
-  display:block;
-  color:#6d708e;
-  font-size:7px;
-  letter-spacing:.12em;
-}
-
-.stat b{
+.log p{
+  margin:5px 0 0;
   font-size:11px;
-  color:#d7d8e9;
+  line-height:1.5;
 }
 
-.footerButtons{
-  display:flex;
+.log.ai{border-color:var(--violet)}
+.log.success{border-color:var(--green)}
+.log.warn{border-color:var(--orange)}
+
+.quick{
+  display:grid;
+  grid-template-columns:1fr 1fr;
   gap:7px;
+  margin-top:12px;
 }
 
-.toolBtn{
+.quick button{
   border:1px solid rgba(255,255,255,.08);
   background:rgba(255,255,255,.035);
-  color:#aaaed0;
+  color:#aeb7d2;
+  padding:9px;
   border-radius:12px;
-  width:37px;
-  height:37px;
   cursor:pointer;
+  font-size:10px;
 }
 
-.toolBtn:hover{
-  color:#fff;
-  border-color:rgba(92,247,255,.3);
+.quick button:hover{
+  color:white;
+  border-color:rgba(85,234,255,.3);
 }
 
-/* TOAST */
-.toast{
-  position:fixed;
-  z-index:99;
-  left:50%;
-  bottom:95px;
-  transform:translate(-50%,20px);
-  padding:12px 18px;
-  border-radius:14px;
-  background:rgba(10,11,29,.92);
-  border:1px solid rgba(92,247,255,.25);
-  box-shadow:0 15px 50px rgba(0,0,0,.45);
-  font-size:11px;
-  color:#dfe0ef;
-  opacity:0;
-  pointer-events:none;
-  transition:.3s;
+.footerHint{
+  margin-top:11px;
+  font-size:9px;
+  color:#59627e;
+  text-align:center;
 }
 
-.toast.show{
-  opacity:1;
-  transform:translate(-50%,0);
-}
+/* responsive */
 
-/* RESPONSIVE */
-@media(max-width:900px){
-  body{overflow:auto}
-
+@media(max-width:1050px){
   .app{
-    min-height:100vh;
-    height:auto;
-    grid-template-rows:auto auto auto;
-    padding:8px;
+    grid-template-columns:220px minmax(360px,1fr);
   }
-
-  .main{
-    grid-template-columns:1fr;
-  }
-
-  .side{
-    grid-template-rows:300px 250px;
-  }
-
-  .core{
-    min-height:650px;
-  }
-
-  .footer{
-    padding:15px 5px;
-  }
+  .right{display:none}
 }
 
-@media(max-width:550px){
-  .brand small{display:none}
-  .status span{display:none}
-  .core h1{font-size:42px}
-  .orbWrap{transform:scale(.85)}
-  .footerStats{gap:9px}
+@media(max-width:720px){
+  body{overflow:auto}
+  .app{
+    height:auto;
+    min-height:100vh;
+    grid-template-columns:1fr;
+    grid-template-rows:70px 570px auto;
+  }
+  .left{display:none}
+  .right{display:flex;min-height:300px}
+  .rings{width:440px;height:440px}
+}
+
+/* scrollbar */
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.12);
+  border-radius:20px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="space">
-  <div class="nebula n1"></div>
-  <div class="nebula n2"></div>
-  <div class="nebula n3"></div>
-  <div class="stars"></div>
-</div>
+<canvas id="space"></canvas>
 
 <div class="app">
 
-  <!-- TOP -->
-  <header class="topbar">
+  <header class="topbar glass">
     <div class="brand">
       <div class="logo">∞</div>
       <div>
-        <strong>COSMOS</strong>
-        <small>UNIVERSAL COMMAND INTERFACE</small>
+        <h1>COSMOS COMMAND</h1>
+        <span>VOICE • INTELLIGENCE • AUTOMATION</span>
       </div>
     </div>
 
     <div class="status">
       <i class="statusDot"></i>
-      <span id="statusText">SYSTEM READY</span>
+      COSMIC CORE ONLINE
     </div>
   </header>
 
-  <!-- MAIN -->
-  <main class="main">
+  <aside class="left glass">
+    <div class="sectionTitle">Command Library</div>
 
-    <!-- COMMAND CORE -->
-    <section class="panel core">
+    <div class="commandCard" data-command="What time is it?">
+      <b>⏱ Ask the time</b>
+      <small>“What time is it?”</small>
+    </div>
 
-      <div class="eyebrow">Your command becomes action</div>
+    <div class="commandCard" data-command="Open Google">
+      <b>🌐 Open a website</b>
+      <small>“Open Google”</small>
+    </div>
 
-      <h1>
-        Speak to your
-        <span class="gradient">universe.</span>
-      </h1>
+    <div class="commandCard" data-command="Search the web for quantum computing">
+      <b>🔎 Search the web</b>
+      <small>“Search the web for quantum computing”</small>
+    </div>
 
-      <p class="subtitle">
-        Command your digital workspace naturally.
-        Speak, type, automate, search, create, calculate,
-        navigate and orchestrate connected services.
-      </p>
+    <div class="commandCard" data-command="Take me to YouTube">
+      <b>▶ YouTube</b>
+      <small>“Take me to YouTube”</small>
+    </div>
 
-      <div class="orbWrap">
-        <div class="ring"></div>
-        <div class="ring"></div>
-        <div class="ring"></div>
+    <div class="commandCard" data-command="Remember that my project deadline is Friday">
+      <b>🧠 Save a memory</b>
+      <small>“Remember that…”</small>
+    </div>
 
-        <button class="orb" id="voiceOrb" aria-label="Start voice command">
-          <div class="orbIcon" id="orbIcon">✦</div>
-          <div class="orbLabel" id="orbLabel">Tap to speak</div>
-        </button>
-      </div>
+    <div class="commandCard" data-command="Show my saved memories">
+      <b>📚 Memories</b>
+      <small>Show locally stored notes.</small>
+    </div>
 
-      <div class="commandBox">
-        <input
-          id="commandInput"
-          autocomplete="off"
-          placeholder="Type a command… e.g. search the web for quantum computing"
-        >
-        <button class="send" id="sendBtn">↗</button>
-      </div>
+    <div class="commandCard" data-command="Clear the screen">
+      <b>✨ Clear console</b>
+      <small>Reset the activity stream.</small>
+    </div>
 
-      <div class="quick">
-        <button class="chip" data-command="What time is it?">TIME</button>
-        <button class="chip" data-command="Open YouTube">YOUTUBE</button>
-        <button class="chip" data-command="Search the web for today's technology news">SEARCH</button>
-        <button class="chip" data-command="Create a note called Ideas">NOTE</button>
-        <button class="chip" data-command="Set a timer for 10 seconds">TIMER</button>
-        <button class="chip" data-command="What can you do?">CAPABILITIES</button>
+    <div class="sectionTitle" style="margin-top:22px">
+      Voice Control
+    </div>
+
+    <div class="commandCard" data-command="Activate cosmic mode">
+      <b>⚡ Cosmic Mode</b>
+      <small>Activate the visual energy field.</small>
+    </div>
+  </aside>
+
+  <main class="center glass">
+
+    <section class="hero">
+
+      <div class="rings"></div>
+
+      <div class="avatarStage">
+
+        <div class="avatarGlow"></div>
+
+        <div class="avatar" id="avatar">
+
+          <div class="hair"></div>
+
+          <div class="ear leftEar"></div>
+          <div class="ear rightEar"></div>
+
+          <div class="face">
+            <div class="brow leftBrow"></div>
+            <div class="brow rightBrow"></div>
+            <div class="eye leftEye"></div>
+            <div class="eye rightEye"></div>
+            <div class="nose"></div>
+            <div class="mouth" id="mouth"></div>
+          </div>
+
+          <div class="neck"></div>
+          <div class="body"></div>
+          <div class="scan"></div>
+
+        </div>
+
+        <div class="presenterName">
+          <b>NOVA</b>
+          <span>YOUR COSMIC COMMAND PRESENTER</span>
+        </div>
+
       </div>
 
     </section>
 
-    <!-- SIDEBAR -->
-    <aside class="side">
+    <section class="commandZone">
 
-      <section class="panel section">
-        <div class="sectionHead">
-          <strong>LIVE ACTIVITY</strong>
-          <span id="eventCount">0 EVENTS</span>
-        </div>
+      <div class="commandBar">
 
-        <div class="activity" id="activity"></div>
-      </section>
+        <button class="iconButton"
+                id="clearBtn"
+                title="Clear">
+          ✦
+        </button>
 
-      <section class="panel section">
-        <div class="sectionHead">
-          <strong>COMMAND MATRIX</strong>
-          <span>READY</span>
-        </div>
+        <input
+          id="commandInput"
+          class="commandInput"
+          autocomplete="off"
+          placeholder="Speak or type anything…"
+        >
 
-        <div class="capabilities">
+        <button
+          class="iconButton"
+          id="sendBtn"
+          title="Execute command">
+          ➤
+        </button>
 
-          <div class="cap">
-            <div class="capIcon">🌐</div>
-            <b>Web</b>
-            <small>Search & navigate</small>
-          </div>
+        <button
+          class="mic"
+          id="micBtn"
+          title="Voice command">
+          🎙
+        </button>
 
-          <div class="cap">
-            <div class="capIcon">🧠</div>
-            <b>AI</b>
-            <small>Connect your AI API</small>
-          </div>
+      </div>
 
-          <div class="cap">
-            <div class="capIcon">📝</div>
-            <b>Workspace</b>
-            <small>Notes & tasks</small>
-          </div>
-
-          <div class="cap">
-            <div class="capIcon">⏱️</div>
-            <b>Automation</b>
-            <small>Timers & workflows</small>
-          </div>
-
-          <div class="cap">
-            <div class="capIcon">📋</div>
-            <b>Clipboard</b>
-            <small>Copy & paste actions</small>
-          </div>
-
-          <div class="cap">
-            <div class="capIcon">⚡</div>
-            <b>Parallel</b>
-            <small>Run safe actions together</small>
-          </div>
-
-        </div>
-      </section>
-
-    </aside>
+    </section>
 
   </main>
 
-  <!-- FOOTER -->
-  <footer class="panel footer">
+  <aside class="right glass">
 
-    <div class="footerStats">
-      <div class="stat">
-        <small>COMMANDS</small>
-        <b id="commands">0</b>
-      </div>
+    <div class="sectionTitle">Live Intelligence Stream</div>
 
-      <div class="stat">
-        <small>SUCCESS</small>
-        <b id="success">0</b>
-      </div>
+    <div class="console" id="console"></div>
 
-      <div class="stat">
-        <small>UPTIME</small>
-        <b id="uptime">00:00</b>
-      </div>
+    <div class="quick">
+      <button data-command="What time is it?">TIME</button>
+      <button data-command="Open YouTube">YOUTUBE</button>
+      <button data-command="Search the web for artificial intelligence">SEARCH</button>
+      <button data-command="Show my saved memories">MEMORY</button>
     </div>
 
-    <div class="footerButtons">
-      <button class="toolBtn" id="clearBtn" title="Clear activity">⌫</button>
-      <button class="toolBtn" id="voiceToggle" title="Voice feedback">🔊</button>
-      <button class="toolBtn" id="themeBtn" title="Change theme">◉</button>
+    <div class="footerHint">
+      Browser automation is permission-limited.
+      Connect a backend/agent for extended capabilities.
     </div>
 
-  </footer>
+  </aside>
 
 </div>
 
-<div class="toast" id="toast"></div>
-
 <script>
 /* =========================================================
-   COSMOS COMMAND ENGINE
+   COSMOS COMMAND CORE
    ========================================================= */
 
-const state = {
-  commands: 0,
-  success: 0,
-  events: 0,
-  voiceOutput: true,
-  started: Date.now(),
-  listening: false
-};
+const input = document.getElementById("commandInput");
+const micBtn = document.getElementById("micBtn");
+const sendBtn = document.getElementById("sendBtn");
+const clearBtn = document.getElementById("clearBtn");
+const consoleEl = document.getElementById("console");
+const avatar = document.getElementById("avatar");
 
-const $ = id => document.getElementById(id);
+let recognition = null;
+let listening = false;
 
-const orb = $("voiceOrb");
-const input = $("commandInput");
-const activity = $("activity");
-const toast = $("toast");
 
-function showToast(message){
-  toast.textContent = message;
-  toast.classList.add("show");
+/* ---------------------------------------------------------
+   LOGGING
+--------------------------------------------------------- */
 
-  clearTimeout(showToast.timer);
+function log(message, type="ai"){
+  const item = document.createElement("div");
+  item.className = "log " + type;
 
-  showToast.timer = setTimeout(()=>{
-    toast.classList.remove("show");
-  },2600);
-}
+  const time = new Date().toLocaleTimeString([], {
+    hour:"2-digit",
+    minute:"2-digit",
+    second:"2-digit"
+  });
 
-function logEvent(title, detail="", icon="✦"){
-  state.events++;
-
-  const el = document.createElement("div");
-  el.className = "event";
-
-  el.innerHTML = `
-    <div class="eventIcon">${icon}</div>
-    <div class="eventText">
-      <b>${escapeHTML(title)}</b>
-      <small>${escapeHTML(detail)}</small>
-    </div>
+  item.innerHTML = `
+    <small>${time}</small>
+    <p>${escapeHTML(message)}</p>
   `;
 
-  activity.prepend(el);
-
-  while(activity.children.length > 30){
-    activity.lastElementChild.remove();
-  }
-
-  $("eventCount").textContent = `${state.events} EVENTS`;
+  consoleEl.prepend(item);
 }
 
-function escapeHTML(str){
-  return String(str)
+function escapeHTML(value){
+  return String(value)
     .replaceAll("&","&amp;")
     .replaceAll("<","&lt;")
     .replaceAll(">","&gt;")
@@ -913,645 +867,770 @@ function escapeHTML(str){
     .replaceAll("'","&#039;");
 }
 
-function updateStats(){
-  $("commands").textContent = state.commands;
-  $("success").textContent = state.success;
-}
 
-/* =========================================================
-   TEXT TO SPEECH
-   ========================================================= */
+/* ---------------------------------------------------------
+   SPEECH
+--------------------------------------------------------- */
 
 function speak(text){
-  if(!state.voiceOutput || !("speechSynthesis" in window)) return;
+
+  if(!("speechSynthesis" in window)){
+    return;
+  }
 
   speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = 1.02;
-  utterance.pitch = 1.02;
-  utterance.volume = .8;
+
+  utterance.rate = .96;
+  utterance.pitch = 1.03;
+  utterance.volume = 1;
+
+  const voices = speechSynthesis.getVoices();
+
+  const preferred =
+    voices.find(v => /Samantha|Google US English|Microsoft.*Jenny|Microsoft.*Aria/i.test(v.name))
+    || voices.find(v => /^en(-|_)/i.test(v.lang))
+    || voices[0];
+
+  if(preferred){
+    utterance.voice = preferred;
+  }
+
+  utterance.onstart = () => {
+    avatar.classList.add("speaking");
+  };
+
+  utterance.onend = () => {
+    avatar.classList.remove("speaking");
+  };
+
+  utterance.onerror = () => {
+    avatar.classList.remove("speaking");
+  };
 
   speechSynthesis.speak(utterance);
 }
 
-/* =========================================================
-   WEB SPEECH API
-   ========================================================= */
+if("speechSynthesis" in window){
+  speechSynthesis.onvoiceschanged = () => {};
+}
+
+
+/* ---------------------------------------------------------
+   VOICE RECOGNITION
+--------------------------------------------------------- */
 
 const SpeechRecognition =
   window.SpeechRecognition ||
   window.webkitSpeechRecognition;
 
-let recognition = null;
-
 if(SpeechRecognition){
 
   recognition = new SpeechRecognition();
 
+  recognition.lang = "en-US";
   recognition.continuous = false;
   recognition.interimResults = true;
-  recognition.lang = navigator.language || "en-US";
 
-  recognition.onstart = ()=>{
-    state.listening = true;
-
-    orb.classList.add("listening");
-
-    $("orbIcon").textContent = "◉";
-    $("orbLabel").textContent = "Listening…";
-    $("statusText").textContent = "LISTENING";
+  recognition.onstart = () => {
+    listening = true;
+    micBtn.classList.add("listening");
+    micBtn.textContent = "⏹";
+    log("Listening for your command…","ai");
   };
 
   recognition.onresult = event => {
 
-    let transcript = "";
+    let finalText = "";
 
     for(let i=event.resultIndex;i<event.results.length;i++){
-      transcript += event.results[i][0].transcript;
+
+      const transcript =
+        event.results[i][0].transcript;
+
+      if(event.results[i].isFinal){
+        finalText += transcript;
+      }
+
+      input.value = transcript;
     }
 
-    input.value = transcript;
-
-    const finalResult =
-      event.results[event.results.length-1].isFinal;
-
-    if(finalResult){
-      executeCommand(transcript);
+    if(finalText.trim()){
+      input.value = finalText.trim();
     }
   };
 
   recognition.onerror = event => {
-    logEvent(
-      "Voice error",
-      event.error || "Speech recognition failed",
-      "!"
-    );
-
-    showToast("Voice recognition: " + event.error);
+    log("Voice recognition error: " + event.error,"warn");
   };
 
-  recognition.onend = ()=>{
-    state.listening = false;
+  recognition.onend = () => {
 
-    orb.classList.remove("listening");
+    listening = false;
 
-    $("orbIcon").textContent = "✦";
-    $("orbLabel").textContent = "Tap to speak";
-    $("statusText").textContent = "SYSTEM READY";
+    micBtn.classList.remove("listening");
+    micBtn.textContent = "🎙";
+
+    if(input.value.trim()){
+      executeCommand(input.value.trim());
+    }
   };
 
 }else{
-  $("statusText").textContent = "VOICE API UNAVAILABLE";
-  $("orbLabel").textContent = "Voice unavailable";
+
+  log(
+    "Speech recognition is unavailable in this browser. You can still type commands.",
+    "warn"
+  );
 }
 
-orb.addEventListener("click",()=>{
+
+micBtn.addEventListener("click",()=>{
 
   if(!recognition){
-    showToast("Speech recognition isn't supported here.");
+
+    log(
+      "This browser does not support Web Speech recognition.",
+      "warn"
+    );
+
     return;
   }
 
-  if(state.listening){
+  if(listening){
     recognition.stop();
   }else{
-    try{
-      recognition.start();
-    }catch(e){}
+    input.value = "";
+    recognition.start();
   }
 });
 
-/* =========================================================
-   COMMAND ENGINE
-   ========================================================= */
 
-async function executeCommand(rawCommand){
+/* ---------------------------------------------------------
+   COMMAND ENTRY
+--------------------------------------------------------- */
 
-  const command = rawCommand.trim();
-
-  if(!command) return;
-
-  state.commands++;
-  updateStats();
-
-  logEvent(
-    "Command received",
-    command,
-    "⚡"
-  );
-
-  $("statusText").textContent = "EXECUTING";
-
-  try{
-
-    /*
-      Parse first, then execute.
-
-      In a production version this function is the
-      integration point for your AI/backend orchestration
-      system.
-    */
-
-    const result = await commandRouter(command);
-
-    state.success++;
-    updateStats();
-
-    logEvent(
-      "Completed",
-      result.message || "Action completed",
-      "✓"
-    );
-
-    if(result.message){
-      speak(result.message);
-      showToast(result.message);
-    }
-
-  }catch(error){
-
-    logEvent(
-      "Execution failed",
-      error.message || "Unknown error",
-      "!"
-    );
-
-    speak("I couldn't complete that command.");
-    showToast("Command failed.");
-  }
-
-  $("statusText").textContent = "SYSTEM READY";
-}
-
-/* =========================================================
-   COMMAND ROUTER
-   ========================================================= */
-
-async function commandRouter(command){
-
-  const c = command.toLowerCase();
-
-  /* ---- TIME ---- */
-
-  if(
-    c.includes("what time") ||
-    c.includes("current time") ||
-    c === "time"
-  ){
-    const now = new Date();
-
-    return {
-      message:
-        "It is " +
-        now.toLocaleTimeString([],{
-          hour:"numeric",
-          minute:"2-digit"
-        }) +
-        "."
-    };
-  }
-
-  /* ---- OPEN WEBSITES ---- */
-
-  if(
-    c.includes("open youtube") ||
-    c.includes("go to youtube")
-  ){
-
-    window.open(
-      "https://www.youtube.com/",
-      "_blank",
-      "noopener"
-    );
-
-    return {
-      message:"Opening YouTube."
-    };
-  }
-
-  if(
-    c.includes("open google") ||
-    c.includes("go to google")
-  ){
-
-    window.open(
-      "https://www.google.com/",
-      "_blank",
-      "noopener"
-    );
-
-    return {
-      message:"Opening Google."
-    };
-  }
-
-  /* ---- SEARCH ---- */
-
-  if(
-    c.startsWith("search ") ||
-    c.includes("search the web")
-  ){
-
-    let query = command
-      .replace(/search the web for/i,"")
-      .replace(/^search/i,"")
-      .trim();
-
-    if(!query) query = "latest news";
-
-    window.open(
-      "https://www.google.com/search?q=" +
-      encodeURIComponent(query),
-      "_blank",
-      "noopener"
-    );
-
-    return {
-      message:"Searching the web for " + query + "."
-    };
-  }
-
-  /* ---- CREATE NOTE ---- */
-
-  if(
-    c.startsWith("create a note") ||
-    c.startsWith("make a note") ||
-    c.startsWith("take a note")
-  ){
-
-    const note =
-      command
-        .replace(/create a note/i,"")
-        .replace(/make a note/i,"")
-        .replace(/take a note/i,"")
-        .trim() || "Untitled note";
-
-    const notes =
-      JSON.parse(localStorage.getItem("cosmosNotes") || "[]");
-
-    notes.push({
-      text:note,
-      created:new Date().toISOString()
-    });
-
-    localStorage.setItem(
-      "cosmosNotes",
-      JSON.stringify(notes)
-    );
-
-    return {
-      message:"Note created: " + note
-    };
-  }
-
-  /* ---- LIST NOTES ---- */
-
-  if(
-    c.includes("show my notes") ||
-    c.includes("list my notes")
-  ){
-
-    const notes =
-      JSON.parse(localStorage.getItem("cosmosNotes") || "[]");
-
-    if(!notes.length){
-      return {
-        message:"You don't have any saved notes yet."
-      };
-    }
-
-    return {
-      message:`You have ${notes.length} saved note${notes.length===1?"":"s"}.`
-    };
-  }
-
-  /* ---- TIMER ---- */
-
-  const timerMatch =
-    c.match(/timer.*?(\d+)\s*(second|seconds|minute|minutes)/i);
-
-  if(timerMatch){
-
-    const amount = Number(timerMatch[1]);
-    const unit = timerMatch[2].toLowerCase();
-
-    const ms =
-      unit.startsWith("minute")
-        ? amount * 60 * 1000
-        : amount * 1000;
-
-    setTimeout(()=>{
-
-      logEvent(
-        "Timer completed",
-        `${amount} ${unit}`,
-        "⏰"
-      );
-
-      speak("Your timer is complete.");
-      showToast("⏰ Timer complete");
-
-    },ms);
-
-    return {
-      message:`Timer set for ${amount} ${unit}.`
-    };
-  }
-
-  /* ---- COPY ---- */
-
-  if(
-    c.startsWith("copy ")
-  ){
-
-    const text =
-      command.substring(5).trim();
-
-    if(navigator.clipboard){
-
-      await navigator.clipboard.writeText(text);
-
-      return {
-        message:"Copied that to your clipboard."
-      };
-
-    }
-
-    throw new Error("Clipboard permission unavailable.");
-  }
-
-  /* ---- CAPABILITIES ---- */
-
-  if(
-    c.includes("what can you do") ||
-    c.includes("your capabilities")
-  ){
-
-    return {
-      message:
-        "I can route commands for web search, websites, notes, timers, clipboard actions, voice interaction and connected services."
-    };
-  }
-
-  /* ---- CLEAR ---- */
-
-  if(
-    c.includes("clear activity") ||
-    c.includes("clear history")
-  ){
-
-    activity.innerHTML = "";
-    state.events = 0;
-    $("eventCount").textContent = "0 EVENTS";
-
-    return {
-      message:"Activity cleared."
-    };
-  }
-
-  /* ---- MULTI ACTION ---- */
-
-  if(
-    c.includes(" and ") &&
-    c.length > 20
-  ){
-
-    const parts = command
-      .split(/\s+and\s+/i)
-      .map(x=>x.trim())
-      .filter(Boolean);
-
-    if(parts.length > 1){
-
-      logEvent(
-        "Parallel orchestration",
-        `${parts.length} actions detected`,
-        "∞"
-      );
-
-      /*
-        Safe browser-level actions can execute in parallel.
-
-        For arbitrary external automation, connect this
-        section to your backend/API orchestrator.
-      */
-
-      const results =
-        await Promise.all(
-          parts.map(part => commandRouter(part))
-        );
-
-      return {
-        message:
-          `Completed ${results.length} requested actions.`
-      };
-    }
-  }
-
-  /* ---- FALLBACK ---- */
-
-  /*
-    This is where a real AI backend should receive the
-    natural-language command.
-
-    Example architecture:
-
-    Browser
-       ↓
-    POST /api/command
-       ↓
-    Authentication / permissions
-       ↓
-    AI planner
-       ↓
-    Tool registry
-       ↓
-    Parallel execution
-       ↓
-    Results → browser
-  */
-
-  logEvent(
-    "Command queued for AI",
-    "No local handler — connect your backend here.",
-    "🧠"
-  );
-
-  return {
-    message:
-      "I understand the command, but this browser-only demo needs an AI backend or connected tool to execute that action."
-  };
-}
-
-/* =========================================================
-   SEND BUTTON
-   ========================================================= */
-
-function submitInput(){
-
+sendBtn.addEventListener("click",()=>{
   const command = input.value.trim();
 
-  if(!command){
-    showToast("Speak or type a command first.");
-    return;
+  if(command){
+    executeCommand(command);
   }
-
-  executeCommand(command);
-  input.value = "";
-}
-
-$("sendBtn").addEventListener("click",submitInput);
+});
 
 input.addEventListener("keydown",event=>{
   if(event.key === "Enter"){
-    submitInput();
+    const command = input.value.trim();
+
+    if(command){
+      executeCommand(command);
+    }
   }
 });
 
-/* =========================================================
-   QUICK COMMANDS
-   ========================================================= */
 
-document.querySelectorAll(".chip").forEach(button=>{
+/* ---------------------------------------------------------
+   COMMAND ENGINE
+--------------------------------------------------------- */
 
-  button.addEventListener("click",()=>{
+async function executeCommand(raw){
 
-    const command = button.dataset.command;
+  const command = raw.trim();
 
-    input.value = command;
+  if(!command) return;
 
-    executeCommand(command);
+  log("YOU → " + command,"success");
 
-    input.value = "";
+  input.value = "";
+
+  const normalized = command.toLowerCase();
+
+  /*
+    This is the browser-side command router.
+
+    For genuinely arbitrary natural-language automation,
+    replace/augment this section with an API call to your
+    own AI backend/agent.
+  */
+
+  /* TIME */
+
+  if(
+    normalized.includes("what time") ||
+    normalized === "time" ||
+    normalized.includes("current time")
+  ){
+
+    const now = new Date();
+
+    const response =
+      "It is " +
+      now.toLocaleTimeString([],{
+        hour:"numeric",
+        minute:"2-digit"
+      }) +
+      " right now.";
+
+    respond(response);
+    return;
+  }
+
+
+  /* DATE */
+
+  if(
+    normalized.includes("what date") ||
+    normalized.includes("today's date") ||
+    normalized === "date"
+  ){
+
+    const response =
+      "Today is " +
+      new Date().toLocaleDateString(undefined,{
+        weekday:"long",
+        year:"numeric",
+        month:"long",
+        day:"numeric"
+      }) +
+      ".";
+
+    respond(response);
+    return;
+  }
+
+
+  /* CLEAR */
+
+  if(
+    normalized.includes("clear the screen") ||
+    normalized.includes("clear console") ||
+    normalized === "clear"
+  ){
+
+    consoleEl.innerHTML = "";
+
+    respond("The command stream has been cleared.");
+    return;
+  }
+
+
+  /* COSMIC MODE */
+
+  if(
+    normalized.includes("cosmic mode") ||
+    normalized.includes("magic mode")
+  ){
+
+    document.body.style.setProperty(
+      "--cyan",
+      "#ff4fd8"
+    );
+
+    document.body.style.setProperty(
+      "--violet",
+      "#55eaff"
+    );
+
+    respond(
+      "Cosmic mode activated. The command universe is now running at maximum visual energy."
+    );
+
+    return;
+  }
+
+
+  /* MEMORY */
+
+  if(normalized.startsWith("remember ")){
+
+    const memory =
+      command.substring(9).trim();
+
+    saveMemory(memory);
+
+    respond(
+      "Saved to local cosmic memory: " + memory
+    );
+
+    return;
+  }
+
+
+  if(
+    normalized.includes("show my saved memories") ||
+    normalized.includes("show memories") ||
+    normalized.includes("my memories")
+  ){
+
+    showMemories();
+    return;
+  }
+
+
+  /* OPEN WEBSITE */
+
+  if(
+    normalized.startsWith("open ") ||
+    normalized.startsWith("go to ") ||
+    normalized.startsWith("take me to ")
+  ){
+
+    const destination =
+      command
+        .replace(/^open\s+/i,"")
+        .replace(/^go to\s+/i,"")
+        .replace(/^take me to\s+/i,"")
+        .trim();
+
+    openDestination(destination);
+    return;
+  }
+
+
+  /* SEARCH */
+
+  if(
+    normalized.startsWith("search ") ||
+    normalized.includes("search the web for") ||
+    normalized.startsWith("google ")
+  ){
+
+    let query = command
+      .replace(/^search the web for\s*/i,"")
+      .replace(/^search\s+/i,"")
+      .replace(/^google\s+/i,"")
+      .trim();
+
+    if(!query){
+      respond("What would you like me to search for?");
+      return;
+    }
+
+    const url =
+      "https://www.google.com/search?q=" +
+      encodeURIComponent(query);
+
+    window.open(url,"_blank");
+
+    respond(
+      "Searching the web for " + query + "."
+    );
+
+    return;
+  }
+
+
+  /* HELP */
+
+  if(
+    normalized === "help" ||
+    normalized.includes("what can you do")
+  ){
+
+    respond(
+      "I can respond to voice commands, speak back, open websites, search the web, tell you the time and date, save local memories, show your saved memories, and control this interface. For much broader automation, connect the command engine to your own AI agent backend."
+    );
+
+    return;
+  }
+
+
+  /*
+    FALLBACK
+    ------------------------------------------------------
+    A real production AI system should send the command to
+    your backend here.
+  */
+
+  respond(
+    "Command received. I understand the request, but this standalone browser version does not have permission to perform arbitrary computer actions. Connect an AI automation backend to execute extended commands."
+  );
+}
+
+
+/* ---------------------------------------------------------
+   RESPONSE
+--------------------------------------------------------- */
+
+function respond(text){
+
+  log("NOVA → " + text,"ai");
+  speak(text);
+}
+
+
+/* ---------------------------------------------------------
+   WEBSITE ROUTER
+--------------------------------------------------------- */
+
+function openDestination(destination){
+
+  const d = destination.toLowerCase();
+
+  const sites = {
+
+    "google":
+      "https://www.google.com",
+
+    "youtube":
+      "https://www.youtube.com",
+
+    "gmail":
+      "https://mail.google.com",
+
+    "github":
+      "https://github.com",
+
+    "chatgpt":
+      "https://chatgpt.com",
+
+    "openai":
+      "https://openai.com",
+
+    "reddit":
+      "https://www.reddit.com",
+
+    "facebook":
+      "https://www.facebook.com",
+
+    "instagram":
+      "https://www.instagram.com",
+
+    "x":
+      "https://x.com",
+
+    "twitter":
+      "https://x.com"
+  };
+
+  if(sites[d]){
+
+    window.open(sites[d],"_blank");
+
+    respond(
+      "Opening " + destination + "."
+    );
+
+    return;
+  }
+
+
+  let url = destination;
+
+  if(!/^https?:\/\//i.test(url)){
+    url = "https://" + url;
+  }
+
+  try{
+
+    new URL(url);
+
+    window.open(url,"_blank");
+
+    respond(
+      "Opening " + destination + "."
+    );
+
+  }catch{
+
+    window.open(
+      "https://www.google.com/search?q=" +
+      encodeURIComponent(destination),
+      "_blank"
+    );
+
+    respond(
+      "I couldn't identify that as a direct website, so I searched for it."
+    );
+  }
+}
+
+
+/* ---------------------------------------------------------
+   LOCAL MEMORY
+--------------------------------------------------------- */
+
+function saveMemory(memory){
+
+  const memories =
+    JSON.parse(
+      localStorage.getItem("cosmos_memories") || "[]"
+    );
+
+  memories.unshift({
+    text:memory,
+    time:new Date().toISOString()
   });
 
-});
-
-/* =========================================================
-   CLEAR
-   ========================================================= */
-
-$("clearBtn").addEventListener("click",()=>{
-
-  activity.innerHTML = "";
-
-  state.events = 0;
-
-  $("eventCount").textContent = "0 EVENTS";
-
-  showToast("Activity cleared.");
-});
-
-/* =========================================================
-   VOICE OUTPUT
-   ========================================================= */
-
-$("voiceToggle").addEventListener("click",()=>{
-
-  state.voiceOutput = !state.voiceOutput;
-
-  $("voiceToggle").textContent =
-    state.voiceOutput ? "🔊" : "🔇";
-
-  showToast(
-    state.voiceOutput
-      ? "Voice feedback enabled."
-      : "Voice feedback disabled."
+  localStorage.setItem(
+    "cosmos_memories",
+    JSON.stringify(memories.slice(0,100))
   );
-});
+}
 
-/* =========================================================
-   THEME
-   ========================================================= */
 
-let alternateTheme = false;
+function showMemories(){
 
-$("themeBtn").addEventListener("click",()=>{
-
-  alternateTheme = !alternateTheme;
-
-  if(alternateTheme){
-
-    document.documentElement.style.setProperty(
-      "--cyan","#ffdd6b"
+  const memories =
+    JSON.parse(
+      localStorage.getItem("cosmos_memories") || "[]"
     );
 
-    document.documentElement.style.setProperty(
-      "--violet","#ff5f91"
-    );
+  if(!memories.length){
 
-    document.documentElement.style.setProperty(
-      "--pink","#ff9f43"
-    );
-
-    showToast("Solar mode activated.");
-
-  }else{
-
-    document.documentElement.style.setProperty(
-      "--cyan","#5cf7ff"
-    );
-
-    document.documentElement.style.setProperty(
-      "--violet","#9b6cff"
-    );
-
-    document.documentElement.style.setProperty(
-      "--pink","#ff5edb"
-    );
-
-    showToast("Cosmic mode restored.");
+    respond("Your cosmic memory is currently empty.");
+    return;
   }
+
+  const list = memories
+    .slice(0,10)
+    .map((m,i)=>`${i+1}. ${m.text}`)
+    .join(" ");
+
+  log("MEMORY VAULT → " + list,"success");
+
+  speak(
+    "I found " +
+    memories.length +
+    " saved memories. " +
+    list
+  );
+}
+
+
+/* ---------------------------------------------------------
+   QUICK COMMAND CARDS
+--------------------------------------------------------- */
+
+document.querySelectorAll("[data-command]")
+  .forEach(element=>{
+
+    element.addEventListener("click",()=>{
+
+      const command =
+        element.dataset.command;
+
+      input.value = command;
+
+      executeCommand(command);
+    });
+
+  });
+
+
+/* ---------------------------------------------------------
+   CLEAR
+--------------------------------------------------------- */
+
+clearBtn.addEventListener("click",()=>{
+
+  consoleEl.innerHTML = "";
+
+  log(
+    "Cosmic command stream initialized.",
+    "success"
+  );
+
 });
 
-/* =========================================================
-   UPTIME
-   ========================================================= */
 
-setInterval(()=>{
+/* ---------------------------------------------------------
+   INITIALIZATION
+--------------------------------------------------------- */
 
-  const seconds =
-    Math.floor((Date.now()-state.started)/1000);
+log(
+  "COSMOS CORE initialized. Voice interface ready.",
+  "success"
+);
 
-  const mins =
-    Math.floor(seconds/60)
-      .toString()
-      .padStart(2,"0");
+log(
+  "Say “What can you do?” to explore available commands.",
+  "ai"
+);
 
-  const secs =
-    (seconds%60)
-      .toString()
-      .padStart(2,"0");
-
-  $("uptime").textContent =
-    `${mins}:${secs}`;
-
-},1000);
 
 /* =========================================================
-   WELCOME
+   COSMIC PARTICLE FIELD
    ========================================================= */
 
-logEvent(
-  "Cosmos initialized",
-  "Universal command interface online.",
-  "✦"
-);
+const canvas =
+  document.getElementById("space");
 
-logEvent(
-  "Voice engine",
-  recognition
-    ? "Speech recognition available."
-    : "Use Chrome/Edge for speech recognition.",
-  "🎙️"
-);
+const ctx = canvas.getContext("2d");
 
-logEvent(
-  "Automation core",
-  "Local browser command router ready.",
-  "⚡"
-);
+let W,H;
+
+function resize(){
+
+  W = canvas.width =
+    window.innerWidth * devicePixelRatio;
+
+  H = canvas.height =
+    window.innerHeight * devicePixelRatio;
+
+  canvas.style.width =
+    window.innerWidth + "px";
+
+  canvas.style.height =
+    window.innerHeight + "px";
+
+  ctx.setTransform(
+    devicePixelRatio,
+    0,
+    0,
+    devicePixelRatio,
+    0,
+    0
+  );
+}
+
+resize();
+
+window.addEventListener("resize",resize);
+
+
+const stars =
+  Array.from(
+    {length:Math.min(260,Math.floor(window.innerWidth/4))},
+    ()=>({
+      x:Math.random()*window.innerWidth,
+      y:Math.random()*window.innerHeight,
+      z:Math.random(),
+      r:Math.random()*1.6+.2,
+      speed:Math.random()*.25+.03,
+      hue:Math.random()*100
+    })
+  );
+
+
+let t=0;
+
+function animateSpace(){
+
+  t += .003;
+
+  ctx.clearRect(
+    0,
+    0,
+    window.innerWidth,
+    window.innerHeight
+  );
+
+  const g =
+    ctx.createRadialGradient(
+      window.innerWidth*.5,
+      window.innerHeight*.48,
+      0,
+      window.innerWidth*.5,
+      window.innerHeight*.48,
+      Math.max(window.innerWidth,window.innerHeight)*.7
+    );
+
+  g.addColorStop(0,"rgba(35,20,80,.35)");
+  g.addColorStop(.45,"rgba(5,12,32,.25)");
+  g.addColorStop(1,"rgba(0,0,0,0)");
+
+  ctx.fillStyle = g;
+
+  ctx.fillRect(
+    0,
+    0,
+    window.innerWidth,
+    window.innerHeight
+  );
+
+
+  for(const s of stars){
+
+    s.y += s.speed;
+
+    if(s.y > window.innerHeight+10){
+      s.y=-10;
+      s.x=Math.random()*window.innerWidth;
+    }
+
+    const alpha =
+      .25 +
+      Math.sin(t*2+s.x)*.25 +
+      s.z*.5;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      s.x,
+      s.y,
+      s.r,
+      0,
+      Math.PI*2
+    );
+
+    const hue =
+      185 + Math.sin(s.hue+t*5)*70;
+
+    ctx.fillStyle =
+      `hsla(${hue},100%,75%,${Math.max(.05,alpha)})`;
+
+    ctx.fill();
+  }
+
+
+  requestAnimationFrame(animateSpace);
+}
+
+animateSpace();
+
+
+/* ---------------------------------------------------------
+   MOUSE COSMIC PARALLAX
+--------------------------------------------------------- */
+
+document.addEventListener("pointermove",event=>{
+
+  const x =
+    event.clientX / window.innerWidth - .5;
+
+  const y =
+    event.clientY / window.innerHeight - .5;
+
+  document.querySelector(".rings").style.transform =
+    `translate(${x*14}px,${y*14}px) rotate(${t*20}deg)`;
+
+  document.querySelector(".avatarStage").style.transform =
+    `translate(${x*7}px,${y*5}px)`;
+
+});
+
+
+/* ---------------------------------------------------------
+   DEMO COMMAND EXTENSION API
+---------------------------------------------------------
+
+   You can add commands here:
+
+   registerCommand(
+      ["launch spotify","open spotify"],
+      async command => {
+         ...
+      }
+   );
+
+--------------------------------------------------------- */
+
+function registerCommand(patterns, handler){
+
+  /*
+    Production implementation can maintain a command
+    registry and route AI-generated intents into handlers.
+  */
+
+  console.log(
+    "Registered command:",
+    patterns
+  );
+
+}
+
 </script>
 
 </body>
