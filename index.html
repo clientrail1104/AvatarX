@@ -3,1350 +3,1990 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ÆTHER — Magical Voice Command OS</title>
+<meta name="theme-color" content="#05030d">
+<title>NEXUS — AI Voice Command Center</title>
 
 <style>
-:root{
-  --bg:#03030a;
-  --panel:rgba(12,12,27,.62);
-  --panel2:rgba(20,15,40,.48);
-  --line:rgba(255,255,255,.11);
-  --text:#f7f4ff;
-  --muted:#a8a1bf;
-  --cyan:#65f5ff;
-  --violet:#9b6cff;
-  --pink:#ff61cf;
-  --gold:#ffd36a;
-  --green:#67ffb0;
-  --danger:#ff6b8b;
+/* =========================================================
+   NEXUS AI — ONE PAGE VOICE AGENT
+   ========================================================= */
+
+:root {
+    --bg: #05030d;
+    --panel: rgba(16, 12, 35, .72);
+    --panel-2: rgba(26, 19, 52, .58);
+    --line: rgba(255,255,255,.1);
+
+    --violet: #8b5cf6;
+    --purple: #c026d3;
+    --cyan: #22d3ee;
+    --blue: #3b82f6;
+    --pink: #f43f5e;
+    --green: #22c55e;
+    --yellow: #facc15;
+
+    --text: #f8f7ff;
+    --muted: #9d99b8;
+
+    --glow:
+        0 0 30px rgba(139,92,246,.25),
+        0 0 80px rgba(34,211,238,.08);
 }
 
-*{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-body{
-  background:
-    radial-gradient(circle at 50% 35%,rgba(116,65,255,.16),transparent 28%),
-    radial-gradient(circle at 15% 20%,rgba(42,238,255,.09),transparent 25%),
-    radial-gradient(circle at 85% 75%,rgba(255,62,193,.08),transparent 30%),
-    #03030a;
+html {
+    scroll-behavior: smooth;
 }
 
-/* ===== SPACE ===== */
-
-#space{
-  position:fixed;
-  inset:0;
-  overflow:hidden;
-  pointer-events:none;
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 20% 10%, rgba(139,92,246,.18), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(34,211,238,.12), transparent 28%),
+        radial-gradient(circle at 50% 100%, rgba(192,38,211,.12), transparent 35%),
+        var(--bg);
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 }
 
-.star{
-  position:absolute;
-  width:2px;
-  height:2px;
-  border-radius:50%;
-  background:#fff;
-  opacity:.5;
-  animation:twinkle 3s infinite alternate;
+/* Background magic */
+
+.aurora {
+    position: fixed;
+    inset: -30%;
+    z-index: -3;
+    pointer-events: none;
+    background:
+        conic-gradient(
+            from 0deg,
+            transparent,
+            rgba(139,92,246,.07),
+            transparent,
+            rgba(34,211,238,.06),
+            transparent
+        );
+    filter: blur(80px);
+    animation: aurora 20s linear infinite;
 }
 
-@keyframes twinkle{
-  from{opacity:.15;transform:scale(.7)}
-  to{opacity:.9;transform:scale(1.5)}
+.stars {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    opacity: .5;
+    background-image:
+        radial-gradient(#fff 1px, transparent 1px),
+        radial-gradient(#8b5cf6 1px, transparent 1px);
+    background-size: 90px 90px, 130px 130px;
+    background-position: 0 0, 40px 60px;
+    animation: stars 30s linear infinite;
 }
 
-.orb{
-  position:absolute;
-  width:45vw;
-  height:45vw;
-  border-radius:50%;
-  filter:blur(90px);
-  opacity:.12;
-  animation:drift 18s infinite alternate ease-in-out;
+@keyframes aurora {
+    to { transform: rotate(360deg); }
 }
 
-.orb.a{
-  background:#5b38ff;
-  left:-15vw;
-  top:-20vw;
+@keyframes stars {
+    to { background-position: 90px 90px, 170px 190px; }
 }
 
-.orb.b{
-  background:#00efff;
-  right:-20vw;
-  top:10vh;
-  animation-delay:-5s;
+/* App */
+
+.app {
+    width: min(1500px, 96%);
+    min-height: 100vh;
+    margin: auto;
+    padding: 20px;
 }
 
-.orb.c{
-  background:#ff35c8;
-  left:30vw;
-  bottom:-35vw;
-  animation-delay:-10s;
+/* Header */
+
+.header {
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px 20px;
+    margin-bottom: 18px;
+
+    background: rgba(10,7,25,.65);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+
+    box-shadow: var(--glow);
 }
 
-@keyframes drift{
-  to{transform:translate(10vw,7vh) scale(1.15)}
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-/* ===== APP ===== */
+.logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
 
-.app{
-  position:relative;
-  width:100%;
-  height:100%;
-  display:grid;
-  grid-template-columns:300px 1fr 300px;
-  grid-template-rows:76px 1fr 110px;
-  gap:16px;
-  padding:16px;
-  isolation:isolate;
-}
+    background:
+        linear-gradient(135deg, var(--violet), var(--cyan));
 
-/* ===== GLASS ===== */
-
-.glass{
-  background:
-    linear-gradient(135deg,
-      rgba(255,255,255,.075),
-      rgba(255,255,255,.018));
-  border:1px solid var(--line);
-  backdrop-filter:blur(28px) saturate(150%);
-  -webkit-backdrop-filter:blur(28px) saturate(150%);
-  box-shadow:
-    inset 0 1px rgba(255,255,255,.07),
-    0 25px 90px rgba(0,0,0,.35);
-}
-
-/* ===== HEADER ===== */
-
-.header{
-  grid-column:1/4;
-  border-radius:24px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 22px;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.logo{
-  width:40px;
-  height:40px;
-  border-radius:13px;
-  display:grid;
-  place-items:center;
-  font-size:21px;
-  background:
-    conic-gradient(from 210deg,
-      var(--cyan),
-      var(--violet),
-      var(--pink),
-      var(--cyan));
-  box-shadow:
-    0 0 30px rgba(105,100,255,.45);
-  color:white;
-}
-
-.brand-name{
-  font-weight:800;
-  letter-spacing:.14em;
-  font-size:14px;
-}
-
-.brand-sub{
-  font-size:11px;
-  color:var(--muted);
-  margin-top:3px;
-}
-
-.status{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  font-size:12px;
-  color:#d8d3e9;
-}
-
-.status-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 14px var(--green);
-}
-
-/* ===== SIDEBARS ===== */
-
-.sidebar{
-  min-height:0;
-  border-radius:24px;
-  overflow:hidden;
-}
-
-.left{
-  padding:18px;
-}
-
-.section-title{
-  font-size:10px;
-  color:#77718f;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  margin:4px 5px 12px;
-}
-
-.command-list{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.command-item{
-  padding:12px;
-  border-radius:15px;
-  border:1px solid transparent;
-  background:rgba(255,255,255,.025);
-  cursor:pointer;
-  transition:.25s;
-}
-
-.command-item:hover{
-  border-color:rgba(155,108,255,.35);
-  background:rgba(155,108,255,.08);
-  transform:translateX(3px);
-}
-
-.command-item strong{
-  display:block;
-  font-size:12px;
-}
-
-.command-item span{
-  color:var(--muted);
-  font-size:10px;
-}
-
-.memory{
-  margin-top:20px;
-  padding:13px;
-  border-radius:16px;
-  background:rgba(103,255,176,.04);
-  border:1px solid rgba(103,255,176,.12);
-}
-
-.memory b{
-  color:var(--green);
-  font-size:11px;
-}
-
-.memory p{
-  color:#9690a9;
-  font-size:10px;
-  line-height:1.5;
-  margin:7px 0 0;
-}
-
-/* ===== CORE ===== */
-
-.core{
-  position:relative;
-  min-width:0;
-  min-height:0;
-  border-radius:28px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-}
-
-.core::before{
-  content:"";
-  position:absolute;
-  inset:15%;
-  border-radius:50%;
-  background:radial-gradient(circle,
-    rgba(126,92,255,.22),
-    rgba(38,228,255,.08) 40%,
-    transparent 70%);
-  filter:blur(20px);
-}
-
-.ring{
-  position:absolute;
-  width:min(32vw,380px);
-  aspect-ratio:1;
-  border-radius:50%;
-  border:1px solid rgba(120,120,255,.13);
-  animation:spin 18s linear infinite;
-}
-
-.ring::before,
-.ring::after{
-  content:"";
-  position:absolute;
-  inset:12%;
-  border-radius:50%;
-  border:1px dashed rgba(103,245,255,.22);
-}
-
-.ring::after{
-  inset:26%;
-  border-color:rgba(255,97,207,.2);
-  animation:spin 8s linear infinite reverse;
-}
-
-@keyframes spin{
-  to{transform:rotate(360deg)}
-}
-
-.core-orb{
-  position:relative;
-  z-index:2;
-  width:150px;
-  height:150px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:
-    radial-gradient(circle at 40% 35%,
-      #ffffff,
-      #c9b8ff 4%,
-      #805fff 18%,
-      #24165f 50%,
-      #05030d 75%);
-  box-shadow:
-    0 0 25px #8065ff,
-    0 0 70px rgba(121,82,255,.7),
-    0 0 140px rgba(69,224,255,.2);
-  transition:.4s;
-}
-
-.core-orb::before{
-  content:"";
-  position:absolute;
-  inset:-12px;
-  border-radius:50%;
-  border:1px solid rgba(108,245,255,.4);
-  animation:pulse 2s infinite;
-}
-
-.core-orb::after{
-  content:"✦";
-  font-size:38px;
-  color:white;
-  text-shadow:
-    0 0 15px white,
-    0 0 35px var(--cyan);
-}
-
-@keyframes pulse{
-  50%{
-    transform:scale(1.08);
-    opacity:.25;
-  }
-}
-
-.core.listening .core-orb{
-  animation:listen 1s infinite alternate;
-}
-
-@keyframes listen{
-  to{
-    transform:scale(1.08);
     box-shadow:
-      0 0 35px var(--cyan),
-      0 0 100px rgba(0,240,255,.65);
-  }
+        0 0 25px rgba(139,92,246,.5),
+        inset 0 0 20px rgba(255,255,255,.2);
+
+    font-size: 20px;
 }
 
-.core.executing .core-orb{
-  animation:execute .35s infinite alternate;
+.brand h1 {
+    font-size: 18px;
+    letter-spacing: .18em;
 }
 
-@keyframes execute{
-  to{
-    transform:scale(1.13) rotate(8deg);
+.brand span {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: .18em;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    background: rgba(255,255,255,.035);
+    font-size: 11px;
+}
+
+.live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 12px var(--green);
+}
+
+/* Main grid */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 18px;
+}
+
+/* Glass */
+
+.glass {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.055),
+            rgba(255,255,255,.018)
+        );
+    border: 1px solid var(--line);
+    border-radius: 26px;
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
     box-shadow:
-      0 0 45px var(--pink),
-      0 0 130px rgba(255,65,203,.7);
-  }
+        0 25px 80px rgba(0,0,0,.28),
+        inset 0 1px rgba(255,255,255,.05);
 }
 
-.core-label{
-  z-index:3;
-  margin-top:35px;
-  text-align:center;
+/* Hero */
+
+.hero {
+    min-height: 720px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
 }
 
-.core-label h1{
-  margin:0;
-  font-size:25px;
-  letter-spacing:.08em;
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    left: 50%;
+    top: 42%;
+    transform: translate(-50%,-50%);
+    border-radius: 50%;
+    background:
+        radial-gradient(
+            circle,
+            rgba(139,92,246,.17),
+            transparent 65%
+        );
+    filter: blur(20px);
+    pointer-events: none;
 }
 
-.core-label p{
-  margin:7px 0;
-  color:var(--muted);
-  font-size:12px;
+.hero-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
 }
 
-.wave{
-  height:32px;
-  display:flex;
-  align-items:center;
-  gap:3px;
-  margin-top:18px;
+.eyebrow {
+    color: var(--cyan);
+    font-size: 10px;
+    letter-spacing: .24em;
+    text-transform: uppercase;
 }
 
-.wave i{
-  display:block;
-  width:3px;
-  height:8px;
-  border-radius:5px;
-  background:linear-gradient(var(--cyan),var(--violet));
-  animation:wave 1s infinite ease-in-out;
-  animation-delay:calc(var(--i) * -.08s);
+.hero h2 {
+    margin-top: 7px;
+    font-size: clamp(28px, 4vw, 52px);
+    line-height: 1;
+    letter-spacing: -.04em;
 }
 
-@keyframes wave{
-  50%{height:28px}
+.hero h2 span {
+    background: linear-gradient(
+        90deg,
+        #fff,
+        #b794ff,
+        #6ee7f9,
+        #fff
+    );
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: shimmer 5s linear infinite;
 }
 
-/* ===== RIGHT PANEL ===== */
-
-.right{
-  padding:18px;
-  display:flex;
-  flex-direction:column;
+@keyframes shimmer {
+    to { background-position: 250% center; }
 }
 
-.activity{
-  flex:1;
-  overflow:auto;
-  padding-right:4px;
+.system-status {
+    padding: 9px 13px;
+    border-radius: 999px;
+    border: 1px solid rgba(34,211,238,.18);
+    background: rgba(34,211,238,.06);
+    color: var(--cyan);
+    font-size: 10px;
+    letter-spacing: .15em;
 }
 
-.activity::-webkit-scrollbar{
-  width:3px;
+/* Avatar */
+
+.avatar-stage {
+    position: relative;
+    width: min(570px, 90%);
+    aspect-ratio: 1 / 1;
+    margin: 30px auto 20px;
+    display: grid;
+    place-items: center;
 }
 
-.activity::-webkit-scrollbar-thumb{
-  background:#48415f;
+.ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(139,92,246,.3);
+    box-shadow:
+        0 0 30px rgba(139,92,246,.12),
+        inset 0 0 30px rgba(34,211,238,.05);
 }
 
-.log{
-  padding:11px;
-  border-left:2px solid var(--violet);
-  background:rgba(155,108,255,.035);
-  margin-bottom:8px;
-  border-radius:0 12px 12px 0;
+.ring.one {
+    width: 96%;
+    height: 96%;
+    animation: spin 16s linear infinite;
 }
 
-.log time{
-  font-size:9px;
-  color:#77718e;
+.ring.two {
+    width: 82%;
+    height: 82%;
+    border-color: rgba(34,211,238,.25);
+    border-style: dashed;
+    animation: spinReverse 12s linear infinite;
 }
 
-.log p{
-  margin:5px 0 0;
-  font-size:10px;
-  line-height:1.45;
-  color:#cbc6d7;
+.ring.three {
+    width: 69%;
+    height: 69%;
+    border-color: rgba(192,38,211,.25);
+    animation: pulseRing 3s ease-in-out infinite;
 }
 
-.stats{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:12px;
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
-.stat{
-  padding:12px;
-  border-radius:14px;
-  background:rgba(255,255,255,.025);
+@keyframes spinReverse {
+    to { transform: rotate(-360deg); }
 }
 
-.stat small{
-  display:block;
-  color:#77718e;
-  font-size:9px;
+@keyframes pulseRing {
+    50% {
+        transform: scale(1.07);
+        opacity: .5;
+    }
 }
 
-.stat b{
-  display:block;
-  margin-top:4px;
-  font-size:15px;
+/* Avatar video */
+
+.avatar-video {
+    width: 55%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 50%;
+    position: relative;
+    z-index: 3;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            #6d28d9,
+            #170b31 60%,
+            #05030d
+        );
+
+    border: 2px solid rgba(255,255,255,.18);
+
+    box-shadow:
+        0 0 25px rgba(139,92,246,.5),
+        0 0 100px rgba(139,92,246,.18),
+        inset 0 0 50px rgba(34,211,238,.1);
 }
 
-/* ===== COMMAND BAR ===== */
+/* If no video exists */
 
-.commandbar{
-  grid-column:1/4;
-  border-radius:24px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:13px;
+.avatar-placeholder {
+    position: absolute;
+    z-index: 2;
+    width: 55%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 50% 30%, #a855f7, transparent 28%),
+        radial-gradient(circle, #1e1140, #05030d 70%);
 }
 
-.mic{
-  width:58px;
-  height:58px;
-  flex:0 0 58px;
-  border:none;
-  border-radius:18px;
-  color:white;
-  cursor:pointer;
-  font-size:22px;
-  background:
-    linear-gradient(135deg,#7356ff,#b73eff);
-  box-shadow:
-    0 8px 35px rgba(120,75,255,.4);
-  transition:.2s;
+.avatar-placeholder::before {
+    content: "✦";
+    font-size: 70px;
+    color: rgba(255,255,255,.9);
+    text-shadow:
+        0 0 20px var(--violet),
+        0 0 60px var(--cyan);
+    animation: starPulse 2s ease-in-out infinite;
 }
 
-.mic:hover{
-  transform:translateY(-2px) scale(1.03);
+@keyframes starPulse {
+    50% {
+        transform: scale(1.2) rotate(20deg);
+        filter: hue-rotate(50deg);
+    }
 }
 
-.mic.active{
-  background:linear-gradient(135deg,#00ddeb,#008cff);
-  box-shadow:
-    0 0 40px rgba(0,235,255,.55);
+/* Status */
+
+.voice-status {
+    position: absolute;
+    bottom: 20px;
+    z-index: 5;
+    padding: 9px 16px;
+    border-radius: 999px;
+
+    background: rgba(0,0,0,.55);
+    border: 1px solid rgba(255,255,255,.12);
+    backdrop-filter: blur(15px);
+
+    font-size: 10px;
+    letter-spacing: .16em;
 }
 
-.input-wrap{
-  flex:1;
-  min-width:0;
+.voice-status.active {
+    color: var(--cyan);
+    border-color: rgba(34,211,238,.35);
+    box-shadow: 0 0 25px rgba(34,211,238,.16);
 }
 
-.input-wrap input{
-  width:100%;
-  border:none;
-  outline:none;
-  background:transparent;
-  color:white;
-  font-size:14px;
+/* Waveform */
+
+.waveform {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    position: relative;
+    z-index: 5;
 }
 
-.input-wrap input::placeholder{
-  color:#77718e;
+.bar {
+    width: 5px;
+    height: 8px;
+    border-radius: 10px;
+    background: linear-gradient(
+        to top,
+        var(--violet),
+        var(--cyan)
+    );
+    transition: height .1s;
 }
 
-.input-sub{
-  font-size:9px;
-  color:#625c76;
-  margin-top:6px;
+.waveform.active .bar {
+    animation: wave .65s ease-in-out infinite alternate;
 }
 
-.send{
-  height:48px;
-  padding:0 18px;
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:15px;
-  color:white;
-  background:rgba(255,255,255,.055);
-  cursor:pointer;
+.waveform.active .bar:nth-child(2) { animation-delay: .08s; }
+.waveform.active .bar:nth-child(3) { animation-delay: .16s; }
+.waveform.active .bar:nth-child(4) { animation-delay: .24s; }
+.waveform.active .bar:nth-child(5) { animation-delay: .32s; }
+.waveform.active .bar:nth-child(6) { animation-delay: .4s; }
+.waveform.active .bar:nth-child(7) { animation-delay: .28s; }
+.waveform.active .bar:nth-child(8) { animation-delay: .18s; }
+
+@keyframes wave {
+    from { height: 7px; }
+    to { height: 45px; }
 }
 
-.send:hover{
-  background:rgba(255,255,255,.1);
+/* Command box */
+
+.command-area {
+    position: relative;
+    z-index: 5;
 }
 
-/* ===== RESPONSIVE ===== */
+.command-box {
+    display: flex;
+    gap: 10px;
+    padding: 8px;
 
-@media(max-width:1050px){
-  .app{
-    grid-template-columns:230px 1fr;
-  }
+    border: 1px solid rgba(139,92,246,.25);
+    border-radius: 18px;
 
-  .right{
-    display:none;
-  }
-
-  .header,.commandbar{
-    grid-column:1/3;
-  }
+    background: rgba(0,0,0,.25);
+    box-shadow: inset 0 0 30px rgba(139,92,246,.04);
 }
 
-@media(max-width:700px){
-  body{
-    overflow:auto;
-  }
+.command-box input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: none;
+    color: white;
+    background: transparent;
+    padding: 13px 14px;
+    font-size: 14px;
+}
 
-  .app{
-    min-height:100vh;
-    height:auto;
-    grid-template-columns:1fr;
-    grid-template-rows:70px 1fr 100px;
-    padding:10px;
-  }
+.command-box input::placeholder {
+    color: #696580;
+}
 
-  .header,.commandbar{
-    grid-column:1;
-  }
+.icon-btn,
+.execute-btn {
+    border: 0;
+    cursor: pointer;
+    color: white;
+    border-radius: 13px;
+    transition: .25s ease;
+}
 
-  .left{
-    display:none;
-  }
+.icon-btn {
+    width: 48px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--line);
+    font-size: 17px;
+}
 
-  .core{
-    min-height:calc(100vh - 200px);
-  }
+.icon-btn:hover {
+    background: rgba(139,92,246,.2);
+    transform: translateY(-2px);
+}
 
-  .ring{
-    width:75vw;
-  }
+.execute-btn {
+    padding: 0 20px;
+    font-weight: 700;
+    background:
+        linear-gradient(
+            135deg,
+            var(--violet),
+            var(--purple)
+        );
+    box-shadow: 0 0 25px rgba(139,92,246,.25);
+}
 
-  .core-orb{
-    width:120px;
-    height:120px;
-  }
+.execute-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 35px rgba(139,92,246,.45);
+}
 
-  .commandbar{
-    position:sticky;
-    bottom:10px;
-  }
+/* Quick actions */
 
-  .send{
-    padding:0 13px;
-  }
+.quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.quick {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,.035);
+    color: #bcb7d5;
+    cursor: pointer;
+    font-size: 10px;
+    transition: .2s;
+}
+
+.quick:hover {
+    color: white;
+    border-color: rgba(139,92,246,.45);
+    background: rgba(139,92,246,.12);
+}
+
+/* Right sidebar */
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.panel {
+    padding: 20px;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.panel-title {
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.panel-sub {
+    color: var(--muted);
+    font-size: 9px;
+}
+
+/* Capability cards */
+
+.capabilities {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.capability {
+    padding: 14px;
+    border-radius: 15px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,.025);
+    transition: .25s;
+}
+
+.capability:hover {
+    transform: translateY(-3px);
+    border-color: rgba(139,92,246,.4);
+    background: rgba(139,92,246,.08);
+}
+
+.capability-icon {
+    font-size: 20px;
+    margin-bottom: 9px;
+}
+
+.capability strong {
+    display: block;
+    font-size: 11px;
+}
+
+.capability span {
+    color: var(--muted);
+    font-size: 9px;
+}
+
+/* Automation */
+
+.automation {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.automation-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px;
+    border-radius: 13px;
+    background: rgba(255,255,255,.025);
+    border: 1px solid var(--line);
+}
+
+.automation-row span {
+    color: #c6c1da;
+    font-size: 10px;
+}
+
+.toggle {
+    width: 34px;
+    height: 19px;
+    border-radius: 99px;
+    background: #29263c;
+    cursor: pointer;
+    position: relative;
+    transition: .25s;
+}
+
+.toggle::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #777;
+    transition: .25s;
+}
+
+.toggle.on {
+    background: rgba(34,211,238,.25);
+}
+
+.toggle.on::after {
+    left: 18px;
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan);
+}
+
+/* Activity */
+
+.activity {
+    max-height: 270px;
+    overflow-y: auto;
+}
+
+.activity::-webkit-scrollbar {
+    width: 4px;
+}
+
+.activity::-webkit-scrollbar-thumb {
+    background: #30264e;
+    border-radius: 20px;
+}
+
+.log {
+    display: flex;
+    gap: 9px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+}
+
+.log-dot {
+    flex: 0 0 7px;
+    width: 7px;
+    height: 7px;
+    margin-top: 5px;
+    border-radius: 50%;
+    background: var(--violet);
+    box-shadow: 0 0 10px var(--violet);
+}
+
+.log-text {
+    font-size: 10px;
+    color: #aaa5c0;
+    line-height: 1.5;
+}
+
+.log-time {
+    color: #656078;
+    margin-top: 2px;
+}
+
+/* Footer */
+
+.footer {
+    margin-top: 18px;
+    padding: 12px;
+    text-align: center;
+    color: #55516a;
+    font-size: 9px;
+    letter-spacing: .12em;
+}
+
+/* Responsive */
+
+@media (max-width: 1000px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        min-height: auto;
+    }
+
+    .sidebar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .sidebar .panel:last-child {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 650px) {
+    .app {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .header {
+        border-radius: 18px;
+    }
+
+    .header-actions .pill:not(:last-child) {
+        display: none;
+    }
+
+    .hero {
+        padding: 18px;
+        border-radius: 20px;
+    }
+
+    .sidebar {
+        display: flex;
+    }
+
+    .hero h2 {
+        font-size: 34px;
+    }
+
+    .command-box {
+        flex-wrap: wrap;
+    }
+
+    .command-box input {
+        width: 100%;
+        flex-basis: 100%;
+    }
+
+    .execute-btn {
+        height: 45px;
+        flex: 1;
+    }
+
+    .icon-btn {
+        height: 45px;
+    }
+}
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div id="space"></div>
+<div class="aurora"></div>
+<div class="stars"></div>
 
 <div class="app">
 
-  <!-- HEADER -->
-  <header class="header glass">
-    <div class="brand">
-      <div class="logo">✦</div>
-      <div>
-        <div class="brand-name">ÆTHER</div>
-        <div class="brand-sub">VOICE COMMAND INTELLIGENCE</div>
-      </div>
-    </div>
+    <!-- HEADER -->
+    <header class="header">
 
-    <div class="status">
-      <span class="status-dot"></span>
-      SYSTEM ONLINE
-    </div>
-  </header>
+        <div class="brand">
+            <div class="logo">✦</div>
+            <div>
+                <h1>NEXUS</h1>
+                <span>AI VOICE COMMAND CENTER</span>
+            </div>
+        </div>
 
-  <!-- LEFT -->
-  <aside class="sidebar left glass">
+        <div class="header-actions">
 
-    <div class="section-title">Instant Powers</div>
+            <div class="pill">
+                <span class="live-dot"></span>
+                SYSTEM ONLINE
+            </div>
 
-    <div class="command-list">
-      <div class="command-item" data-command="What time is it?">
-        <strong>◈ Time</strong>
-        <span>Know the current time</span>
-      </div>
+            <div class="pill" id="clock">
+                00:00:00
+            </div>
 
-      <div class="command-item" data-command="Tell me something magical">
-        <strong>✦ Inspire</strong>
-        <span>Generate a spark of wonder</span>
-      </div>
+        </div>
 
-      <div class="command-item" data-command="What is today's date?">
-        <strong>◉ Date</strong>
-        <span>Reveal today's date</span>
-      </div>
+    </header>
 
-      <div class="command-item" data-command="Open a search for artificial intelligence">
-        <strong>⌁ Search</strong>
-        <span>Launch a web search</span>
-      </div>
 
-      <div class="command-item" data-command="Show my system status">
-        <strong>◇ Status</strong>
-        <span>Inspect ÆTHER</span>
-      </div>
-    </div>
+    <main class="dashboard">
 
-    <div class="memory">
-      <b>∞ CONTEXT ENGINE</b>
-      <p>
-        Commands are remembered locally during this session.
-        Connect an AI backend for persistent intelligent reasoning.
-      </p>
-    </div>
+        <!-- MAIN -->
+        <section class="hero glass">
 
-  </aside>
+            <div class="hero-top">
 
-  <!-- CORE -->
-  <main class="core glass" id="core">
+                <div>
+                    <div class="eyebrow">Autonomous Interface</div>
+                    <h2>
+                        Your command.<br>
+                        <span>Infinite possibility.</span>
+                    </h2>
+                </div>
 
-    <div class="ring"></div>
+                <div class="system-status" id="systemStatus">
+                    READY
+                </div>
 
-    <div class="core-orb"></div>
+            </div>
 
-    <div class="core-label">
-      <h1 id="state">READY</h1>
-      <p id="response">
-        Speak a command or type anything below.
-      </p>
 
-      <div class="wave">
-        <i style="--i:1"></i>
-        <i style="--i:2"></i>
-        <i style="--i:3"></i>
-        <i style="--i:4"></i>
-        <i style="--i:5"></i>
-        <i style="--i:6"></i>
-        <i style="--i:7"></i>
-        <i style="--i:8"></i>
-        <i style="--i:9"></i>
-        <i style="--i:10"></i>
-        <i style="--i:11"></i>
-        <i style="--i:12"></i>
-      </div>
-    </div>
+            <!-- AVATAR -->
+            <div class="avatar-stage">
 
-  </main>
+                <div class="ring one"></div>
+                <div class="ring two"></div>
+                <div class="ring three"></div>
 
-  <!-- RIGHT -->
-  <aside class="sidebar right glass">
+                <!--
+                    YOUR ORIGINAL VIDEO SYSTEM IS INTEGRATED HERE.
 
-    <div class="section-title">Live Activity</div>
+                    Put your video beside this HTML file and name it:
 
-    <div class="activity" id="activity">
-      <div class="log">
-        <time>NOW</time>
-        <p>ÆTHER initialized. Awaiting your command.</p>
-      </div>
-    </div>
+                    agent-video.mp4
 
-    <div class="stats">
-      <div class="stat">
-        <small>COMMANDS</small>
-        <b id="commandCount">0</b>
-      </div>
+                    Or change the src below to your own video URL.
+                -->
 
-      <div class="stat">
-        <small>MODE</small>
-        <b>∞</b>
-      </div>
-    </div>
+                <div class="avatar-placeholder" id="avatarPlaceholder"></div>
 
-  </aside>
+                <video
+                    id="avatar-video"
+                    class="avatar-video"
+                    loop
+                    muted
+                    playsinline
+                    preload="auto"
+                >
+                    <source
+                        src="agent-video.mp4"
+                        type="video/mp4"
+                    >
+                </video>
 
-  <!-- COMMAND BAR -->
-  <section class="commandbar glass">
+                <div
+                    class="voice-status"
+                    id="voiceStatus"
+                >
+                    IDLE
+                </div>
 
-    <button class="mic" id="mic" title="Voice command">
-      🎙
-    </button>
+            </div>
 
-    <div class="input-wrap">
-      <input
-        id="command"
-        autocomplete="off"
-        placeholder="Tell ÆTHER what you want..."
-      >
 
-      <div class="input-sub">
-        ENTER = EXECUTE · SPACE = VOICE
-      </div>
-    </div>
+            <!-- WAVEFORM -->
+            <div
+                class="waveform"
+                id="waveform"
+            >
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
 
-    <button class="send" id="send">
-      Execute ↗
-    </button>
 
-  </section>
+            <!-- COMMAND -->
+            <div class="command-area">
+
+                <div class="command-box">
+
+                    <input
+                        id="commandInput"
+                        type="text"
+                        autocomplete="off"
+                        placeholder="Tell NEXUS what you want..."
+                    >
+
+                    <button
+                        class="icon-btn"
+                        id="micBtn"
+                        title="Voice command"
+                    >
+                        🎙
+                    </button>
+
+                    <button
+                        class="execute-btn"
+                        id="executeBtn"
+                    >
+                        EXECUTE
+                    </button>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+                    <button class="quick"
+                        data-command="Tell me the current time">
+                        ✦ Time
+                    </button>
+
+                    <button class="quick"
+                        data-command="Open a new browser tab">
+                        ◈ Browse
+                    </button>
+
+                    <button class="quick"
+                        data-command="Read my command aloud">
+                        ◉ Speak
+                    </button>
+
+                    <button class="quick"
+                        data-command="Show system capabilities">
+                        ✧ Capabilities
+                    </button>
+
+                    <button class="quick"
+                        data-command="Clear the activity log">
+                        × Clear
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <!-- CAPABILITIES -->
+            <section class="panel glass">
+
+                <div class="panel-header">
+                    <div class="panel-title">
+                        Capabilities
+                    </div>
+
+                    <div class="panel-sub">
+                        EXTENSIBLE
+                    </div>
+                </div>
+
+                <div class="capabilities">
+
+                    <div class="capability">
+                        <div class="capability-icon">🎙️</div>
+                        <strong>Voice</strong>
+                        <span>Speech recognition</span>
+                    </div>
+
+                    <div class="capability">
+                        <div class="capability-icon">🔊</div>
+                        <strong>Speech</strong>
+                        <span>AI voice output</span>
+                    </div>
+
+                    <div class="capability">
+                        <div class="capability-icon">⚡</div>
+                        <strong>Actions</strong>
+                        <span>Command routing</span>
+                    </div>
+
+                    <div class="capability">
+                        <div class="capability-icon">🌐</div>
+                        <strong>Web</strong>
+                        <span>Browser actions</span>
+                    </div>
+
+                    <div class="capability">
+                        <div class="capability-icon">🤖</div>
+                        <strong>Agents</strong>
+                        <span>API integration</span>
+                    </div>
+
+                    <div class="capability">
+                        <div class="capability-icon">∞</div>
+                        <strong>Automation</strong>
+                        <span>Workflow engine</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- AUTOMATION -->
+            <section class="panel glass">
+
+                <div class="panel-header">
+                    <div class="panel-title">
+                        Automation
+                    </div>
+
+                    <div class="panel-sub">
+                        CONTROL
+                    </div>
+                </div>
+
+                <div class="automation">
+
+                    <div class="automation-row">
+                        <span>Voice activation</span>
+                        <div
+                            class="toggle on"
+                            data-toggle="voice"
+                        ></div>
+                    </div>
+
+                    <div class="automation-row">
+                        <span>Auto speech</span>
+                        <div
+                            class="toggle on"
+                            data-toggle="speech"
+                        ></div>
+                    </div>
+
+                    <div class="automation-row">
+                        <span>Continuous listening</span>
+                        <div
+                            class="toggle"
+                            data-toggle="continuous"
+                        ></div>
+                    </div>
+
+                    <div class="automation-row">
+                        <span>Auto execute</span>
+                        <div
+                            class="toggle on"
+                            data-toggle="execute"
+                        ></div>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ACTIVITY -->
+            <section class="panel glass">
+
+                <div class="panel-header">
+                    <div class="panel-title">
+                        Live Activity
+                    </div>
+
+                    <div class="panel-sub">
+                        REALTIME
+                    </div>
+                </div>
+
+                <div
+                    class="activity"
+                    id="activity"
+                ></div>
+
+            </section>
+
+        </aside>
+
+    </main>
+
+
+    <footer class="footer">
+        NEXUS AI • VOICE • AUTOMATION • COMMAND • EXTENSIBLE AGENT CORE
+    </footer>
 
 </div>
 
+
 <script>
 /* =========================================================
-   ÆTHER — MAGICAL VOICE COMMAND ENGINE
+   NEXUS AI — JAVASCRIPT ENGINE
    ========================================================= */
 
-const $ = selector => document.querySelector(selector);
+const video =
+    document.getElementById("avatar-video");
 
-const core = $("#core");
-const mic = $("#mic");
-const input = $("#command");
-const send = $("#send");
-const state = $("#state");
-const response = $("#response");
-const activity = $("#activity");
-const countEl = $("#commandCount");
+const placeholder =
+    document.getElementById("avatarPlaceholder");
 
-let commandCount = 0;
-let recognition = null;
-let listening = false;
+const waveform =
+    document.getElementById("waveform");
 
-/* ===== STARFIELD ===== */
+const voiceStatus =
+    document.getElementById("voiceStatus");
 
-const space = $("#space");
+const systemStatus =
+    document.getElementById("systemStatus");
 
-for(let i=0;i<180;i++){
+const commandInput =
+    document.getElementById("commandInput");
 
-  const star = document.createElement("span");
+const executeBtn =
+    document.getElementById("executeBtn");
 
-  star.className = "star";
+const micBtn =
+    document.getElementById("micBtn");
 
-  star.style.left = Math.random()*100 + "%";
-  star.style.top = Math.random()*100 + "%";
+const activity =
+    document.getElementById("activity");
 
-  star.style.animationDelay =
-    Math.random()*4 + "s";
+const clock =
+    document.getElementById("clock");
 
-  star.style.opacity =
-    (.1 + Math.random()*.8).toFixed(2);
 
-  space.appendChild(star);
+/* =========================================================
+   STATE
+   ========================================================= */
+
+let isSpeaking = false;
+let isListening = false;
+let continuousListening = false;
+
+const settings = {
+    voice: true,
+    speech: true,
+    execute: true
+};
+
+
+/* =========================================================
+   CLOCK
+   ========================================================= */
+
+function updateClock() {
+
+    const now = new Date();
+
+    clock.textContent =
+        now.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        });
 }
 
-/* ===== LOGGING ===== */
+setInterval(updateClock, 1000);
+updateClock();
 
-function log(message){
 
-  const item = document.createElement("div");
+/* =========================================================
+   ACTIVITY LOGGER
+   ========================================================= */
 
-  item.className = "log";
+function logActivity(message, type = "normal") {
 
-  item.innerHTML = `
-    <time>${new Date().toLocaleTimeString()}</time>
-    <p>${escapeHTML(message)}</p>
-  `;
+    const item =
+        document.createElement("div");
 
-  activity.prepend(item);
-}
+    item.className = "log";
 
-/* Prevent HTML injection in displayed command results */
-function escapeHTML(value){
-
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-/* ===== STATE ===== */
-
-function setState(name,message="",mode=""){
-
-  state.textContent = name;
-  response.textContent = message;
-
-  core.classList.remove("listening","executing");
-
-  if(mode){
-    core.classList.add(mode);
-  }
-}
-
-/* ===== TEXT-TO-SPEECH ===== */
-
-function speak(text){
-
-  if(!("speechSynthesis" in window)) return;
-
-  speechSynthesis.cancel();
-
-  const utterance =
-    new SpeechSynthesisUtterance(text);
-
-  utterance.rate = .95;
-  utterance.pitch = 1.05;
-  utterance.volume = .9;
-
-  speechSynthesis.speak(utterance);
-}
-
-/* ===== COMMAND EXECUTION ===== */
-
-async function executeCommand(raw){
-
-  const command = raw.trim();
-
-  if(!command) return;
-
-  commandCount++;
-  countEl.textContent = commandCount;
-
-  log("Command → " + command);
-
-  setState(
-    "THINKING",
-    "Interpreting your intention...",
-    "executing"
-  );
-
-  await delay(450);
-
-  const result =
-    await routeCommand(command);
-
-  setState(
-    "COMPLETE",
-    result.message
-  );
-
-  log(result.message);
-
-  if(result.speak !== false){
-    speak(result.message);
-  }
-
-  setTimeout(()=>{
-    setState(
-      "READY",
-      "Speak a command or type anything below."
-    );
-  },2500);
-}
-
-/* ===== COMMAND ROUTER ===== */
-
-async function routeCommand(command){
-
-  const c = command.toLowerCase();
-
-  /* TIME */
-
-  if(
-    c.includes("what time") ||
-    c === "time" ||
-    c.includes("current time")
-  ){
-
-    const now =
-      new Date().toLocaleTimeString(
-        [],
-        {hour:"numeric",minute:"2-digit"}
-      );
-
-    return {
-      message:`The current time is ${now}.`
+    const colors = {
+        normal: "var(--violet)",
+        success: "var(--green)",
+        voice: "var(--cyan)",
+        warning: "var(--yellow)"
     };
-  }
 
-  /* DATE */
+    item.innerHTML = `
+        <div
+            class="log-dot"
+            style="background:${colors[type] || colors.normal};
+                   box-shadow:0 0 10px ${colors[type] || colors.normal}">
+        </div>
 
-  if(
-    c.includes("today's date") ||
-    c.includes("todays date") ||
-    c === "date"
-  ){
+        <div class="log-text">
+            <div>${escapeHTML(message)}</div>
+            <div class="log-time">
+                ${new Date().toLocaleTimeString()}
+            </div>
+        </div>
+    `;
 
-    const date =
-      new Date().toLocaleDateString(
-        [],
-        {
-          weekday:"long",
-          year:"numeric",
-          month:"long",
-          day:"numeric"
+    activity.prepend(item);
+}
+
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* =========================================================
+   AVATAR / SPEAKING STATE
+   ========================================================= */
+
+function setSpeaking(active) {
+
+    isSpeaking = active;
+
+    if (active) {
+
+        waveform.classList.add("active");
+
+        voiceStatus.textContent = "SPEAKING";
+        voiceStatus.classList.add("active");
+
+        systemStatus.textContent = "ACTIVE";
+
+        try {
+            video.play();
+        } catch (error) {}
+
+    } else {
+
+        waveform.classList.remove("active");
+
+        voiceStatus.textContent = "IDLE";
+        voiceStatus.classList.remove("active");
+
+        systemStatus.textContent = "READY";
+
+        video.pause();
+    }
+}
+
+
+/* =========================================================
+   TEXT TO SPEECH
+   ========================================================= */
+
+function speak(text) {
+
+    if (!settings.speech) return;
+
+    if (!("speechSynthesis" in window)) {
+        logActivity(
+            "Speech synthesis is unavailable.",
+            "warning"
+        );
+        return;
+    }
+
+    speechSynthesis.cancel();
+
+    const utterance =
+        new SpeechSynthesisUtterance(text);
+
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    utterance.onstart = () => {
+        setSpeaking(true);
+    };
+
+    utterance.onend = () => {
+        setSpeaking(false);
+
+        if (
+            continuousListening &&
+            settings.voice
+        ) {
+            startListening();
         }
-      );
-
-    return {
-      message:`Today is ${date}.`
     };
-  }
 
-  /* SYSTEM */
-
-  if(
-    c.includes("system status") ||
-    c.includes("status")
-  ){
-
-    return {
-      message:
-        "ÆTHER is online. Voice interface, command routing, animation engine and browser automation layer are operational."
+    utterance.onerror = () => {
+        setSpeaking(false);
     };
-  }
 
-  /* MAGIC */
-
-  if(
-    c.includes("magical") ||
-    c.includes("inspire") ||
-    c.includes("inspiration")
-  ){
-
-    const magic = [
-      "The impossible is often just a system waiting for a new interface.",
-      "Your next idea could be hiding behind the command you haven't spoken yet.",
-      "Build boldly. Automate the boring. Leave room for wonder.",
-      "A sufficiently curious mind can turn almost any obstacle into a doorway."
-    ];
-
-    return {
-      message:
-        magic[Math.floor(Math.random()*magic.length)]
-    };
-  }
-
-  /* SEARCH */
-
-  if(
-    c.startsWith("search") ||
-    c.includes("open a search")
-  ){
-
-    let query =
-      command
-        .replace(/open a search for/i,"")
-        .replace(/search for/i,"")
-        .replace(/search/i,"")
-        .trim();
-
-    if(!query) query = "artificial intelligence";
-
-    const url =
-      "https://www.google.com/search?q=" +
-      encodeURIComponent(query);
-
-    window.open(url,"_blank","noopener");
-
-    return {
-      message:`I opened a web search for ${query}.`
-    };
-  }
-
-  /* OPEN WEBSITE */
-
-  if(c.startsWith("open ")){
-
-    let target =
-      command.substring(5).trim();
-
-    if(
-      !target.startsWith("http://") &&
-      !target.startsWith("https://")
-    ){
-
-      target =
-        "https://" + target;
-    }
-
-    try{
-
-      const parsed =
-        new URL(target);
-
-      window.open(
-        parsed.href,
-        "_blank",
-        "noopener"
-      );
-
-      return {
-        message:`Opening ${parsed.hostname}.`
-      };
-
-    }catch{
-
-      return {
-        message:
-          "I couldn't recognize that as a valid website."
-      };
-    }
-  }
-
-  /* LOCAL STORAGE MEMORY */
-
-  if(
-    c.startsWith("remember ")
-  ){
-
-    const memory =
-      command.substring(9).trim();
-
-    localStorage.setItem(
-      "aether_memory",
-      memory
-    );
-
-    return {
-      message:
-        `Remembered locally: ${memory}`
-    };
-  }
-
-  if(
-    c.includes("what do you remember")
-  ){
-
-    const memory =
-      localStorage.getItem("aether_memory");
-
-    return {
-      message:
-        memory
-          ? `I remember: ${memory}`
-          : "There is no saved memory yet."
-    };
-  }
-
-  /* CLEAR */
-
-  if(
-    c.includes("clear memory")
-  ){
-
-    localStorage.removeItem("aether_memory");
-
-    return {
-      message:
-        "Local ÆTHER memory has been cleared."
-    };
-  }
-
-  /* DEFAULT */
-
-  return {
-    message:
-      `Command received: "${command}". The browser command layer doesn't have a built-in action for this yet. Connect an AI/API backend to turn arbitrary natural-language requests into real tools and workflows.`
-  };
+    speechSynthesis.speak(utterance);
 }
 
-/* ===== HELPERS ===== */
 
-function delay(ms){
-  return new Promise(resolve=>setTimeout(resolve,ms));
-}
-
-/* ===== INPUT ===== */
-
-function submit(){
-
-  const value = input.value.trim();
-
-  if(!value) return;
-
-  input.value = "";
-
-  executeCommand(value);
-}
-
-send.addEventListener(
-  "click",
-  submit
-);
-
-input.addEventListener(
-  "keydown",
-  e => {
-
-    if(e.key === "Enter"){
-      submit();
-    }
-
-  }
-);
-
-/* ===== QUICK COMMANDS ===== */
-
-document
-  .querySelectorAll(".command-item")
-  .forEach(item => {
-
-    item.addEventListener(
-      "click",
-      ()=>{
-
-        input.value =
-          item.dataset.command;
-
-        input.focus();
-
-      }
-    );
-
-  });
-
-/* ===== VOICE RECOGNITION ===== */
+/* =========================================================
+   SPEECH RECOGNITION
+   ========================================================= */
 
 const SpeechRecognition =
-  window.SpeechRecognition ||
-  window.webkitSpeechRecognition;
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
 
-if(SpeechRecognition){
+let recognition = null;
 
-  recognition =
-    new SpeechRecognition();
+if (SpeechRecognition) {
 
-  recognition.continuous = false;
-  recognition.interimResults = true;
+    recognition =
+        new SpeechRecognition();
 
-  recognition.lang =
-    navigator.language || "en-US";
+    recognition.lang = "en-US";
+    recognition.continuous = false;
+    recognition.interimResults = true;
 
-  recognition.onstart = ()=>{
+    recognition.onstart = () => {
 
-    listening = true;
+        isListening = true;
 
-    mic.classList.add("active");
+        voiceStatus.textContent = "LISTENING";
+        voiceStatus.classList.add("active");
 
-    setState(
-      "LISTENING",
-      "I'm listening...",
-      "listening"
+        waveform.classList.add("active");
+
+        systemStatus.textContent = "LISTENING";
+
+        micBtn.textContent = "⏹";
+
+        logActivity(
+            "Voice input activated.",
+            "voice"
+        );
+    };
+
+
+    recognition.onresult = event => {
+
+        let transcript = "";
+
+        for (
+            let i = event.resultIndex;
+            i < event.results.length;
+            i++
+        ) {
+            transcript +=
+                event.results[i][0].transcript;
+        }
+
+        commandInput.value =
+            transcript.trim();
+
+        const finalResult =
+            event.results[event.results.length - 1];
+
+        if (
+            finalResult &&
+            finalResult.isFinal
+        ) {
+
+            const command =
+                transcript.trim();
+
+            if (command) {
+
+                logActivity(
+                    "Heard: " + command,
+                    "voice"
+                );
+
+                if (settings.execute) {
+                    executeCommand(command);
+                }
+            }
+        }
+    };
+
+
+    recognition.onerror = event => {
+
+        logActivity(
+            "Voice error: " + event.error,
+            "warning"
+        );
+
+        stopListening();
+    };
+
+
+    recognition.onend = () => {
+
+        stopListening();
+
+        if (
+            continuousListening &&
+            settings.voice &&
+            !isSpeaking
+        ) {
+            setTimeout(
+                startListening,
+                350
+            );
+        }
+    };
+
+} else {
+
+    logActivity(
+        "Speech recognition is not supported by this browser.",
+        "warning"
     );
-
-  };
-
-  recognition.onresult = event =>{
-
-    let transcript = "";
-
-    for(
-      let i = event.resultIndex;
-      i < event.results.length;
-      i++
-    ){
-
-      transcript +=
-        event.results[i][0].transcript;
-    }
-
-    input.value = transcript;
-
-    const last =
-      event.results[event.results.length-1];
-
-    if(last.isFinal){
-
-      setTimeout(
-        submit,
-        250
-      );
-    }
-  };
-
-  recognition.onerror = event =>{
-
-    log(
-      "Voice error: " + event.error
-    );
-
-    stopListening();
-  };
-
-  recognition.onend = ()=>{
-
-    stopListening();
-
-  };
-
-}else{
-
-  mic.title =
-    "Speech recognition is not supported by this browser";
-
-  log(
-    "Voice recognition is unavailable in this browser."
-  );
 }
 
-function stopListening(){
 
-  listening = false;
+/* =========================================================
+   LISTENING CONTROL
+   ========================================================= */
 
-  mic.classList.remove("active");
+function startListening() {
 
-  setState(
-    "READY",
-    "Speak a command or type anything below."
-  );
-}
-
-mic.addEventListener(
-  "click",
-  ()=>{
-
-    if(!recognition){
-
-      alert(
-        "Voice recognition is not supported by this browser. Try a current Chromium-based browser."
-      );
-
-      return;
+    if (!recognition) {
+        logActivity(
+            "Use Chrome/Edge for browser speech recognition.",
+            "warning"
+        );
+        return;
     }
 
-    if(listening){
+    if (isListening) return;
 
-      recognition.stop();
-
-    }else{
-
-      try{
+    try {
         recognition.start();
-      }catch(e){}
+    } catch (error) {}
+}
+
+
+function stopListening() {
+
+    isListening = false;
+
+    waveform.classList.remove("active");
+
+    voiceStatus.textContent =
+        isSpeaking ? "SPEAKING" : "IDLE";
+
+    if (!isSpeaking) {
+        voiceStatus.classList.remove("active");
+        systemStatus.textContent = "READY";
     }
-  }
+
+    micBtn.textContent = "🎙";
+
+    try {
+        recognition.stop();
+    } catch (error) {}
+}
+
+
+micBtn.addEventListener("click", () => {
+
+    if (isListening) {
+        stopListening();
+    } else {
+        startListening();
+    }
+});
+
+
+/* =========================================================
+   COMMAND ENGINE
+   ========================================================= */
+
+async function executeCommand(command) {
+
+    command =
+        String(command).trim();
+
+    if (!command) return;
+
+    systemStatus.textContent =
+        "EXECUTING";
+
+    voiceStatus.textContent =
+        "PROCESSING";
+
+    logActivity(
+        "Executing: " + command
+    );
+
+
+    /* -----------------------------------------------------
+       Built-in browser commands
+       ----------------------------------------------------- */
+
+    const lower =
+        command.toLowerCase();
+
+
+    if (
+        lower.includes("current time") ||
+        lower === "time"
+    ) {
+
+        const answer =
+            `The current time is ${
+                new Date().toLocaleTimeString()
+            }.`;
+
+        logActivity(
+            "Completed time request.",
+            "success"
+        );
+
+        speak(answer);
+        return;
+    }
+
+
+    if (
+        lower.includes("clear") &&
+        lower.includes("activity")
+    ) {
+
+        activity.innerHTML = "";
+
+        logActivity(
+            "Activity log cleared.",
+            "success"
+        );
+
+        speak("The activity log is clear.");
+        return;
+    }
+
+
+    if (
+        lower.includes("show") &&
+        lower.includes("capabilities")
+    ) {
+
+        const answer =
+            "NEXUS supports voice input, speech output, browser actions, command routing, automation controls and external AI agent integrations.";
+
+        logActivity(
+            "Capability report generated.",
+            "success"
+        );
+
+        speak(answer);
+        return;
+    }
+
+
+    if (
+        lower.includes("open") &&
+        lower.includes("new") &&
+        lower.includes("tab")
+    ) {
+
+        window.open(
+            "about:blank",
+            "_blank"
+        );
+
+        logActivity(
+            "New browser tab requested.",
+            "success"
+        );
+
+        speak("Opening a new browser tab.");
+        return;
+    }
+
+
+    if (
+        lower.includes("read") &&
+        lower.includes("aloud")
+    ) {
+
+        speak(
+            "Your command has been received and processed by NEXUS."
+        );
+
+        return;
+    }
+
+
+    /* -----------------------------------------------------
+       External AI BACKEND HOOK
+       -----------------------------------------------------
+
+       Replace the function below with your API call.
+
+       Example architecture:
+
+       const response = await fetch("/api/agent", {
+           method: "POST",
+           headers: {
+               "Content-Type": "application/json"
+           },
+           body: JSON.stringify({
+               command: command
+           })
+       });
+
+       const data = await response.json();
+
+       speak(data.response);
+
+       IMPORTANT:
+       Keep secret API keys on your server,
+       never inside this HTML file.
+    */
+
+
+    try {
+
+        const result =
+            await nexusBackend(command);
+
+        if (result) {
+
+            logActivity(
+                "Agent response received.",
+                "success"
+            );
+
+            speak(result);
+
+        } else {
+
+            const fallback =
+                `Command received: ${command}. Connect the NEXUS backend to an AI agent or automation service to execute external actions.`;
+
+            logActivity(
+                "Frontend command router completed.",
+                "success"
+            );
+
+            speak(fallback);
+        }
+
+    } catch (error) {
+
+        logActivity(
+            "Backend connection unavailable.",
+            "warning"
+        );
+
+        speak(
+            "The command was received, but the external automation backend is not connected."
+        );
+    }
+
+
+    systemStatus.textContent =
+        "READY";
+}
+
+
+/* =========================================================
+   BACKEND EXTENSION POINT
+   ========================================================= */
+
+async function nexusBackend(command) {
+
+    /*
+        RETURN null for demo mode.
+
+        To connect your real AI agent, replace this
+        function with your own secure backend.
+
+        Example:
+
+        const response = await fetch("/api/agent", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ command })
+        });
+
+        if (!response.ok) {
+            throw new Error("Backend failed");
+        }
+
+        const data = await response.json();
+
+        return data.response;
+    */
+
+    return null;
+}
+
+
+/* =========================================================
+   EXECUTE BUTTON
+   ========================================================= */
+
+executeBtn.addEventListener("click", () => {
+
+    executeCommand(
+        commandInput.value
+    );
+
+    commandInput.value = "";
+});
+
+
+/* =========================================================
+   ENTER KEY
+   ========================================================= */
+
+commandInput.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            executeCommand(
+                commandInput.value
+            );
+
+            commandInput.value = "";
+        }
+
+    }
 );
 
-/* ===== SPACEBAR VOICE ===== */
+
+/* =========================================================
+   QUICK COMMANDS
+   ========================================================= */
+
+document
+    .querySelectorAll(".quick")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const command =
+                    button.dataset.command;
+
+                commandInput.value =
+                    command;
+
+                executeCommand(command);
+
+                commandInput.value = "";
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   AUTOMATION TOGGLES
+   ========================================================= */
+
+document
+    .querySelectorAll(".toggle")
+    .forEach(toggle => {
+
+        toggle.addEventListener(
+            "click",
+            () => {
+
+                const key =
+                    toggle.dataset.toggle;
+
+                toggle.classList.toggle("on");
+
+                const enabled =
+                    toggle.classList.contains("on");
+
+                if (key === "voice") {
+                    settings.voice = enabled;
+
+                    if (!enabled) {
+                        stopListening();
+                    }
+                }
+
+                if (key === "speech") {
+                    settings.speech = enabled;
+
+                    if (!enabled) {
+                        speechSynthesis.cancel();
+                        setSpeaking(false);
+                    }
+                }
+
+                if (key === "continuous") {
+                    continuousListening =
+                        enabled;
+
+                    if (
+                        enabled &&
+                        settings.voice
+                    ) {
+                        startListening();
+                    }
+                }
+
+                if (key === "execute") {
+                    settings.execute = enabled;
+                }
+
+                logActivity(
+                    `${key} automation ${enabled ? "enabled" : "disabled"}.`,
+                    enabled ? "success" : "normal"
+                );
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   VIDEO FALLBACK
+   ========================================================= */
+
+video.addEventListener(
+    "error",
+    () => {
+
+        video.style.display = "none";
+        placeholder.style.display = "grid";
+
+        logActivity(
+            "Avatar video not found. Using holographic fallback.",
+            "warning"
+        );
+    }
+);
+
+
+video.addEventListener(
+    "loadeddata",
+    () => {
+
+        placeholder.style.display =
+            "none";
+
+        logActivity(
+            "Avatar video loaded.",
+            "success"
+        );
+    }
+);
+
+
+/* =========================================================
+   KEYBOARD SHORTCUT
+   ========================================================= */
 
 document.addEventListener(
-  "keydown",
-  e => {
+    "keydown",
+    event => {
 
-    if(
-      e.code === "Space" &&
-      document.activeElement !== input
-    ){
+        /*
+            SPACE = voice activation
+        */
 
-      e.preventDefault();
+        if (
+            event.code === "Space" &&
+            document.activeElement !== commandInput
+        ) {
 
-      if(recognition){
+            event.preventDefault();
 
-        if(listening){
-          recognition.stop();
-        }else{
-
-          try{
-            recognition.start();
-          }catch(e){}
-
+            if (isListening) {
+                stopListening();
+            } else {
+                startListening();
+            }
         }
-      }
+
+        /*
+            CTRL/CMD + K = command box
+        */
+
+        if (
+            (event.ctrlKey || event.metaKey) &&
+            event.key.toLowerCase() === "k"
+        ) {
+
+            event.preventDefault();
+
+            commandInput.focus();
+        }
+
     }
-  }
 );
 
-/* ===== WELCOME ===== */
 
-setTimeout(()=>{
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
 
-  speak(
-    "ÆTHER online. Your command awaits."
-  );
+logActivity(
+    "NEXUS interface initialized.",
+    "success"
+);
 
-},700);
+logActivity(
+    "Command center ready.",
+    "success"
+);
+
+if (!recognition) {
+
+    logActivity(
+        "Voice recognition unavailable in this browser.",
+        "warning"
+    );
+
+}
+
 </script>
 
 </body>
