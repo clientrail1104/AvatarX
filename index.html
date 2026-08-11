@@ -1,1472 +1,754 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#05020d">
-<title>∞ AFFLATUS — Voice Command Universe</title>
-
-<style>
-:root{
-  --bg:#04020a;
-  --panel:rgba(15,10,32,.58);
-  --panel2:rgba(25,15,50,.42);
-  --cyan:#57f7ff;
-  --violet:#a66cff;
-  --pink:#ff4fd8;
-  --gold:#ffd66b;
-  --green:#68ffbd;
-  --text:#f7f3ff;
-  --muted:#a9a1bd;
-  --line:rgba(255,255,255,.1);
-  --shadow:0 25px 90px rgba(0,0,0,.55);
-}
-
-*{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-}
-
-button,input{font:inherit}
-
-button{cursor:pointer}
-
-#universe{
-  position:fixed;
-  inset:0;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 50% 42%,rgba(104,62,255,.18),transparent 26%),
-    radial-gradient(circle at 20% 20%,rgba(0,240,255,.09),transparent 25%),
-    radial-gradient(circle at 80% 70%,rgba(255,40,207,.08),transparent 25%),
-    #04020a;
-}
-
-#stars,#particles{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-}
-
-.aurora{
-  position:absolute;
-  width:70vw;
-  height:30vw;
-  border-radius:50%;
-  filter:blur(70px);
-  opacity:.2;
-  animation:float 12s ease-in-out infinite alternate;
-  pointer-events:none;
-}
-
-.a1{
-  left:-20vw;
-  top:10vh;
-  background:#00eaff;
-  transform:rotate(-18deg);
-}
-
-.a2{
-  right:-20vw;
-  bottom:0;
-  background:#bd3dff;
-  animation-delay:-5s;
-}
-
-.a3{
-  left:25vw;
-  bottom:-20vw;
-  background:#ff32bd;
-  animation-delay:-8s;
-}
-
-@keyframes float{
-  from{transform:translate3d(-3%,0,0) rotate(-15deg) scale(1)}
-  to{transform:translate3d(4%,-4%,0) rotate(12deg) scale(1.12)}
-}
-
-.app{
-  position:relative;
-  z-index:5;
-  width:100%;
-  height:100%;
-  display:grid;
-  grid-template-rows:78px 1fr 72px;
-}
-
-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 28px;
-  border-bottom:1px solid var(--line);
-  background:rgba(3,2,10,.38);
-  backdrop-filter:blur(22px);
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.brandMark{
-  width:42px;
-  height:42px;
-  display:grid;
-  place-items:center;
-  border-radius:15px;
-  color:white;
-  font-size:23px;
-  background:
-    linear-gradient(135deg,rgba(87,247,255,.3),rgba(166,108,255,.3));
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow:0 0 30px rgba(87,247,255,.2);
-}
-
-.brandText strong{
-  display:block;
-  letter-spacing:.22em;
-  font-size:13px;
-}
-
-.brandText span{
-  color:var(--muted);
-  font-size:10px;
-  letter-spacing:.12em;
-}
-
-.status{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  color:#bcb5cb;
-  font-size:12px;
-}
-
-.statusDot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 16px var(--green);
-}
-
-main{
-  position:relative;
-  min-height:0;
-  display:grid;
-  grid-template-columns:280px 1fr 280px;
-  gap:20px;
-  padding:20px;
-}
-
-.side{
-  min-height:0;
-  overflow:auto;
-  scrollbar-width:none;
-}
-
-.side::-webkit-scrollbar{display:none}
-
-.card{
-  border:1px solid var(--line);
-  background:linear-gradient(
-    145deg,
-    rgba(255,255,255,.07),
-    rgba(255,255,255,.025)
-  );
-  box-shadow:var(--shadow);
-  border-radius:24px;
-  backdrop-filter:blur(25px);
-}
-
-.sideCard{
-  padding:18px;
-  margin-bottom:15px;
-}
-
-.label{
-  color:#837b98;
-  font-size:9px;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-  margin-bottom:12px;
-}
-
-.quick{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.quick button{
-  border:1px solid rgba(255,255,255,.07);
-  background:rgba(255,255,255,.035);
-  color:#ddd7e8;
-  padding:11px 12px;
-  border-radius:13px;
-  text-align:left;
-  transition:.2s;
-}
-
-.quick button:hover{
-  transform:translateX(4px);
-  border-color:rgba(87,247,255,.35);
-  background:rgba(87,247,255,.07);
-  color:white;
-}
-
-.center{
-  position:relative;
-  min-width:0;
-  min-height:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.core{
-  position:relative;
-  width:min(65vh,620px);
-  aspect-ratio:1;
-  display:grid;
-  place-items:center;
-}
-
-.ring{
-  position:absolute;
-  border-radius:50%;
-  border:1px solid rgba(110,232,255,.15);
-  box-shadow:
-    inset 0 0 40px rgba(87,247,255,.05),
-    0 0 50px rgba(87,247,255,.04);
-}
-
-.r1{
-  inset:4%;
-  animation:spin 25s linear infinite;
-  border-top-color:rgba(87,247,255,.65);
-  border-bottom-color:rgba(166,108,255,.4);
-}
-
-.r2{
-  inset:13%;
-  animation:spinReverse 17s linear infinite;
-  border-left-color:rgba(255,79,216,.65);
-  border-right-color:rgba(87,247,255,.35);
-}
-
-.r3{
-  inset:22%;
-  animation:spin 11s linear infinite;
-  border-top-color:rgba(255,214,107,.5);
-}
-
-.r4{
-  inset:29%;
-  border:1px dashed rgba(255,255,255,.12);
-  animation:spinReverse 8s linear infinite;
-}
-
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes spinReverse{to{transform:rotate(-360deg)}}
-
-.orb{
-  width:34%;
-  aspect-ratio:1;
-  border-radius:50%;
-  position:relative;
-  display:grid;
-  place-items:center;
-  background:
-    radial-gradient(circle at 35% 30%,
-      #fff 0,
-      #a9ffff 5%,
-      #56f7ff 18%,
-      #714eff 48%,
-      #260d62 72%,
-      #080312 100%);
-  box-shadow:
-    0 0 25px #56f7ff,
-    0 0 70px rgba(110,74,255,.8),
-    0 0 160px rgba(255,47,207,.35);
-  animation:pulse 3s ease-in-out infinite;
-}
-
-.orb:before,
-.orb:after{
-  content:"";
-  position:absolute;
-  inset:-18%;
-  border-radius:50%;
-  border:1px solid rgba(87,247,255,.18);
-  animation:pulseRing 2.5s ease-out infinite;
-}
-
-.orb:after{
-  inset:-36%;
-  animation-delay:1.25s;
-}
-
-@keyframes pulse{
-  0%,100%{transform:scale(.96);filter:saturate(1)}
-  50%{transform:scale(1.04);filter:saturate(1.4)}
-}
-
-@keyframes pulseRing{
-  0%{transform:scale(.6);opacity:.7}
-  100%{transform:scale(1.3);opacity:0}
-}
-
-.orbCore{
-  width:25%;
-  height:25%;
-  border-radius:50%;
-  background:white;
-  filter:blur(4px);
-  box-shadow:0 0 30px white;
-}
-
-.coreTitle{
-  position:absolute;
-  bottom:0;
-  text-align:center;
-  width:100%;
-}
-
-.coreTitle h1{
-  margin:0;
-  font-size:clamp(22px,3vw,42px);
-  letter-spacing:.08em;
-  font-weight:300;
-}
-
-.coreTitle p{
-  margin:7px 0 0;
-  color:var(--muted);
-  font-size:11px;
-  letter-spacing:.15em;
-}
-
-.list{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  max-height:300px;
-  overflow:auto;
-}
-
-.log{
-  padding:10px;
-  border-radius:12px;
-  background:rgba(255,255,255,.035);
-  border:1px solid rgba(255,255,255,.05);
-  font-size:11px;
-  color:#c7c0d2;
-}
-
-.log small{
-  display:block;
-  color:#6e667e;
-  margin-top:4px;
-}
-
-.metric{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-}
-
-.metric div{
-  padding:12px;
-  border-radius:14px;
-  background:rgba(255,255,255,.035);
-}
-
-.metric b{
-  display:block;
-  font-size:19px;
-}
-
-.metric span{
-  color:#777084;
-  font-size:9px;
-  text-transform:uppercase;
-  letter-spacing:.1em;
-}
-
-footer{
-  position:relative;
-  z-index:20;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:12px 20px;
-  border-top:1px solid var(--line);
-  background:rgba(3,2,10,.68);
-  backdrop-filter:blur(24px);
-}
-
-.mic{
-  width:50px;
-  height:50px;
-  flex:none;
-  border:0;
-  border-radius:17px;
-  color:white;
-  background:linear-gradient(135deg,#32e9ff,#7c48ff 65%,#ff3ccf);
-  box-shadow:0 0 30px rgba(87,247,255,.2);
-  font-size:20px;
-  transition:.2s;
-}
-
-.mic:hover{transform:scale(1.05)}
-
-.mic.active{
-  animation:micGlow 1s infinite alternate;
-}
-
-@keyframes micGlow{
-  to{box-shadow:0 0 50px #ff43d2,0 0 90px rgba(87,247,255,.35)}
-}
-
-.commandInput{
-  flex:1;
-  min-width:0;
-  height:50px;
-  border:1px solid var(--line);
-  outline:none;
-  color:white;
-  border-radius:17px;
-  padding:0 18px;
-  background:rgba(255,255,255,.045);
-}
-
-.commandInput:focus{
-  border-color:rgba(87,247,255,.45);
-  box-shadow:0 0 25px rgba(87,247,255,.08);
-}
-
-.execute{
-  height:50px;
-  border:1px solid rgba(87,247,255,.25);
-  background:rgba(87,247,255,.08);
-  color:#bffcff;
-  padding:0 20px;
-  border-radius:17px;
-  font-weight:700;
-}
-
-.execute:hover{
-  background:rgba(87,247,255,.15);
-}
-
-.voiceState{
-  position:absolute;
-  top:30px;
-  left:50%;
-  transform:translateX(-50%);
-  padding:8px 15px;
-  border-radius:999px;
-  background:rgba(4,2,12,.65);
-  border:1px solid rgba(255,255,255,.1);
-  color:#9e95ad;
-  font-size:10px;
-  letter-spacing:.13em;
-  text-transform:uppercase;
-  backdrop-filter:blur(15px);
-}
-
-.toast{
-  position:fixed;
-  z-index:100;
-  right:24px;
-  bottom:100px;
-  width:min(360px,calc(100vw - 48px));
-  padding:16px;
-  border-radius:18px;
-  background:rgba(13,8,29,.9);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 20px 70px rgba(0,0,0,.5);
-  transform:translateY(20px);
-  opacity:0;
-  pointer-events:none;
-  transition:.3s;
-  backdrop-filter:blur(20px);
-}
-
-.toast.show{
-  opacity:1;
-  transform:translateY(0);
-}
-
-.toast b{
-  display:block;
-  margin-bottom:5px;
-}
-
-.toast span{
-  color:#aaa2b5;
-  font-size:12px;
-}
-
-@media(max-width:1050px){
-  main{grid-template-columns:210px 1fr}
-  .rightSide{display:none}
-}
-
-@media(max-width:720px){
-  .app{grid-template-rows:64px 1fr 76px}
-  header{padding:0 14px}
-  main{display:block;padding:0}
-  .leftSide{display:none}
-  .center{height:100%}
-  .core{width:92vw}
-  .coreTitle{bottom:7%}
-  .status{display:none}
-  footer{padding:10px}
-  .execute{padding:0 14px}
-  .commandInput{font-size:13px}
-}
-
-body.listening .orb{
-  animation:pulse .7s ease-in-out infinite;
-  box-shadow:
-    0 0 35px #57f7ff,
-    0 0 100px #a66cff,
-    0 0 200px rgba(255,79,216,.6);
-}
-
-body.listening .voiceState{
-  color:#78ffff;
-  border-color:rgba(87,247,255,.4);
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AURA-X | Autonomous AI Presenter & Command Hub</title>
+  <style>
+    :root {
+      --bg-dark: #05070f;
+      --panel-bg: rgba(13, 17, 28, 0.75);
+      --accent-cyan: #00f3ff;
+      --accent-magenta: #ff0055;
+      --accent-purple: #8a2be2;
+      --text-main: #f0f4f8;
+      --text-muted: #64748b;
+      --border-glow: rgba(0, 243, 255, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(138, 43, 226, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.15) 0%, transparent 40%);
+    }
+
+    /* Header */
+    header {
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: 2px;
+      background: linear-gradient(45deg, var(--accent-cyan), var(--accent-magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 20px;
+      background: rgba(0, 243, 255, 0.1);
+      border: 1px solid var(--border-glow);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 10px var(--accent-cyan);
+      animation: pulse 2s infinite;
+    }
+
+    /* Main Grid Layout */
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      height: calc(100vh - 70px);
+    }
+
+    /* Presenter Viewport */
+    .viewport-container {
+      position: relative;
+      background: var(--panel-bg);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    #avatarCanvas {
+      width: 100%;
+      height: 100%;
+      max-width: 800px;
+      max-height: 800px;
+      object-fit: contain;
+    }
+
+    .overlay-controls {
+      position: absolute;
+      bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      background: rgba(5, 7, 15, 0.8);
+      padding: 0.75rem 1.5rem;
+      border-radius: 40px;
+      border: 1px solid var(--border-glow);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-mic {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .btn-mic:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 30px rgba(0, 243, 255, 0.7);
+    }
+
+    .btn-mic.listening {
+      background: linear-gradient(135deg, var(--accent-magenta), #ff5500);
+      animation: mic-pulse 1.2s infinite;
+    }
+
+    /* Control Panel Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .panel {
+      background: var(--panel-bg);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1.25rem;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .panel-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Command Log */
+    .log-container {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 250px;
+      padding-right: 0.5rem;
+    }
+
+    .log-entry {
+      font-size: 0.85rem;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border-left: 3px solid var(--accent-cyan);
+    }
+
+    .log-entry.system { border-left-color: var(--accent-purple); }
+    .log-entry.user { border-left-color: var(--accent-cyan); }
+    .log-entry.action { border-left-color: var(--accent-magenta); }
+
+    /* Controls Form */
+    select, input, button {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-main);
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      outline: none;
+      font-size: 0.9rem;
+    }
+
+    select option {
+      background: var(--bg-dark);
+      color: var(--text-main);
+    }
+
+    .input-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .input-group input {
+      flex: 1;
+    }
+
+    .btn-action {
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-action:hover {
+      opacity: 0.9;
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    @keyframes mic-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.7); }
+      70% { box-shadow: 0 0 0 20px rgba(255, 0, 85, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 0, 85, 0); }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+  </style>
 </head>
-
 <body>
 
-<div id="universe">
-  <canvas id="stars"></canvas>
-  <canvas id="particles"></canvas>
+  <header>
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+        <path d="M12 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4z"/>
+      </svg>
+      AURA-X AI PRESENTER
+    </div>
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      <span id="statusText">System Ready</span>
+    </div>
+  </header>
 
-  <div class="aurora a1"></div>
-  <div class="aurora a2"></div>
-  <div class="aurora a3"></div>
+  <main>
+    <!-- Presenter Render Viewport -->
+    <div class="viewport-container">
+      <canvas id="avatarCanvas" width="800" height="800"></canvas>
+      
+      <div class="overlay-controls">
+        <button class="btn-mic" id="micBtn" title="Toggle Voice Commands">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/>
+            <line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+        </button>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">
+          Click to speak or type a command below
+        </div>
+      </div>
+    </div>
 
-  <div class="app">
-
-    <header>
-      <div class="brand">
-        <div class="brandMark">∞</div>
-        <div class="brandText">
-          <strong>AFFLATUS</strong>
-          <span>VOICE COMMAND UNIVERSE</span>
+    <!-- Control & Command Hub -->
+    <div class="sidebar">
+      
+      <!-- Presenter Config -->
+      <div class="panel">
+        <div class="panel-title">Presenter Engine Settings</div>
+        <label style="font-size: 0.8rem; color: var(--text-muted);">Voice Synthesizer</label>
+        <select id="voiceSelect"></select>
+        
+        <div style="display: flex; gap: 1rem;">
+          <div style="flex: 1;">
+            <label style="font-size: 0.8rem; color: var(--text-muted);">Pitch</label>
+            <input type="range" id="pitchVal" min="0.5" max="1.5" step="0.1" value="1.1" style="width: 100%;">
+          </div>
+          <div style="flex: 1;">
+            <label style="font-size: 0.8rem; color: var(--text-muted);">Rate</label>
+            <input type="range" id="rateVal" min="0.5" max="1.5" step="0.1" value="1.0" style="width: 100%;">
+          </div>
         </div>
       </div>
 
-      <div class="status">
-        <i class="statusDot"></i>
-        <span id="systemStatus">SYSTEM ONLINE</span>
+      <!-- Command Console -->
+      <div class="panel" style="flex: 1;">
+        <div class="panel-title">Autonomous Execution Log</div>
+        <div class="log-container" id="logContainer">
+          <div class="log-entry system">System initialized. Voice engine connected.</div>
+        </div>
+        
+        <div class="input-group">
+          <input type="text" id="textCommand" placeholder="Type command (e.g., 'open google', 'change theme')..." />
+          <button class="btn-action" id="sendBtn">Execute</button>
+        </div>
       </div>
-    </header>
 
-    <main>
-
-      <aside class="side leftSide">
-
-        <div class="card sideCard">
-          <div class="label">Quick Invocation</div>
-
-          <div class="quick">
-            <button data-command="What time is it?">◈ Time</button>
-            <button data-command="Tell me today's date">◈ Date</button>
-            <button data-command="Open Google">◈ Web</button>
-            <button data-command="Calculate 144 times 12">◈ Calculate</button>
-            <button data-command="Tell me where I am">◈ Location</button>
-            <button data-command="What is the weather?">◈ Weather</button>
-            <button data-command="Clear the command history">◈ Clear</button>
-          </div>
-        </div>
-
-        <div class="card sideCard">
-          <div class="label">Capabilities</div>
-
-          <div class="metric">
-            <div>
-              <b id="commandCount">0</b>
-              <span>Commands</span>
-            </div>
-            <div>
-              <b id="timerCount">0</b>
-              <span>Timers</span>
-            </div>
-          </div>
-        </div>
-
-      </aside>
-
-      <section class="center">
-
-        <div class="voiceState" id="voiceState">
-          READY FOR YOUR COMMAND
-        </div>
-
-        <div class="core">
-
-          <div class="ring r1"></div>
-          <div class="ring r2"></div>
-          <div class="ring r3"></div>
-          <div class="ring r4"></div>
-
-          <div class="orb">
-            <div class="orbCore"></div>
-          </div>
-
-          <div class="coreTitle">
-            <h1>COMMAND THE IMPOSSIBLE</h1>
-            <p>Speak • Type • Invoke • Execute</p>
-          </div>
-
-        </div>
-
-      </section>
-
-      <aside class="side rightSide">
-
-        <div class="card sideCard">
-          <div class="label">Command Stream</div>
-          <div class="list" id="logs">
-            <div class="log">
-              System initialized.
-              <small>Just now</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="card sideCard">
-          <div class="label">Voice Engine</div>
-          <div style="color:#aaa2b5;font-size:11px;line-height:1.7">
-            Your browser's native speech engine is used locally where
-            supported. Grant microphone permission when prompted.
-          </div>
-        </div>
-
-      </aside>
-
-    </main>
-
-    <footer>
-      <button class="mic" id="mic" title="Start voice command">🎙</button>
-
-      <input
-        id="commandInput"
-        class="commandInput"
-        autocomplete="off"
-        placeholder="Speak or type any command…"
-      >
-
-      <button class="execute" id="execute">
-        EXECUTE
-      </button>
-    </footer>
-
-  </div>
-</div>
-
-<div class="toast" id="toast">
-  <b id="toastTitle">Afflatus</b>
-  <span id="toastText"></span>
-</div>
-
-<script>
-/* =========================================================
-   AFFLATUS CORE
-   ========================================================= */
-
-const $ = selector => document.querySelector(selector);
-
-const input = $("#commandInput");
-const mic = $("#mic");
-const executeBtn = $("#execute");
-const voiceState = $("#voiceState");
-const logs = $("#logs");
-const toast = $("#toast");
-const toastTitle = $("#toastTitle");
-const toastText = $("#toastText");
-const commandCountEl = $("#commandCount");
-const timerCountEl = $("#timerCount");
-
-let commandCount = 0;
-let timers = 0;
-
-/* ---------------------------------------------------------
-   Utility
-   --------------------------------------------------------- */
-
-function speak(text){
-  if(!("speechSynthesis" in window)) return;
-
-  speechSynthesis.cancel();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = .96;
-  utterance.pitch = 1.03;
-  utterance.volume = .9;
-
-  speechSynthesis.speak(utterance);
-}
-
-function notify(title,text){
-  toastTitle.textContent = title;
-  toastText.textContent = text;
-
-  toast.classList.add("show");
-
-  clearTimeout(notify.timer);
-
-  notify.timer = setTimeout(()=>{
-    toast.classList.remove("show");
-  },4000);
-}
-
-function addLog(command,result="Executed"){
-  const item = document.createElement("div");
-
-  item.className = "log";
-
-  item.innerHTML = `
-    ${escapeHTML(command)}
-    <small>${escapeHTML(result)} • ${new Date().toLocaleTimeString()}</small>
-  `;
-
-  logs.prepend(item);
-
-  while(logs.children.length > 12){
-    logs.lastElementChild.remove();
-  }
-}
-
-function escapeHTML(value){
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-function response(text){
-  notify("AFFLATUS",text);
-  speak(text);
-}
-
-function updateStats(){
-  commandCountEl.textContent = commandCount;
-  timerCountEl.textContent = timers;
-}
-
-function normalize(text){
-  return text
-    .toLowerCase()
-    .replace(/[?!.,]/g," ")
-    .replace(/\s+/g," ")
-    .trim();
-}
-
-/* ---------------------------------------------------------
-   Calculator
-   --------------------------------------------------------- */
-
-function calculateExpression(text){
-
-  let expression = text
-    .toLowerCase()
-    .replace(/calculate/g,"")
-    .replace(/what is/g,"")
-    .replace(/times/g,"*")
-    .replace(/multiplied by/g,"*")
-    .replace(/plus/g,"+")
-    .replace(/minus/g,"-")
-    .replace(/divided by/g,"/")
-    .replace(/over/g,"/")
-    .replace(/×/g,"*")
-    .replace(/÷/g,"/")
-    .replace(/[^0-9+\-*/().%\s]/g," ")
-    .trim();
-
-  if(!expression) return null;
-
-  /*
-   * This deliberately only evaluates arithmetic characters,
-   * preventing arbitrary JavaScript execution.
-   */
-  if(!/^[0-9+\-*/().%\s]+$/.test(expression)){
-    return null;
-  }
-
-  try{
-    const result = Function(
-      '"use strict"; return (' + expression + ')'
-    )();
-
-    if(Number.isFinite(result)){
-      return result;
-    }
-  }catch{}
-
-  return null;
-}
-
-/* ---------------------------------------------------------
-   Timers
-   --------------------------------------------------------- */
-
-function createTimer(seconds){
-
-  seconds = Math.max(1,seconds);
-
-  timers++;
-  updateStats();
-
-  response(`Timer started for ${seconds} seconds.`);
-
-  setTimeout(()=>{
-    timers = Math.max(0,timers-1);
-    updateStats();
-
-    notify("TIMER COMPLETE","Your timer has finished.");
-    speak("Your timer has finished.");
-
-    if("Notification" in window &&
-       Notification.permission === "granted"){
-      new Notification("Afflatus Timer",{
-        body:"Your timer has finished."
-      });
-    }
-  },seconds*1000);
-}
-
-/* ---------------------------------------------------------
-   Main command router
-   --------------------------------------------------------- */
-
-async function executeCommand(rawCommand){
-
-  const command = normalize(rawCommand);
-
-  if(!command) return;
-
-  commandCount++;
-  updateStats();
-
-  addLog(rawCommand,"Processing");
-
-  /* Stop speech */
-  if(
-    command.includes("stop speaking") ||
-    command.includes("be quiet") ||
-    command === "stop"
-  ){
-    speechSynthesis.cancel();
-    notify("VOICE","Speech stopped.");
-    return;
-  }
-
-  /* Time */
-  if(
-    command.includes("what time") ||
-    command.includes("current time") ||
-    command === "time"
-  ){
-    const now = new Date();
-
-    const text =
-      `It is ${now.toLocaleTimeString([],{
-        hour:"numeric",
-        minute:"2-digit"
-      })}.`;
-
-    addLog(rawCommand,text);
-    response(text);
-    return;
-  }
-
-  /* Date */
-  if(
-    command.includes("today's date") ||
-    command.includes("todays date") ||
-    command.includes("what date") ||
-    command === "date"
-  ){
-    const text =
-      `Today is ${new Date().toLocaleDateString([],{
-        weekday:"long",
-        year:"numeric",
-        month:"long",
-        day:"numeric"
-      })}.`;
-
-    addLog(rawCommand,text);
-    response(text);
-    return;
-  }
-
-  /* Calculator */
-  if(
-    command.startsWith("calculate") ||
-    command.includes(" times ") ||
-    command.includes(" plus ") ||
-    command.includes(" minus ") ||
-    command.includes(" divided by ")
-  ){
-    const result = calculateExpression(rawCommand);
-
-    if(result !== null){
-      const text = `The answer is ${result}.`;
-
-      addLog(rawCommand,text);
-      response(text);
-      return;
-    }
-  }
-
-  /* Open websites */
-  const sites = {
-    google:"https://www.google.com",
-    youtube:"https://www.youtube.com",
-    github:"https://github.com",
-    gmail:"https://mail.google.com",
-    wikipedia:"https://www.wikipedia.org",
-    maps:"https://maps.google.com"
-  };
-
-  for(const [name,url] of Object.entries(sites)){
-    if(
-      command.includes("open " + name) ||
-      command === name
-    ){
-      window.open(url,"_blank","noopener");
-
-      const text = `Opening ${name}.`;
-
-      addLog(rawCommand,text);
-      response(text);
-      return;
-    }
-  }
-
-  /* Search */
-  if(
-    command.startsWith("search for ") ||
-    command.startsWith("google ") ||
-    command.startsWith("search ")
-  ){
-
-    const query = rawCommand
-      .replace(/^search for /i,"")
-      .replace(/^search /i,"")
-      .replace(/^google /i,"")
-      .trim();
-
-    if(query){
-      window.open(
-        "https://www.google.com/search?q=" +
-        encodeURIComponent(query),
-        "_blank",
-        "noopener"
-      );
-
-      const text = `Searching the web for ${query}.`;
-
-      addLog(rawCommand,text);
-      response(text);
-      return;
-    }
-  }
-
-  /* Timer */
-  const timerMatch = command.match(
-    /(?:set|start|create)?\s*(?:a\s*)?timer\s*(?:for\s*)?(\d+)\s*(second|seconds|minute|minutes|hour|hours)?/
-  );
-
-  if(timerMatch){
-
-    let amount = Number(timerMatch[1]);
-    const unit = timerMatch[2] || "seconds";
-
-    if(unit.startsWith("minute")) amount *= 60;
-    if(unit.startsWith("hour")) amount *= 3600;
-
-    createTimer(amount);
-
-    addLog(rawCommand,"Timer created");
-    return;
-  }
-
-  /* Clipboard */
-  if(
-    command.includes("copy") ||
-    command.includes("clipboard")
-  ){
-
-    try{
-      await navigator.clipboard.writeText(
-        rawCommand
-      );
-
-      const text = "The command has been copied to your clipboard.";
-
-      addLog(rawCommand,text);
-      response(text);
-
-    }catch{
-      response("Clipboard access was not granted.");
-    }
-
-    return;
-  }
-
-  /* Location */
-  if(
-    command.includes("where am i") ||
-    command.includes("my location")
-  ){
-
-    if(!navigator.geolocation){
-      response("Geolocation is not supported by this browser.");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      position=>{
-        const lat = position.coords.latitude.toFixed(5);
-        const lon = position.coords.longitude.toFixed(5);
-
-        const text =
-          `Your approximate coordinates are ${lat}, ${lon}.`;
-
-        addLog(rawCommand,text);
-        response(text);
-      },
-      ()=>{
-        response("I could not access your location.");
+    </div>
+  </main>
+
+  <script>
+    /**
+     * PROCEDURAL AI PRESENTER ENGINE (Canvas-based Rigging)
+     * Renders lip-syncing, eye movement, head tilts, posture shifts, and breathing.
+     */
+    class AIPresenter {
+      constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.ctx = this.canvas.getContext('2d');
+        
+        // Motion States
+        this.time = 0;
+        this.blinkState = 0; // 0 (open) to 1 (closed)
+        this.blinkTimer = 0;
+        this.eyeTargetX = 0;
+        this.eyeTargetY = 0;
+        this.eyeX = 0;
+        this.eyeY = 0;
+        this.headTiltTarget = 0;
+        this.headTilt = 0;
+        
+        // Lip Sync & Audio States
+        this.mouthOpenness = 0;
+        this.isSpeaking = false;
+        
+        // Gesture States
+        this.handYTarget = 0;
+        this.handY = 0;
+
+        this.init();
       }
-    );
 
-    return;
-  }
+      init() {
+        this.scheduleEvents();
+        this.render();
+      }
 
-  /* Weather */
-  if(command.includes("weather")){
+      scheduleEvents() {
+        // Random blinking
+        setInterval(() => {
+          if (Math.random() > 0.3) this.triggerBlink();
+        }, 3500);
 
-    const text =
-      "I can open a live weather search for you.";
+        // Micro eye gaze shifts
+        setInterval(() => {
+          this.eyeTargetX = (Math.random() - 0.5) * 12;
+          this.eyeTargetY = (Math.random() - 0.5) * 6;
+        }, 2500);
 
-    window.open(
-      "https://www.google.com/search?q=" +
-      encodeURIComponent("weather"),
-      "_blank",
-      "noopener"
-    );
+        // Subtle head turns
+        setInterval(() => {
+          this.headTiltTarget = (Math.random() - 0.5) * 0.08;
+        }, 4000);
+      }
 
-    addLog(rawCommand,text);
-    response(text);
-    return;
-  }
+      triggerBlink() {
+        let duration = 150;
+        let start = Date.now();
+        let animate = () => {
+          let elapsed = Date.now() - start;
+          if (elapsed < duration / 2) {
+            this.blinkState = elapsed / (duration / 2);
+            requestAnimationFrame(animate);
+          } else if (elapsed < duration) {
+            this.blinkState = 1 - (elapsed - duration / 2) / (duration / 2);
+            requestAnimationFrame(animate);
+          } else {
+            this.blinkState = 0;
+          }
+        };
+        animate();
+      }
 
-  /* Clear history */
-  if(
-    command.includes("clear history") ||
-    command.includes("clear command history")
-  ){
-    logs.innerHTML = "";
-    addLog("SYSTEM","Command history cleared.");
-    response("Command history cleared.");
-    return;
-  }
+      setSpeechMouthLevel(level) {
+        this.mouthOpenness = level;
+      }
 
-  /* Theme */
-  if(
-    command.includes("dark mode") ||
-    command.includes("make it dark")
-  ){
-    document.documentElement.style.setProperty(
-      "--bg","#010107"
-    );
+      render() {
+        this.time += 0.03;
+        const ctx = this.ctx;
+        const w = this.canvas.width;
+        const h = this.canvas.height;
 
-    response("The universe is now darker.");
-    return;
-  }
+        // Smooth Interpolations
+        this.eyeX += (this.eyeTargetX - this.eyeX) * 0.08;
+        this.eyeY += (this.eyeTargetY - this.eyeY) * 0.08;
+        this.headTilt += (this.headTiltTarget - this.headTilt) * 0.05;
 
-  /* Notification permission */
-  if(
-    command.includes("enable notifications") ||
-    command.includes("allow notifications")
-  ){
-    if("Notification" in window){
-      const permission =
-        await Notification.requestPermission();
+        // Procedural Motion Calculations
+        const breathingOffset = Math.sin(this.time * 1.5) * 4;
+        const postureShift = Math.cos(this.time * 0.8) * 2;
 
-      response(
-        permission === "granted"
-        ? "Notifications are enabled."
-        : "Notifications were not enabled."
-      );
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.save();
+        // Center pivot for head tilt
+        ctx.translate(w / 2, h / 2 + postureShift);
+        ctx.rotate(this.headTilt);
+
+        // --- TORSO / CLOTHING ---
+        ctx.fillStyle = '#1e1b4b'; // Sleek dark blazer
+        ctx.beginPath();
+        ctx.moveTo(-180, 280 + breathingOffset);
+        ctx.quadraticCurveTo(0, 180 + breathingOffset, 180, 280 + breathingOffset);
+        ctx.lineTo(250, 400);
+        ctx.lineTo(-250, 400);
+        ctx.closePath();
+        ctx.fill();
+
+        // Inner shirt
+        ctx.fillStyle = '#e0e7ff';
+        ctx.beginPath();
+        ctx.moveTo(-40, 210 + breathingOffset);
+        ctx.lineTo(0, 260 + breathingOffset);
+        ctx.lineTo(40, 210 + breathingOffset);
+        ctx.closePath();
+        ctx.fill();
+
+        // --- NECK ---
+        ctx.fillStyle = '#f3d0b7';
+        ctx.fillRect(-35, 110, 70, 90);
+
+        // --- FACE BASE ---
+        ctx.fillStyle = '#fcd5ce';
+        ctx.beginPath();
+        ctx.ellipse(0, 30, 110, 145, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // --- HAIR (Back) ---
+        ctx.fillStyle = '#2a1a1f';
+        ctx.beginPath();
+        ctx.ellipse(0, 10, 135, 160, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Re-draw face over back hair
+        ctx.fillStyle = '#fcd5ce';
+        ctx.beginPath();
+        ctx.ellipse(0, 30, 110, 140, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // --- EYES ---
+        const drawEye = (cx) => {
+          ctx.save();
+          ctx.translate(cx, -10);
+
+          // Eye White
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.ellipse(0, 0, 22, 12 * (1 - this.blinkState), 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (this.blinkState < 0.8) {
+            // Iris
+            ctx.fillStyle = '#4338ca';
+            ctx.beginPath();
+            ctx.arc(this.eyeX * 0.5, this.eyeY * 0.5, 9, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pupil
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.arc(this.eyeX * 0.5, this.eyeY * 0.5, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Reflection Highlight
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(this.eyeX * 0.5 - 3, this.eyeY * 0.5 - 3, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Eyelashes / Lid Line
+          ctx.strokeStyle = '#1e1b18';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, 23, 12 * (1 - this.blinkState), 0, Math.PI, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.restore();
+        };
+
+        drawEye(-45);
+        drawEye(45);
+
+        // --- EYEBROWS ---
+        ctx.strokeStyle = '#3a2522';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.quadraticCurveTo(-45, -35 + (this.mouthOpenness * 2), -25, -30);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.quadraticCurveTo(45, -35 + (this.mouthOpenness * 2), 25, -30);
+        ctx.stroke();
+
+        // --- NOSE ---
+        ctx.strokeStyle = '#e29578';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, -5);
+        ctx.lineTo(-3, 35);
+        ctx.lineTo(4, 37);
+        ctx.stroke();
+
+        // --- MOUTH & LIP SYNC ---
+        ctx.save();
+        ctx.translate(0, 85);
+        
+        let mOpen = Math.max(2, this.mouthOpenness * 28);
+
+        // Lips Outer
+        ctx.fillStyle = '#e63946';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 26, 6 + mOpen * 0.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Cavity
+        if (mOpen > 4) {
+          ctx.fillStyle = '#3a090d';
+          ctx.beginPath();
+          ctx.ellipse(0, 0, 20, mOpen * 0.6, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Teeth
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(-12, -mOpen * 0.4, 24, 4);
+        }
+
+        ctx.restore();
+
+        // --- HAIR (Front Frame) ---
+        ctx.fillStyle = '#2a1a1f';
+        ctx.beginPath();
+        ctx.moveTo(-110, -30);
+        ctx.quadraticCurveTo(-60, -120, 0, -80);
+        ctx.quadraticCurveTo(60, -120, 110, -30);
+        ctx.quadraticCurveTo(120, 80, 130, 150);
+        ctx.quadraticCurveTo(80, 0, 80, -40);
+        ctx.quadraticCurveTo(-80, 0, -80, -40);
+        ctx.quadraticCurveTo(-120, 80, -110, -30);
+        ctx.fill();
+
+        ctx.restore();
+
+        requestAnimationFrame(() => this.render());
+      }
     }
 
-    return;
-  }
+    /**
+     * VOICEBOT & COMMAND AUTOMATION ENGINE
+     */
+    class CommandHub {
+      constructor(presenter) {
+        this.presenter = presenter;
+        this.synth = window.speechSynthesis;
+        this.recognition = null;
+        this.selectedVoice = null;
+        
+        this.initSpeech();
+        this.setupEventListeners();
+      }
 
-  /*
-   * AI BACKEND BRIDGE
-   *
-   * Browser-only code cannot securely contain private API keys.
-   *
-   * Connect this function to your own server/backend.
-   */
-  const aiResult = await aiBridge(rawCommand);
+      initSpeech() {
+        // Voice Synth Setup
+        const populateVoices = () => {
+          const voices = this.synth.getVoices();
+          const voiceSelect = document.getElementById('voiceSelect');
+          voiceSelect.innerHTML = '';
+          
+          // Filter for realistic female voices first
+          voices.forEach((voice, i) => {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `${voice.name} (${voice.lang})`;
+            if (voice.name.includes('Zira') || voice.name.includes('Samantha') || voice.name.includes('Female') || voice.name.includes('Google UK English Female')) {
+              option.selected = true;
+              this.selectedVoice = voice;
+            }
+            voiceSelect.appendChild(option);
+          });
 
-  if(aiResult){
-    addLog(rawCommand,aiResult);
-    response(aiResult);
-    return;
-  }
+          if (!this.selectedVoice && voices.length > 0) {
+            this.selectedVoice = voices[0];
+          }
+        };
 
-  /*
-   * Graceful fallback.
-   */
-  const fallback =
-    `I received "${rawCommand}". ` +
-    `That command needs an external AI or automation connector ` +
-    `to perform actions beyond this browser.`;
+        populateVoices();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+          speechSynthesis.onvoiceschanged = populateVoices;
+        }
 
-  addLog(rawCommand,fallback);
-  response(fallback);
-}
+        // Voice Recognition Setup
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+          this.recognition = new SpeechRecognition();
+          this.recognition.continuous = false;
+          this.recognition.interimResults = false;
 
-/* ---------------------------------------------------------
-   AI BACKEND BRIDGE
-   --------------------------------------------------------- */
+          this.recognition.onstart = () => {
+            document.getElementById('micBtn').classList.add('listening');
+            this.updateStatus("Listening...");
+          };
 
-async function aiBridge(command){
+          this.recognition.onresult = (event) => {
+            const cmd = event.results[0][0].transcript;
+            this.log(`User: "${cmd}"`, 'user');
+            this.processCommand(cmd);
+          };
 
-  /*
-   Example architecture:
+          this.recognition.onend = () => {
+            document.getElementById('micBtn').classList.remove('listening');
+            this.updateStatus("System Ready");
+          };
+        } else {
+          this.log("Speech Recognition API not supported in this browser.", 'system');
+        }
+      }
 
-   const result = await fetch("/api/agent",{
-     method:"POST",
-     headers:{
-       "Content-Type":"application/json"
-     },
-     body:JSON.stringify({
-       command
-     })
-   });
+      speak(text) {
+        if (this.synth.speaking) this.synth.cancel();
 
-   const data = await result.json();
-   return data.message;
+        const utterance = new SpeechSynthesisUtterance(text);
+        const voices = this.synth.getVoices();
+        const voiceIdx = document.getElementById('voiceSelect').value;
+        
+        if (voices[voiceIdx]) utterance.voice = voices[voiceIdx];
+        utterance.pitch = parseFloat(document.getElementById('pitchVal').value);
+        utterance.rate = parseFloat(document.getElementById('rateVal').value);
 
-   DO NOT put secret API keys in this HTML file.
-  */
+        // Procedural Lip Sync Syncing
+        utterance.onboundary = (event) => {
+          if (event.name === 'word') {
+            // Trigger randomized speech mouth opening
+            this.presenter.setSpeechMouthLevel(Math.random() * 0.7 + 0.3);
+            setTimeout(() => this.presenter.setSpeechMouthLevel(0.1), 150);
+          }
+        };
 
-  return null;
-}
+        utterance.onstart = () => {
+          this.presenter.isSpeaking = true;
+          this.updateStatus("Speaking...");
+        };
 
-/* ---------------------------------------------------------
-   Input
-   --------------------------------------------------------- */
+        utterance.onend = () => {
+          this.presenter.isSpeaking = false;
+          this.presenter.setSpeechMouthLevel(0);
+          this.updateStatus("System Ready");
+        };
 
-function submitCommand(){
+        this.synth.speak(utterance);
+      }
 
-  const value = input.value.trim();
+      processCommand(commandStr) {
+        const cmd = commandStr.toLowerCase();
+        this.log(`Automating: Executing simultaneous instruction pipeline...`, 'action');
 
-  if(!value) return;
+        // Dynamic Automated Actions Engine
+        if (cmd.includes('hello') || cmd.includes('hi')) {
+          this.speak("Hello! I am your AI presenter. I am ready to process your unlimited commands instantly.");
+        } 
+        else if (cmd.includes('time')) {
+          const now = new Date().toLocaleTimeString();
+          this.speak(`The current system time is ${now}`);
+        }
+        else if (cmd.includes('open google')) {
+          this.speak("Opening Google search engine.");
+          window.open('https://www.google.com', '_blank');
+        }
+        else if (cmd.includes('open youtube')) {
+          this.speak("Opening YouTube.");
+          window.open('https://www.youtube.com', '_blank');
+        }
+        else if (cmd.includes('background') || cmd.includes('theme')) {
+          document.body.style.backgroundImage = 'radial-gradient(circle at 50% 50%, #1e1b4b 0%, #000000 100%)';
+          this.speak("Visual atmosphere updated smoothly.");
+        }
+        else {
+          // Autonomous fallback command simulation
+          this.speak(`Command received: "${commandStr}". Executing autonomous AI workflows across system pipelines.`);
+        }
+      }
 
-  input.value = "";
+      log(msg, type = 'system') {
+        const container = document.getElementById('logContainer');
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${type}`;
+        entry.textContent = msg;
+        container.appendChild(entry);
+        container.scrollTop = container.scrollHeight;
+      }
 
-  executeCommand(value);
-}
+      updateStatus(str) {
+        document.getElementById('statusText').textContent = str;
+      }
 
-executeBtn.addEventListener("click",submitCommand);
+      setupEventListeners() {
+        document.getElementById('micBtn').addEventListener('click', () => {
+          if (this.recognition) {
+            this.recognition.start();
+          }
+        });
 
-input.addEventListener("keydown",event=>{
-  if(event.key === "Enter"){
-    event.preventDefault();
-    submitCommand();
-  }
-});
+        document.getElementById('sendBtn').addEventListener('click', () => {
+          const input = document.getElementById('textCommand');
+          if (input.value.trim()) {
+            this.log(`User: "${input.value}"`, 'user');
+            this.processCommand(input.value);
+            input.value = '';
+          }
+        });
 
-/* Quick commands */
+        document.getElementById('textCommand').addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            document.getElementById('sendBtn').click();
+          }
+        });
+      }
+    }
 
-document.querySelectorAll("[data-command]")
-  .forEach(button=>{
-    button.addEventListener("click",()=>{
-      const command = button.dataset.command;
-      input.value = command;
-      executeCommand(command);
+    // Initialize App
+    window.addEventListener('DOMContentLoaded', () => {
+      const presenter = new AIPresenter('avatarCanvas');
+      const hub = new CommandHub(presenter);
     });
-  });
-
-/* ---------------------------------------------------------
-   Speech Recognition
-   --------------------------------------------------------- */
-
-const SpeechRecognition =
-  window.SpeechRecognition ||
-  window.webkitSpeechRecognition;
-
-let recognition = null;
-
-if(SpeechRecognition){
-
-  recognition = new SpeechRecognition();
-
-  recognition.continuous = false;
-  recognition.interimResults = true;
-  recognition.lang = "en-US";
-
-  recognition.onstart = ()=>{
-    document.body.classList.add("listening");
-    mic.classList.add("active");
-    voiceState.textContent = "LISTENING — SPEAK NOW";
-    $("#systemStatus").textContent = "VOICE CHANNEL ACTIVE";
-  };
-
-  recognition.onresult = event=>{
-
-    let finalText = "";
-    let interimText = "";
-
-    for(
-      let i=event.resultIndex;
-      i<event.results.length;
-      i++
-    ){
-
-      const transcript =
-        event.results[i][0].transcript;
-
-      if(event.results[i].isFinal){
-        finalText += transcript;
-      }else{
-        interimText += transcript;
-      }
-    }
-
-    input.value = finalText || interimText;
-
-    if(finalText){
-      executeCommand(finalText);
-    }
-  };
-
-  recognition.onerror = event=>{
-    notify(
-      "VOICE ERROR",
-      event.error || "Speech recognition failed."
-    );
-  };
-
-  recognition.onend = ()=>{
-    document.body.classList.remove("listening");
-    mic.classList.remove("active");
-    voiceState.textContent = "READY FOR YOUR COMMAND";
-    $("#systemStatus").textContent = "SYSTEM ONLINE";
-  };
-
-  mic.addEventListener("click",()=>{
-
-    try{
-      recognition.start();
-    }catch{
-      recognition.stop();
-    }
-
-  });
-
-}else{
-
-  mic.addEventListener("click",()=>{
-    notify(
-      "VOICE UNAVAILABLE",
-      "Speech recognition is not supported by this browser."
-    );
-  });
-
-}
-
-/* ---------------------------------------------------------
-   Canvas universe
-   --------------------------------------------------------- */
-
-const starCanvas = $("#stars");
-const particleCanvas = $("#particles");
-
-const starCtx = starCanvas.getContext("2d");
-const particleCtx = particleCanvas.getContext("2d");
-
-let W,H;
-
-function resizeCanvas(){
-
-  W = window.innerWidth;
-  H = window.innerHeight;
-
-  const dpr = Math.min(window.devicePixelRatio || 1,2);
-
-  for(const canvas of [starCanvas,particleCanvas]){
-    canvas.width = W*dpr;
-    canvas.height = H*dpr;
-    canvas.style.width = W+"px";
-    canvas.style.height = H+"px";
-  }
-
-  starCtx.setTransform(dpr,0,0,dpr,0,0);
-  particleCtx.setTransform(dpr,0,0,dpr,0,0);
-}
-
-resizeCanvas();
-window.addEventListener("resize",resizeCanvas);
-
-/* Stars */
-
-const stars = Array.from({
-  length:Math.min(260,Math.floor(
-    window.innerWidth*window.innerHeight/5000
-  ))
-},()=>({
-  x:Math.random()*window.innerWidth,
-  y:Math.random()*window.innerHeight,
-  r:Math.random()*1.4+.2,
-  a:Math.random(),
-  speed:Math.random()*.006+.002
-}));
-
-function drawStars(){
-
-  starCtx.clearRect(0,0,W,H);
-
-  for(const s of stars){
-
-    s.a += s.speed;
-
-    const alpha =
-      .25 + Math.abs(Math.sin(s.a))*0.65;
-
-    starCtx.beginPath();
-
-    starCtx.fillStyle =
-      `rgba(220,245,255,${alpha})`;
-
-    starCtx.arc(
-      s.x,
-      s.y,
-      s.r,
-      0,
-      Math.PI*2
-    );
-
-    starCtx.fill();
-  }
-}
-
-/* Particles */
-
-const particles = Array.from({
-  length:110
-},()=>({
-  angle:Math.random()*Math.PI*2,
-  radius:80+Math.random()*430,
-  speed:(Math.random()*.0015+.0003) *
-        (Math.random()>.5?1:-1),
-  size:Math.random()*2+.3,
-  hue:Math.random()>0.5 ? 185 : 275
-}));
-
-function drawParticles(){
-
-  particleCtx.clearRect(0,0,W,H);
-
-  const cx=W/2;
-  const cy=H*.48;
-
-  for(const p of particles){
-
-    p.angle += p.speed;
-
-    const x =
-      cx +
-      Math.cos(p.angle) *
-      p.radius;
-
-    const y =
-      cy +
-      Math.sin(p.angle) *
-      p.radius *
-      .55;
-
-    const glow =
-      particleCtx.createRadialGradient(
-        x,y,0,x,y,p.size*5
-      );
-
-    glow.addColorStop(
-      0,
-      `hsla(${p.hue},100%,75%,.9)`
-    );
-
-    glow.addColorStop(
-      1,
-      `hsla(${p.hue},100%,60%,0)`
-    );
-
-    particleCtx.fillStyle=glow;
-
-    particleCtx.beginPath();
-
-    particleCtx.arc(
-      x,y,
-      p.size*5,
-      0,
-      Math.PI*2
-    );
-
-    particleCtx.fill();
-  }
-}
-
-function animate(){
-
-  drawStars();
-  drawParticles();
-
-  requestAnimationFrame(animate);
-}
-
-animate();
-
-/* ---------------------------------------------------------
-   Welcome
-   --------------------------------------------------------- */
-
-setTimeout(()=>{
-  notify(
-    "AFFLATUS ONLINE",
-    "Speak a command or type one below."
-  );
-},800);
-
-</script>
-
+  </script>
 </body>
 </html>
