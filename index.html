@@ -3,1989 +3,2330 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#05030d">
-<title>NEXUS — AI Voice Command Center</title>
+<meta name="theme-color" content="#070611">
+<title>NEBULA — Universal Voice Command Center</title>
 
 <style>
-/* =========================================================
-   NEXUS AI — ONE PAGE VOICE AGENT
-   ========================================================= */
-
-:root {
-    --bg: #05030d;
-    --panel: rgba(16, 12, 35, .72);
-    --panel-2: rgba(26, 19, 52, .58);
-    --line: rgba(255,255,255,.1);
-
-    --violet: #8b5cf6;
-    --purple: #c026d3;
-    --cyan: #22d3ee;
-    --blue: #3b82f6;
-    --pink: #f43f5e;
-    --green: #22c55e;
-    --yellow: #facc15;
-
-    --text: #f8f7ff;
-    --muted: #9d99b8;
-
-    --glow:
-        0 0 30px rgba(139,92,246,.25),
-        0 0 80px rgba(34,211,238,.08);
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    min-height: 100vh;
-    overflow-x: hidden;
-    color: var(--text);
-    background:
-        radial-gradient(circle at 20% 10%, rgba(139,92,246,.18), transparent 30%),
-        radial-gradient(circle at 85% 15%, rgba(34,211,238,.12), transparent 28%),
-        radial-gradient(circle at 50% 100%, rgba(192,38,211,.12), transparent 35%),
-        var(--bg);
-    font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-}
-
-/* Background magic */
-
-.aurora {
-    position: fixed;
-    inset: -30%;
-    z-index: -3;
-    pointer-events: none;
-    background:
-        conic-gradient(
-            from 0deg,
-            transparent,
-            rgba(139,92,246,.07),
-            transparent,
-            rgba(34,211,238,.06),
-            transparent
-        );
-    filter: blur(80px);
-    animation: aurora 20s linear infinite;
-}
-
-.stars {
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    pointer-events: none;
-    opacity: .5;
-    background-image:
-        radial-gradient(#fff 1px, transparent 1px),
-        radial-gradient(#8b5cf6 1px, transparent 1px);
-    background-size: 90px 90px, 130px 130px;
-    background-position: 0 0, 40px 60px;
-    animation: stars 30s linear infinite;
-}
-
-@keyframes aurora {
-    to { transform: rotate(360deg); }
-}
-
-@keyframes stars {
-    to { background-position: 90px 90px, 170px 190px; }
-}
-
-/* App */
-
-.app {
-    width: min(1500px, 96%);
-    min-height: 100vh;
-    margin: auto;
-    padding: 20px;
-}
-
-/* Header */
-
-.header {
-    min-height: 72px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 14px 20px;
-    margin-bottom: 18px;
-
-    background: rgba(10,7,25,.65);
-    border: 1px solid var(--line);
-    border-radius: 22px;
-
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-
-    box-shadow: var(--glow);
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.logo {
-    width: 42px;
-    height: 42px;
-    border-radius: 14px;
-    display: grid;
-    place-items: center;
-
-    background:
-        linear-gradient(135deg, var(--violet), var(--cyan));
-
-    box-shadow:
-        0 0 25px rgba(139,92,246,.5),
-        inset 0 0 20px rgba(255,255,255,.2);
-
-    font-size: 20px;
-}
-
-.brand h1 {
-    font-size: 18px;
-    letter-spacing: .18em;
-}
-
-.brand span {
-    display: block;
-    margin-top: 3px;
-    color: var(--muted);
-    font-size: 10px;
-    letter-spacing: .18em;
-}
-
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.pill {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 8px 12px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    color: var(--muted);
-    background: rgba(255,255,255,.035);
-    font-size: 11px;
-}
-
-.live-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 12px var(--green);
-}
-
-/* Main grid */
-
-.dashboard {
-    display: grid;
-    grid-template-columns: 1fr 360px;
-    gap: 18px;
-}
-
-/* Glass */
-
-.glass {
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255,255,255,.055),
-            rgba(255,255,255,.018)
-        );
-    border: 1px solid var(--line);
-    border-radius: 26px;
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    box-shadow:
-        0 25px 80px rgba(0,0,0,.28),
-        inset 0 1px rgba(255,255,255,.05);
-}
-
-/* Hero */
-
-.hero {
-    min-height: 720px;
-    padding: 28px;
-    position: relative;
-    overflow: hidden;
-}
-
-.hero::before {
-    content: "";
-    position: absolute;
-    width: 500px;
-    height: 500px;
-    left: 50%;
-    top: 42%;
-    transform: translate(-50%,-50%);
-    border-radius: 50%;
-    background:
-        radial-gradient(
-            circle,
-            rgba(139,92,246,.17),
-            transparent 65%
-        );
-    filter: blur(20px);
-    pointer-events: none;
-}
-
-.hero-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    z-index: 2;
-}
-
-.eyebrow {
-    color: var(--cyan);
-    font-size: 10px;
-    letter-spacing: .24em;
-    text-transform: uppercase;
-}
-
-.hero h2 {
-    margin-top: 7px;
-    font-size: clamp(28px, 4vw, 52px);
-    line-height: 1;
-    letter-spacing: -.04em;
-}
-
-.hero h2 span {
-    background: linear-gradient(
-        90deg,
-        #fff,
-        #b794ff,
-        #6ee7f9,
-        #fff
-    );
-    background-size: 250% auto;
-    -webkit-background-clip: text;
-    color: transparent;
-    animation: shimmer 5s linear infinite;
-}
-
-@keyframes shimmer {
-    to { background-position: 250% center; }
-}
-
-.system-status {
-    padding: 9px 13px;
-    border-radius: 999px;
-    border: 1px solid rgba(34,211,238,.18);
-    background: rgba(34,211,238,.06);
-    color: var(--cyan);
-    font-size: 10px;
-    letter-spacing: .15em;
-}
-
-/* Avatar */
-
-.avatar-stage {
-    position: relative;
-    width: min(570px, 90%);
-    aspect-ratio: 1 / 1;
-    margin: 30px auto 20px;
-    display: grid;
-    place-items: center;
-}
-
-.ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 1px solid rgba(139,92,246,.3);
-    box-shadow:
-        0 0 30px rgba(139,92,246,.12),
-        inset 0 0 30px rgba(34,211,238,.05);
-}
-
-.ring.one {
-    width: 96%;
-    height: 96%;
-    animation: spin 16s linear infinite;
-}
-
-.ring.two {
-    width: 82%;
-    height: 82%;
-    border-color: rgba(34,211,238,.25);
-    border-style: dashed;
-    animation: spinReverse 12s linear infinite;
-}
-
-.ring.three {
-    width: 69%;
-    height: 69%;
-    border-color: rgba(192,38,211,.25);
-    animation: pulseRing 3s ease-in-out infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-@keyframes spinReverse {
-    to { transform: rotate(-360deg); }
-}
-
-@keyframes pulseRing {
-    50% {
-        transform: scale(1.07);
-        opacity: .5;
-    }
-}
-
-/* Avatar video */
-
-.avatar-video {
-    width: 55%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: 50%;
-    position: relative;
-    z-index: 3;
-
-    background:
-        radial-gradient(
-            circle at 35% 30%,
-            #6d28d9,
-            #170b31 60%,
-            #05030d
-        );
-
-    border: 2px solid rgba(255,255,255,.18);
-
-    box-shadow:
-        0 0 25px rgba(139,92,246,.5),
-        0 0 100px rgba(139,92,246,.18),
-        inset 0 0 50px rgba(34,211,238,.1);
-}
-
-/* If no video exists */
-
-.avatar-placeholder {
-    position: absolute;
-    z-index: 2;
-    width: 55%;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    background:
-        radial-gradient(circle at 50% 30%, #a855f7, transparent 28%),
-        radial-gradient(circle, #1e1140, #05030d 70%);
-}
-
-.avatar-placeholder::before {
-    content: "✦";
-    font-size: 70px;
-    color: rgba(255,255,255,.9);
-    text-shadow:
-        0 0 20px var(--violet),
-        0 0 60px var(--cyan);
-    animation: starPulse 2s ease-in-out infinite;
-}
-
-@keyframes starPulse {
-    50% {
-        transform: scale(1.2) rotate(20deg);
-        filter: hue-rotate(50deg);
-    }
-}
-
-/* Status */
-
-.voice-status {
-    position: absolute;
-    bottom: 20px;
-    z-index: 5;
-    padding: 9px 16px;
-    border-radius: 999px;
-
-    background: rgba(0,0,0,.55);
-    border: 1px solid rgba(255,255,255,.12);
-    backdrop-filter: blur(15px);
-
-    font-size: 10px;
-    letter-spacing: .16em;
-}
-
-.voice-status.active {
-    color: var(--cyan);
-    border-color: rgba(34,211,238,.35);
-    box-shadow: 0 0 25px rgba(34,211,238,.16);
-}
-
-/* Waveform */
-
-.waveform {
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    position: relative;
-    z-index: 5;
-}
-
-.bar {
-    width: 5px;
-    height: 8px;
-    border-radius: 10px;
-    background: linear-gradient(
-        to top,
-        var(--violet),
-        var(--cyan)
-    );
-    transition: height .1s;
-}
-
-.waveform.active .bar {
-    animation: wave .65s ease-in-out infinite alternate;
+:root{
+  --bg:#05040b;
+  --panel:rgba(17,14,32,.58);
+  --panel2:rgba(255,255,255,.055);
+  --line:rgba(255,255,255,.11);
+  --text:#f7f4ff;
+  --muted:#9691aa;
+  --cyan:#35eaff;
+  --violet:#9b5cff;
+  --pink:#ff4fd8;
+  --green:#50ffb0;
+  --yellow:#ffe66d;
+  --danger:#ff5577;
+  --shadow:0 25px 100px rgba(0,0,0,.55);
+}
+
+*{box-sizing:border-box}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  font-family:
+    Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
+    "Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 50% 0%,#21105a 0%,transparent 35%),
+    radial-gradient(circle at 10% 80%,#071e3a 0%,transparent 30%),
+    radial-gradient(circle at 90% 70%,#330b3a 0%,transparent 28%),
+    var(--bg);
+  overflow-x:hidden;
+}
+
+/* ---------- MAGIC BACKGROUND ---------- */
+
+canvas#cosmos{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:-5;
+  opacity:.8;
+}
+
+.aurora{
+  position:fixed;
+  width:700px;
+  height:700px;
+  border-radius:50%;
+  filter:blur(100px);
+  opacity:.13;
+  pointer-events:none;
+  z-index:-4;
+  animation:float 12s ease-in-out infinite alternate;
+}
+
+.aurora.a{
+  background:#7a2cff;
+  top:-350px;
+  left:-200px;
+}
+
+.aurora.b{
+  background:#00eaff;
+  right:-300px;
+  bottom:-350px;
+  animation-delay:-5s;
+}
+
+.aurora.c{
+  background:#ff00c8;
+  left:45%;
+  top:35%;
+  width:350px;
+  height:350px;
+  animation-delay:-8s;
+}
+
+@keyframes float{
+  from{transform:translate3d(-30px,-20px,0) scale(1)}
+  to{transform:translate3d(50px,40px,0) scale(1.18)}
+}
+
+/* ---------- APP ---------- */
+
+.app{
+  width:min(1500px,94vw);
+  margin:auto;
+  padding:24px 0 70px;
+}
+
+.topbar{
+  height:66px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:0 8px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.brand-orb{
+  width:42px;
+  height:42px;
+  border-radius:15px;
+  background:
+    radial-gradient(circle at 30% 25%,#fff 0 3%,transparent 4%),
+    conic-gradient(from 120deg,#27eaff,#9a5cff,#ff4fd8,#27eaff);
+  box-shadow:
+    0 0 25px #8c51ff,
+    inset 0 0 16px rgba(255,255,255,.4);
+  animation:spin 7s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+.brand strong{
+  font-size:18px;
+  letter-spacing:.18em;
+}
+
+.brand small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  letter-spacing:.16em;
+  margin-top:2px;
+}
+
+.status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#bcb6ce;
+  font-size:12px;
+  padding:10px 14px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:rgba(255,255,255,.035);
+  backdrop-filter:blur(20px);
+}
+
+.status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 15px var(--green);
+}
+
+/* ---------- HERO ---------- */
+
+.hero{
+  position:relative;
+  min-height:690px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:50px 0 30px;
+}
+
+.hero-copy{
+  position:absolute;
+  top:45px;
+  z-index:3;
+  pointer-events:none;
+}
+
+.kicker{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  padding:8px 13px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:999px;
+  background:rgba(255,255,255,.035);
+  backdrop-filter:blur(20px);
+  color:#c9c3d9;
+  font-size:10px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+
+.kicker i{
+  width:6px;
+  height:6px;
+  background:var(--cyan);
+  border-radius:50%;
+  box-shadow:0 0 12px var(--cyan);
+}
+
+.hero h1{
+  margin:17px 0 8px;
+  font-size:clamp(38px,6vw,78px);
+  line-height:.94;
+  letter-spacing:-.065em;
+  font-weight:800;
+  background:linear-gradient(
+    100deg,
+    #fff 10%,
+    #b9eaff 38%,
+    #bd88ff 60%,
+    #ff8be7 85%
+  );
+  -webkit-background-clip:text;
+  color:transparent;
+  text-shadow:0 0 50px rgba(143,83,255,.2);
+}
+
+.hero p{
+  margin:0;
+  color:#aaa4bb;
+  font-size:14px;
+}
+
+/* ---------- COMMAND CORE ---------- */
+
+.core{
+  position:relative;
+  width:min(520px,86vw);
+  height:520px;
+  display:grid;
+  place-items:center;
+}
+
+.ring{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(147,90,255,.22);
+  box-shadow:
+    inset 0 0 60px rgba(96,60,255,.07),
+    0 0 60px rgba(97,48,255,.07);
+}
+
+.ring.r1{
+  width:100%;
+  height:100%;
+  animation:rotate 18s linear infinite;
+  border-top-color:#a25dff;
+  border-bottom-color:#35eaff;
+}
+
+.ring.r2{
+  width:80%;
+  height:80%;
+  animation:rotateReverse 13s linear infinite;
+  border-left-color:#35eaff;
+  border-right-color:#ff4fd8;
+}
+
+.ring.r3{
+  width:60%;
+  height:60%;
+  animation:rotate 8s linear infinite;
+  border-top-color:#fff;
+  border-right-color:#a25dff;
+}
+
+.ring.r4{
+  width:42%;
+  height:42%;
+  border-color:rgba(255,255,255,.12);
+}
+
+@keyframes rotate{
+  to{transform:rotate(360deg)}
+}
+
+@keyframes rotateReverse{
+  to{transform:rotate(-360deg)}
+}
+
+.core::before{
+  content:"";
+  position:absolute;
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 35% 30%,
+      #fff 0 2%,
+      #8bf5ff 5%,
+      #6a43ff 25%,
+      #210c52 58%,
+      transparent 70%);
+  filter:blur(1px);
+  box-shadow:
+    0 0 35px #7649ff,
+    0 0 100px rgba(67,190,255,.3),
+    0 0 180px rgba(169,50,255,.18);
+  animation:pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes pulse{
+  0%,100%{
+    transform:scale(.92);
+    filter:brightness(.9);
+  }
+  50%{
+    transform:scale(1.08);
+    filter:brightness(1.3);
+  }
+}
+
+.core::after{
+  content:"";
+  position:absolute;
+  width:270px;
+  height:270px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 0 100px rgba(92,78,255,.12);
+}
+
+.mic{
+  position:relative;
+  z-index:10;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.28);
+  background:
+    radial-gradient(circle at 35% 20%,
+      rgba(255,255,255,.35),
+      transparent 25%),
+    linear-gradient(145deg,
+      rgba(255,255,255,.13),
+      rgba(255,255,255,.025));
+  backdrop-filter:blur(25px);
+  color:white;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.25);
+  transition:.3s;
+}
+
+.mic:hover{
+  transform:scale(1.07);
+  box-shadow:
+    0 20px 80px rgba(105,64,255,.55),
+    inset 0 1px 0 rgba(255,255,255,.3);
+}
+
+.mic:active{
+  transform:scale(.94);
+}
+
+.mic svg{
+  width:38px;
+  height:38px;
+}
+
+.listening .mic{
+  animation:micPulse 1s infinite;
+  border-color:#35eaff;
+  box-shadow:
+    0 0 30px #35eaff,
+    0 0 100px rgba(53,234,255,.35);
+}
+
+@keyframes micPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.12)}
+}
+
+.visualizer{
+  position:absolute;
+  bottom:35px;
+  display:flex;
+  gap:4px;
+  align-items:end;
+  height:30px;
+  opacity:.8;
+}
+
+.bar{
+  width:3px;
+  height:8px;
+  border-radius:9px;
+  background:linear-gradient(#35eaff,#9b5cff);
+  animation:wave 1s ease-in-out infinite;
+}
+
+.bar:nth-child(2){animation-delay:-.2s}
+.bar:nth-child(3){animation-delay:-.4s}
+.bar:nth-child(4){animation-delay:-.6s}
+.bar:nth-child(5){animation-delay:-.8s}
+.bar:nth-child(6){animation-delay:-.3s}
+.bar:nth-child(7){animation-delay:-.7s}
+
+@keyframes wave{
+  0%,100%{height:6px}
+  50%{height:28px}
+}
+
+/* ---------- COMMAND INPUT ---------- */
+
+.command-box{
+  position:absolute;
+  bottom:0;
+  width:min(720px,90vw);
+  z-index:20;
+}
+
+.input-shell{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:7px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:22px;
+  background:rgba(12,10,24,.72);
+  backdrop-filter:blur(28px);
+  box-shadow:
+    0 20px 80px rgba(0,0,0,.4),
+    0 0 70px rgba(102,57,255,.08);
+}
+
+.input-shell input{
+  min-width:0;
+  flex:1;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:white;
+  padding:14px 15px;
+  font-size:14px;
+}
+
+.input-shell input::placeholder{
+  color:#716b7d;
+}
+
+.send{
+  width:48px;
+  height:48px;
+  border:0;
+  border-radius:16px;
+  cursor:pointer;
+  color:#fff;
+  background:linear-gradient(135deg,#6c4cff,#bd48ff);
+  box-shadow:0 8px 25px rgba(121,63,255,.35);
+}
+
+.send:hover{
+  filter:brightness(1.18);
+}
+
+/* ---------- GRID ---------- */
+
+.dashboard{
+  display:grid;
+  grid-template-columns:1.35fr .8fr;
+  gap:18px;
+  margin-top:30px;
+}
+
+.panel{
+  border:1px solid var(--line);
+  background:linear-gradient(
+    145deg,
+    rgba(255,255,255,.065),
+    rgba(255,255,255,.018)
+  );
+  border-radius:24px;
+  backdrop-filter:blur(25px);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.panel-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 21px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.panel-title{
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:#c6c0d3;
+}
+
+.panel-sub{
+  color:#716b7d;
+  font-size:11px;
+}
+
+/* ---------- ACTIVITY ---------- */
+
+.activity{
+  min-height:330px;
+  max-height:430px;
+  overflow:auto;
+  padding:10px;
+}
+
+.activity::-webkit-scrollbar{
+  width:5px;
 }
-
-.waveform.active .bar:nth-child(2) { animation-delay: .08s; }
-.waveform.active .bar:nth-child(3) { animation-delay: .16s; }
-.waveform.active .bar:nth-child(4) { animation-delay: .24s; }
-.waveform.active .bar:nth-child(5) { animation-delay: .32s; }
-.waveform.active .bar:nth-child(6) { animation-delay: .4s; }
-.waveform.active .bar:nth-child(7) { animation-delay: .28s; }
-.waveform.active .bar:nth-child(8) { animation-delay: .18s; }
-
-@keyframes wave {
-    from { height: 7px; }
-    to { height: 45px; }
-}
-
-/* Command box */
-
-.command-area {
-    position: relative;
-    z-index: 5;
-}
-
-.command-box {
-    display: flex;
-    gap: 10px;
-    padding: 8px;
-
-    border: 1px solid rgba(139,92,246,.25);
-    border-radius: 18px;
-
-    background: rgba(0,0,0,.25);
-    box-shadow: inset 0 0 30px rgba(139,92,246,.04);
-}
-
-.command-box input {
-    flex: 1;
-    min-width: 0;
-    border: 0;
-    outline: none;
-    color: white;
-    background: transparent;
-    padding: 13px 14px;
-    font-size: 14px;
-}
-
-.command-box input::placeholder {
-    color: #696580;
+.activity::-webkit-scrollbar-thumb{
+  background:#30264c;
+  border-radius:10px;
 }
 
-.icon-btn,
-.execute-btn {
-    border: 0;
-    cursor: pointer;
-    color: white;
-    border-radius: 13px;
-    transition: .25s ease;
+.event{
+  display:grid;
+  grid-template-columns:36px 1fr auto;
+  gap:12px;
+  padding:13px;
+  margin:4px;
+  border-radius:15px;
+  transition:.2s;
 }
 
-.icon-btn {
-    width: 48px;
-    background: rgba(255,255,255,.06);
-    border: 1px solid var(--line);
-    font-size: 17px;
+.event:hover{
+  background:rgba(255,255,255,.035);
 }
 
-.icon-btn:hover {
-    background: rgba(139,92,246,.2);
-    transform: translateY(-2px);
+.event-icon{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border-radius:11px;
+  background:rgba(128,88,255,.12);
+  color:#ad8cff;
 }
 
-.execute-btn {
-    padding: 0 20px;
-    font-weight: 700;
-    background:
-        linear-gradient(
-            135deg,
-            var(--violet),
-            var(--purple)
-        );
-    box-shadow: 0 0 25px rgba(139,92,246,.25);
+.event-main{
+  min-width:0;
 }
 
-.execute-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 35px rgba(139,92,246,.45);
+.event-command{
+  color:#eeeaf7;
+  font-size:12px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
-
-/* Quick actions */
-
-.quick-actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 12px;
-}
-
-.quick {
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 8px 12px;
-    background: rgba(255,255,255,.035);
-    color: #bcb7d5;
-    cursor: pointer;
-    font-size: 10px;
-    transition: .2s;
+
+.event-result{
+  margin-top:4px;
+  color:#777183;
+  font-size:11px;
+  line-height:1.4;
 }
 
-.quick:hover {
-    color: white;
-    border-color: rgba(139,92,246,.45);
-    background: rgba(139,92,246,.12);
+.event-time{
+  color:#5d5868;
+  font-size:10px;
 }
 
-/* Right sidebar */
+/* ---------- QUICK COMMANDS ---------- */
 
-.sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+.quick-grid{
+  padding:15px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:9px;
 }
 
-.panel {
-    padding: 20px;
+.quick{
+  text-align:left;
+  padding:15px;
+  min-height:82px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:17px;
+  background:rgba(255,255,255,.025);
+  color:#fff;
+  cursor:pointer;
+  transition:.25s;
 }
 
-.panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
+.quick:hover{
+  transform:translateY(-3px);
+  border-color:rgba(143,95,255,.4);
+  background:rgba(128,79,255,.08);
+  box-shadow:0 12px 30px rgba(0,0,0,.2);
 }
 
-.panel-title {
-    font-size: 12px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
+.quick-icon{
+  font-size:20px;
+  margin-bottom:8px;
 }
 
-.panel-sub {
-    color: var(--muted);
-    font-size: 9px;
+.quick b{
+  display:block;
+  font-size:11px;
 }
 
-/* Capability cards */
-
-.capabilities {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+.quick span{
+  color:#777183;
+  font-size:10px;
 }
 
-.capability {
-    padding: 14px;
-    border-radius: 15px;
-    border: 1px solid var(--line);
-    background: rgba(255,255,255,.025);
-    transition: .25s;
-}
+/* ---------- AUTOMATIONS ---------- */
 
-.capability:hover {
-    transform: translateY(-3px);
-    border-color: rgba(139,92,246,.4);
-    background: rgba(139,92,246,.08);
+.automation-list{
+  padding:13px;
 }
 
-.capability-icon {
-    font-size: 20px;
-    margin-bottom: 9px;
+.auto{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:13px;
+  border-radius:15px;
+  margin-bottom:7px;
+  background:rgba(255,255,255,.025);
 }
 
-.capability strong {
-    display: block;
-    font-size: 11px;
+.auto-name{
+  font-size:12px;
 }
 
-.capability span {
-    color: var(--muted);
-    font-size: 9px;
+.auto-desc{
+  font-size:10px;
+  color:#6e6878;
+  margin-top:3px;
 }
 
-/* Automation */
-
-.automation {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.switch{
+  width:39px;
+  height:22px;
+  border:0;
+  border-radius:20px;
+  background:#292432;
+  cursor:pointer;
+  position:relative;
 }
 
-.automation-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 11px;
-    border-radius: 13px;
-    background: rgba(255,255,255,.025);
-    border: 1px solid var(--line);
+.switch::after{
+  content:"";
+  position:absolute;
+  top:3px;
+  left:3px;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:#756e80;
+  transition:.25s;
 }
 
-.automation-row span {
-    color: #c6c1da;
-    font-size: 10px;
+.switch.active{
+  background:#693cff;
+  box-shadow:0 0 15px rgba(105,60,255,.4);
 }
 
-.toggle {
-    width: 34px;
-    height: 19px;
-    border-radius: 99px;
-    background: #29263c;
-    cursor: pointer;
-    position: relative;
-    transition: .25s;
+.switch.active::after{
+  transform:translateX(17px);
+  background:#fff;
 }
 
-.toggle::after {
-    content: "";
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-    background: #777;
-    transition: .25s;
-}
+/* ---------- STATS ---------- */
 
-.toggle.on {
-    background: rgba(34,211,238,.25);
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:18px;
 }
 
-.toggle.on::after {
-    left: 18px;
-    background: var(--cyan);
-    box-shadow: 0 0 10px var(--cyan);
+.stat{
+  padding:18px;
+  border:1px solid var(--line);
+  border-radius:19px;
+  background:rgba(255,255,255,.03);
 }
-
-/* Activity */
 
-.activity {
-    max-height: 270px;
-    overflow-y: auto;
+.stat-value{
+  font-size:22px;
+  font-weight:700;
 }
 
-.activity::-webkit-scrollbar {
-    width: 4px;
+.stat-label{
+  margin-top:4px;
+  font-size:9px;
+  color:#777183;
+  text-transform:uppercase;
+  letter-spacing:.12em;
 }
 
-.activity::-webkit-scrollbar-thumb {
-    background: #30264e;
-    border-radius: 20px;
-}
+/* ---------- FOOTER ---------- */
 
-.log {
-    display: flex;
-    gap: 9px;
-    padding: 9px 0;
-    border-bottom: 1px solid rgba(255,255,255,.05);
+.footer{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  padding:25px 8px 0;
+  color:#575261;
+  font-size:10px;
 }
 
-.log-dot {
-    flex: 0 0 7px;
-    width: 7px;
-    height: 7px;
-    margin-top: 5px;
-    border-radius: 50%;
-    background: var(--violet);
-    box-shadow: 0 0 10px var(--violet);
+kbd{
+  padding:4px 7px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:6px;
+  background:rgba(255,255,255,.035);
+  color:#8e879c;
 }
 
-.log-text {
-    font-size: 10px;
-    color: #aaa5c0;
-    line-height: 1.5;
-}
+/* ---------- TOAST ---------- */
 
-.log-time {
-    color: #656078;
-    margin-top: 2px;
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:30px;
+  transform:translate(-50%,30px);
+  padding:12px 17px;
+  border-radius:14px;
+  background:rgba(15,12,28,.9);
+  border:1px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(20px);
+  color:#eee;
+  font-size:12px;
+  opacity:0;
+  pointer-events:none;
+  transition:.35s;
+  z-index:100;
+  box-shadow:0 20px 50px rgba(0,0,0,.4);
 }
 
-/* Footer */
-
-.footer {
-    margin-top: 18px;
-    padding: 12px;
-    text-align: center;
-    color: #55516a;
-    font-size: 9px;
-    letter-spacing: .12em;
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
 }
 
-/* Responsive */
+/* ---------- RESPONSIVE ---------- */
 
-@media (max-width: 1000px) {
-    .dashboard {
-        grid-template-columns: 1fr;
-    }
+@media(max-width:900px){
+  .dashboard{
+    grid-template-columns:1fr;
+  }
 
-    .hero {
-        min-height: auto;
-    }
+  .hero{
+    min-height:650px;
+  }
 
-    .sidebar {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
+  .core{
+    width:430px;
+    height:430px;
+  }
 
-    .sidebar .panel:last-child {
-        grid-column: 1 / -1;
-    }
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
 }
 
-@media (max-width: 650px) {
-    .app {
-        width: 100%;
-        padding: 10px;
-    }
+@media(max-width:550px){
+  .app{
+    width:92vw;
+  }
 
-    .header {
-        border-radius: 18px;
-    }
+  .topbar{
+    padding:0;
+  }
 
-    .header-actions .pill:not(:last-child) {
-        display: none;
-    }
+  .status{
+    display:none;
+  }
 
-    .hero {
-        padding: 18px;
-        border-radius: 20px;
-    }
+  .hero{
+    min-height:600px;
+  }
 
-    .sidebar {
-        display: flex;
-    }
+  .core{
+    width:330px;
+    height:330px;
+  }
 
-    .hero h2 {
-        font-size: 34px;
-    }
+  .core::before{
+    width:130px;
+    height:130px;
+  }
 
-    .command-box {
-        flex-wrap: wrap;
-    }
+  .mic{
+    width:90px;
+    height:90px;
+  }
 
-    .command-box input {
-        width: 100%;
-        flex-basis: 100%;
-    }
+  .hero h1{
+    font-size:43px;
+  }
 
-    .execute-btn {
-        height: 45px;
-        flex: 1;
-    }
+  .hero-copy{
+    top:25px;
+  }
 
-    .icon-btn {
-        height: 45px;
-    }
-}
+  .command-box{
+    bottom:0;
+  }
 
-/* Reduced motion */
+  .quick-grid{
+    grid-template-columns:1fr;
+  }
 
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-    }
+  .footer{
+    flex-direction:column;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="aurora"></div>
-<div class="stars"></div>
+<canvas id="cosmos"></canvas>
 
-<div class="app">
+<div class="aurora a"></div>
+<div class="aurora b"></div>
+<div class="aurora c"></div>
 
-    <!-- HEADER -->
-    <header class="header">
+<main class="app">
 
-        <div class="brand">
-            <div class="logo">✦</div>
-            <div>
-                <h1>NEXUS</h1>
-                <span>AI VOICE COMMAND CENTER</span>
-            </div>
+  <!-- HEADER -->
+  <header class="topbar">
+
+    <div class="brand">
+      <div class="brand-orb"></div>
+      <div>
+        <strong>NEBULA</strong>
+        <small>UNIVERSAL COMMAND ENGINE</small>
+      </div>
+    </div>
+
+    <div class="status">
+      <span class="status-dot"></span>
+      <span id="systemStatus">SYSTEM READY</span>
+    </div>
+
+  </header>
+
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="hero-copy">
+
+      <div class="kicker">
+        <i></i>
+        Voice intelligence online
+      </div>
+
+      <h1>Command<br>the impossible.</h1>
+
+      <p id="responseText">
+        Speak naturally. I'll interpret and execute supported actions.
+      </p>
+
+    </div>
+
+
+    <div class="core" id="core">
+
+      <div class="ring r1"></div>
+      <div class="ring r2"></div>
+      <div class="ring r3"></div>
+      <div class="ring r4"></div>
+
+      <button class="mic" id="micButton" aria-label="Start voice command">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round">
+          <rect x="9" y="2.5" width="6" height="12"
+                rx="3"></rect>
+          <path d="M5.5 11a6.5 6.5 0 0 0 13 0"></path>
+          <path d="M12 17.5v4"></path>
+          <path d="M8.5 21.5h7"></path>
+        </svg>
+
+      </button>
+
+      <div class="visualizer" id="visualizer">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+
+    </div>
+
+
+    <!-- TEXT COMMAND -->
+    <div class="command-box">
+
+      <div class="input-shell">
+
+        <input
+          id="commandInput"
+          autocomplete="off"
+          placeholder="Type a command or press the orb to speak..."
+        >
+
+        <button class="send" id="sendButton" aria-label="Execute command">
+          ➜
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- DASHBOARD -->
+  <section class="dashboard">
+
+    <!-- ACTIVITY -->
+    <div class="panel">
+
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Command stream</div>
+          <div class="panel-sub">Live execution history</div>
         </div>
 
-        <div class="header-actions">
+        <div class="panel-sub" id="commandCount">0 commands</div>
+      </div>
 
-            <div class="pill">
-                <span class="live-dot"></span>
-                SYSTEM ONLINE
-            </div>
+      <div class="activity" id="activity">
 
-            <div class="pill" id="clock">
-                00:00:00
+        <div class="event">
+
+          <div class="event-icon">✦</div>
+
+          <div class="event-main">
+            <div class="event-command">System initialized</div>
+            <div class="event-result">
+              Awaiting your first command.
             </div>
+          </div>
+
+          <div class="event-time">NOW</div>
 
         </div>
 
-    </header>
-
-
-    <main class="dashboard">
-
-        <!-- MAIN -->
-        <section class="hero glass">
-
-            <div class="hero-top">
-
-                <div>
-                    <div class="eyebrow">Autonomous Interface</div>
-                    <h2>
-                        Your command.<br>
-                        <span>Infinite possibility.</span>
-                    </h2>
-                </div>
+      </div>
 
-                <div class="system-status" id="systemStatus">
-                    READY
-                </div>
-
-            </div>
+    </div>
 
 
-            <!-- AVATAR -->
-            <div class="avatar-stage">
+    <!-- RIGHT PANEL -->
+    <div class="panel">
 
-                <div class="ring one"></div>
-                <div class="ring two"></div>
-                <div class="ring three"></div>
-
-                <!--
-                    YOUR ORIGINAL VIDEO SYSTEM IS INTEGRATED HERE.
-
-                    Put your video beside this HTML file and name it:
-
-                    agent-video.mp4
-
-                    Or change the src below to your own video URL.
-                -->
-
-                <div class="avatar-placeholder" id="avatarPlaceholder"></div>
-
-                <video
-                    id="avatar-video"
-                    class="avatar-video"
-                    loop
-                    muted
-                    playsinline
-                    preload="auto"
-                >
-                    <source
-                        src="agent-video.mp4"
-                        type="video/mp4"
-                    >
-                </video>
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Instant actions</div>
+          <div class="panel-sub">One-touch automation</div>
+        </div>
+      </div>
 
-                <div
-                    class="voice-status"
-                    id="voiceStatus"
-                >
-                    IDLE
-                </div>
+      <div class="quick-grid">
 
-            </div>
+        <button class="quick" data-command="What time is it">
+          <div class="quick-icon">◷</div>
+          <b>Time</b>
+          <span>Get local time</span>
+        </button>
 
+        <button class="quick" data-command="What is today's date">
+          <div class="quick-icon">◫</div>
+          <b>Date</b>
+          <span>Get today's date</span>
+        </button>
 
-            <!-- WAVEFORM -->
-            <div
-                class="waveform"
-                id="waveform"
-            >
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-            </div>
+        <button class="quick" data-command="Calculate 25 times 8">
+          <div class="quick-icon">∑</div>
+          <b>Calculate</b>
+          <span>Instant arithmetic</span>
+        </button>
 
+        <button class="quick" data-command="Open YouTube">
+          <div class="quick-icon">▶</div>
+          <b>YouTube</b>
+          <span>Open website</span>
+        </button>
 
-            <!-- COMMAND -->
-            <div class="command-area">
+        <button class="quick" data-command="Search the web for artificial intelligence">
+          <div class="quick-icon">⌕</div>
+          <b>Search</b>
+          <span>Launch web search</span>
+        </button>
 
-                <div class="command-box">
-
-                    <input
-                        id="commandInput"
-                        type="text"
-                        autocomplete="off"
-                        placeholder="Tell NEXUS what you want..."
-                    >
-
-                    <button
-                        class="icon-btn"
-                        id="micBtn"
-                        title="Voice command"
-                    >
-                        🎙
-                    </button>
-
-                    <button
-                        class="execute-btn"
-                        id="executeBtn"
-                    >
-                        EXECUTE
-                    </button>
+        <button class="quick" data-command="Tell me a futuristic message">
+          <div class="quick-icon">✧</div>
+          <b>Inspire</b>
+          <span>Generate a response</span>
+        </button>
 
-                </div>
+      </div>
 
+    </div>
 
-                <div class="quick-actions">
+  </section>
 
-                    <button class="quick"
-                        data-command="Tell me the current time">
-                        ✦ Time
-                    </button>
 
-                    <button class="quick"
-                        data-command="Open a new browser tab">
-                        ◈ Browse
-                    </button>
+  <!-- AUTOMATIONS -->
+  <section class="panel" style="margin-top:18px">
 
-                    <button class="quick"
-                        data-command="Read my command aloud">
-                        ◉ Speak
-                    </button>
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">Automation matrix</div>
+        <div class="panel-sub">Browser-safe autonomous behaviors</div>
+      </div>
+    </div>
 
-                    <button class="quick"
-                        data-command="Show system capabilities">
-                        ✧ Capabilities
-                    </button>
-
-                    <button class="quick"
-                        data-command="Clear the activity log">
-                        × Clear
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
-
-            <!-- CAPABILITIES -->
-            <section class="panel glass">
-
-                <div class="panel-header">
-                    <div class="panel-title">
-                        Capabilities
-                    </div>
-
-                    <div class="panel-sub">
-                        EXTENSIBLE
-                    </div>
-                </div>
-
-                <div class="capabilities">
-
-                    <div class="capability">
-                        <div class="capability-icon">🎙️</div>
-                        <strong>Voice</strong>
-                        <span>Speech recognition</span>
-                    </div>
-
-                    <div class="capability">
-                        <div class="capability-icon">🔊</div>
-                        <strong>Speech</strong>
-                        <span>AI voice output</span>
-                    </div>
-
-                    <div class="capability">
-                        <div class="capability-icon">⚡</div>
-                        <strong>Actions</strong>
-                        <span>Command routing</span>
-                    </div>
+    <div class="automation-list">
 
-                    <div class="capability">
-                        <div class="capability-icon">🌐</div>
-                        <strong>Web</strong>
-                        <span>Browser actions</span>
-                    </div>
+      <div class="auto">
 
-                    <div class="capability">
-                        <div class="capability-icon">🤖</div>
-                        <strong>Agents</strong>
-                        <span>API integration</span>
-                    </div>
+        <div>
+          <div class="auto-name">Voice responses</div>
+          <div class="auto-desc">
+            Speak command results aloud.
+          </div>
+        </div>
 
-                    <div class="capability">
-                        <div class="capability-icon">∞</div>
-                        <strong>Automation</strong>
-                        <span>Workflow engine</span>
-                    </div>
+        <button class="switch active" data-setting="voice"></button>
 
-                </div>
+      </div>
 
-            </section>
 
+      <div class="auto">
 
-            <!-- AUTOMATION -->
-            <section class="panel glass">
+        <div>
+          <div class="auto-name">Persistent memory</div>
+          <div class="auto-desc">
+            Keep command history in local storage.
+          </div>
+        </div>
 
-                <div class="panel-header">
-                    <div class="panel-title">
-                        Automation
-                    </div>
+        <button class="switch active" data-setting="memory"></button>
 
-                    <div class="panel-sub">
-                        CONTROL
-                    </div>
-                </div>
+      </div>
 
-                <div class="automation">
 
-                    <div class="automation-row">
-                        <span>Voice activation</span>
-                        <div
-                            class="toggle on"
-                            data-toggle="voice"
-                        ></div>
-                    </div>
+      <div class="auto">
 
-                    <div class="automation-row">
-                        <span>Auto speech</span>
-                        <div
-                            class="toggle on"
-                            data-toggle="speech"
-                        ></div>
-                    </div>
+        <div>
+          <div class="auto-name">Ambient visualization</div>
+          <div class="auto-desc">
+            Continuously animate the command environment.
+          </div>
+        </div>
 
-                    <div class="automation-row">
-                        <span>Continuous listening</span>
-                        <div
-                            class="toggle"
-                            data-toggle="continuous"
-                        ></div>
-                    </div>
+        <button class="switch active" data-setting="visual"></button>
 
-                    <div class="automation-row">
-                        <span>Auto execute</span>
-                        <div
-                            class="toggle on"
-                            data-toggle="execute"
-                        ></div>
-                    </div>
+      </div>
 
-                </div>
 
-            </section>
+      <div class="auto">
 
+        <div>
+          <div class="auto-name">Instant execution</div>
+          <div class="auto-desc">
+            Execute recognized commands immediately.
+          </div>
+        </div>
 
-            <!-- ACTIVITY -->
-            <section class="panel glass">
+        <button class="switch active" data-setting="instant"></button>
 
-                <div class="panel-header">
-                    <div class="panel-title">
-                        Live Activity
-                    </div>
+      </div>
 
-                    <div class="panel-sub">
-                        REALTIME
-                    </div>
-                </div>
+    </div>
 
-                <div
-                    class="activity"
-                    id="activity"
-                ></div>
+  </section>
 
-            </section>
 
-        </aside>
+  <!-- STATS -->
+  <section class="stats">
 
-    </main>
+    <div class="stat">
+      <div class="stat-value" id="statCommands">0</div>
+      <div class="stat-label">Commands</div>
+    </div>
 
+    <div class="stat">
+      <div class="stat-value" id="statSuccess">100%</div>
+      <div class="stat-label">Success rate</div>
+    </div>
 
-    <footer class="footer">
-        NEXUS AI • VOICE • AUTOMATION • COMMAND • EXTENSIBLE AGENT CORE
-    </footer>
+    <div class="stat">
+      <div class="stat-value" id="statWords">0</div>
+      <div class="stat-label">Words heard</div>
+    </div>
 
-</div>
+    <div class="stat">
+      <div class="stat-value" id="statUptime">00:00</div>
+      <div class="stat-label">Session uptime</div>
+    </div>
+
+  </section>
+
+
+  <footer class="footer">
+
+    <div>
+      NEBULA COMMAND ENGINE · CLIENT-SIDE EDITION
+    </div>
+
+    <div>
+      Press <kbd>SPACE</kbd> to activate voice
+      · <kbd>ENTER</kbd> to execute text
+    </div>
+
+  </footer>
+
+</main>
+
+
+<div class="toast" id="toast"></div>
 
 
 <script>
-/* =========================================================
-   NEXUS AI — JAVASCRIPT ENGINE
-   ========================================================= */
+/* ==========================================================
+   NEBULA COMMAND ENGINE
+   ========================================================== */
 
-const video =
-    document.getElementById("avatar-video");
+const $ = selector => document.querySelector(selector);
 
-const placeholder =
-    document.getElementById("avatarPlaceholder");
+const input = $("#commandInput");
+const micButton = $("#micButton");
+const core = $("#core");
+const activity = $("#activity");
+const responseText = $("#responseText");
+const systemStatus = $("#systemStatus");
+const toast = $("#toast");
 
-const waveform =
-    document.getElementById("waveform");
+let commandTotal = 0;
+let successTotal = 0;
+let wordTotal = 0;
+let startTime = Date.now();
 
-const voiceStatus =
-    document.getElementById("voiceStatus");
-
-const systemStatus =
-    document.getElementById("systemStatus");
-
-const commandInput =
-    document.getElementById("commandInput");
-
-const executeBtn =
-    document.getElementById("executeBtn");
-
-const micBtn =
-    document.getElementById("micBtn");
-
-const activity =
-    document.getElementById("activity");
-
-const clock =
-    document.getElementById("clock");
-
-
-/* =========================================================
-   STATE
-   ========================================================= */
-
-let isSpeaking = false;
-let isListening = false;
-let continuousListening = false;
-
-const settings = {
-    voice: true,
-    speech: true,
-    execute: true
+let settings = {
+  voice: true,
+  memory: true,
+  visual: true,
+  instant: true
 };
 
 
-/* =========================================================
-   CLOCK
-   ========================================================= */
+/* ==========================================================
+   LOCAL STORAGE
+   ========================================================== */
 
-function updateClock() {
+function loadSettings(){
 
-    const now = new Date();
+  try{
 
-    clock.textContent =
-        now.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit"
-        });
-}
+    const saved =
+      JSON.parse(localStorage.getItem("nebulaSettings"));
 
-setInterval(updateClock, 1000);
-updateClock();
-
-
-/* =========================================================
-   ACTIVITY LOGGER
-   ========================================================= */
-
-function logActivity(message, type = "normal") {
-
-    const item =
-        document.createElement("div");
-
-    item.className = "log";
-
-    const colors = {
-        normal: "var(--violet)",
-        success: "var(--green)",
-        voice: "var(--cyan)",
-        warning: "var(--yellow)"
-    };
-
-    item.innerHTML = `
-        <div
-            class="log-dot"
-            style="background:${colors[type] || colors.normal};
-                   box-shadow:0 0 10px ${colors[type] || colors.normal}">
-        </div>
-
-        <div class="log-text">
-            <div>${escapeHTML(message)}</div>
-            <div class="log-time">
-                ${new Date().toLocaleTimeString()}
-            </div>
-        </div>
-    `;
-
-    activity.prepend(item);
-}
-
-
-function escapeHTML(value) {
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-/* =========================================================
-   AVATAR / SPEAKING STATE
-   ========================================================= */
-
-function setSpeaking(active) {
-
-    isSpeaking = active;
-
-    if (active) {
-
-        waveform.classList.add("active");
-
-        voiceStatus.textContent = "SPEAKING";
-        voiceStatus.classList.add("active");
-
-        systemStatus.textContent = "ACTIVE";
-
-        try {
-            video.play();
-        } catch (error) {}
-
-    } else {
-
-        waveform.classList.remove("active");
-
-        voiceStatus.textContent = "IDLE";
-        voiceStatus.classList.remove("active");
-
-        systemStatus.textContent = "READY";
-
-        video.pause();
-    }
-}
-
-
-/* =========================================================
-   TEXT TO SPEECH
-   ========================================================= */
-
-function speak(text) {
-
-    if (!settings.speech) return;
-
-    if (!("speechSynthesis" in window)) {
-        logActivity(
-            "Speech synthesis is unavailable.",
-            "warning"
-        );
-        return;
+    if(saved){
+      settings = {...settings, ...saved};
     }
 
-    speechSynthesis.cancel();
+  }catch(e){}
 
-    const utterance =
-        new SpeechSynthesisUtterance(text);
+}
 
-    utterance.rate = 1;
-    utterance.pitch = 1;
-    utterance.volume = 1;
+function saveSettings(){
 
-    utterance.onstart = () => {
-        setSpeaking(true);
-    };
+  if(!settings.memory) return;
 
-    utterance.onend = () => {
-        setSpeaking(false);
+  localStorage.setItem(
+    "nebulaSettings",
+    JSON.stringify(settings)
+  );
 
-        if (
-            continuousListening &&
-            settings.voice
-        ) {
-            startListening();
-        }
-    };
-
-    utterance.onerror = () => {
-        setSpeaking(false);
-    };
-
-    speechSynthesis.speak(utterance);
 }
 
 
-/* =========================================================
-   SPEECH RECOGNITION
-   ========================================================= */
+/* ==========================================================
+   TOAST
+   ========================================================== */
 
-const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
+let toastTimer;
 
-let recognition = null;
+function showToast(message){
 
-if (SpeechRecognition) {
+  toast.textContent = message;
+  toast.classList.add("show");
 
-    recognition =
-        new SpeechRecognition();
+  clearTimeout(toastTimer);
 
-    recognition.lang = "en-US";
-    recognition.continuous = false;
-    recognition.interimResults = true;
+  toastTimer = setTimeout(()=>{
+    toast.classList.remove("show");
+  },2500);
 
-    recognition.onstart = () => {
-
-        isListening = true;
-
-        voiceStatus.textContent = "LISTENING";
-        voiceStatus.classList.add("active");
-
-        waveform.classList.add("active");
-
-        systemStatus.textContent = "LISTENING";
-
-        micBtn.textContent = "⏹";
-
-        logActivity(
-            "Voice input activated.",
-            "voice"
-        );
-    };
-
-
-    recognition.onresult = event => {
-
-        let transcript = "";
-
-        for (
-            let i = event.resultIndex;
-            i < event.results.length;
-            i++
-        ) {
-            transcript +=
-                event.results[i][0].transcript;
-        }
-
-        commandInput.value =
-            transcript.trim();
-
-        const finalResult =
-            event.results[event.results.length - 1];
-
-        if (
-            finalResult &&
-            finalResult.isFinal
-        ) {
-
-            const command =
-                transcript.trim();
-
-            if (command) {
-
-                logActivity(
-                    "Heard: " + command,
-                    "voice"
-                );
-
-                if (settings.execute) {
-                    executeCommand(command);
-                }
-            }
-        }
-    };
-
-
-    recognition.onerror = event => {
-
-        logActivity(
-            "Voice error: " + event.error,
-            "warning"
-        );
-
-        stopListening();
-    };
-
-
-    recognition.onend = () => {
-
-        stopListening();
-
-        if (
-            continuousListening &&
-            settings.voice &&
-            !isSpeaking
-        ) {
-            setTimeout(
-                startListening,
-                350
-            );
-        }
-    };
-
-} else {
-
-    logActivity(
-        "Speech recognition is not supported by this browser.",
-        "warning"
-    );
 }
 
 
-/* =========================================================
-   LISTENING CONTROL
-   ========================================================= */
+/* ==========================================================
+   SPEECH SYNTHESIS
+   ========================================================== */
 
-function startListening() {
+function speak(text){
 
-    if (!recognition) {
-        logActivity(
-            "Use Chrome/Edge for browser speech recognition.",
-            "warning"
-        );
-        return;
-    }
+  if(!settings.voice) return;
 
-    if (isListening) return;
+  if(!("speechSynthesis" in window)) return;
 
-    try {
-        recognition.start();
-    } catch (error) {}
-}
+  window.speechSynthesis.cancel();
 
+  const utterance =
+    new SpeechSynthesisUtterance(text);
 
-function stopListening() {
+  utterance.rate = .96;
+  utterance.pitch = 1.03;
+  utterance.volume = .9;
 
-    isListening = false;
+  const voices =
+    window.speechSynthesis.getVoices();
 
-    waveform.classList.remove("active");
-
-    voiceStatus.textContent =
-        isSpeaking ? "SPEAKING" : "IDLE";
-
-    if (!isSpeaking) {
-        voiceStatus.classList.remove("active");
-        systemStatus.textContent = "READY";
-    }
-
-    micBtn.textContent = "🎙";
-
-    try {
-        recognition.stop();
-    } catch (error) {}
-}
-
-
-micBtn.addEventListener("click", () => {
-
-    if (isListening) {
-        stopListening();
-    } else {
-        startListening();
-    }
-});
-
-
-/* =========================================================
-   COMMAND ENGINE
-   ========================================================= */
-
-async function executeCommand(command) {
-
-    command =
-        String(command).trim();
-
-    if (!command) return;
-
-    systemStatus.textContent =
-        "EXECUTING";
-
-    voiceStatus.textContent =
-        "PROCESSING";
-
-    logActivity(
-        "Executing: " + command
+  const preferred =
+    voices.find(v =>
+      /Google|Microsoft|Samantha|English/i.test(v.name)
     );
 
+  if(preferred){
+    utterance.voice = preferred;
+  }
 
-    /* -----------------------------------------------------
-       Built-in browser commands
-       ----------------------------------------------------- */
+  window.speechSynthesis.speak(utterance);
 
-    const lower =
-        command.toLowerCase();
-
-
-    if (
-        lower.includes("current time") ||
-        lower === "time"
-    ) {
-
-        const answer =
-            `The current time is ${
-                new Date().toLocaleTimeString()
-            }.`;
-
-        logActivity(
-            "Completed time request.",
-            "success"
-        );
-
-        speak(answer);
-        return;
-    }
-
-
-    if (
-        lower.includes("clear") &&
-        lower.includes("activity")
-    ) {
-
-        activity.innerHTML = "";
-
-        logActivity(
-            "Activity log cleared.",
-            "success"
-        );
-
-        speak("The activity log is clear.");
-        return;
-    }
-
-
-    if (
-        lower.includes("show") &&
-        lower.includes("capabilities")
-    ) {
-
-        const answer =
-            "NEXUS supports voice input, speech output, browser actions, command routing, automation controls and external AI agent integrations.";
-
-        logActivity(
-            "Capability report generated.",
-            "success"
-        );
-
-        speak(answer);
-        return;
-    }
-
-
-    if (
-        lower.includes("open") &&
-        lower.includes("new") &&
-        lower.includes("tab")
-    ) {
-
-        window.open(
-            "about:blank",
-            "_blank"
-        );
-
-        logActivity(
-            "New browser tab requested.",
-            "success"
-        );
-
-        speak("Opening a new browser tab.");
-        return;
-    }
-
-
-    if (
-        lower.includes("read") &&
-        lower.includes("aloud")
-    ) {
-
-        speak(
-            "Your command has been received and processed by NEXUS."
-        );
-
-        return;
-    }
-
-
-    /* -----------------------------------------------------
-       External AI BACKEND HOOK
-       -----------------------------------------------------
-
-       Replace the function below with your API call.
-
-       Example architecture:
-
-       const response = await fetch("/api/agent", {
-           method: "POST",
-           headers: {
-               "Content-Type": "application/json"
-           },
-           body: JSON.stringify({
-               command: command
-           })
-       });
-
-       const data = await response.json();
-
-       speak(data.response);
-
-       IMPORTANT:
-       Keep secret API keys on your server,
-       never inside this HTML file.
-    */
-
-
-    try {
-
-        const result =
-            await nexusBackend(command);
-
-        if (result) {
-
-            logActivity(
-                "Agent response received.",
-                "success"
-            );
-
-            speak(result);
-
-        } else {
-
-            const fallback =
-                `Command received: ${command}. Connect the NEXUS backend to an AI agent or automation service to execute external actions.`;
-
-            logActivity(
-                "Frontend command router completed.",
-                "success"
-            );
-
-            speak(fallback);
-        }
-
-    } catch (error) {
-
-        logActivity(
-            "Backend connection unavailable.",
-            "warning"
-        );
-
-        speak(
-            "The command was received, but the external automation backend is not connected."
-        );
-    }
-
-
-    systemStatus.textContent =
-        "READY";
 }
 
 
-/* =========================================================
-   BACKEND EXTENSION POINT
-   ========================================================= */
+/* ==========================================================
+   ACTIVITY LOG
+   ========================================================== */
 
-async function nexusBackend(command) {
+function addEvent(command,result,success=true){
+
+  commandTotal++;
+
+  if(success) successTotal++;
+
+  wordTotal += command.trim().split(/\s+/).length;
+
+  const time =
+    new Date().toLocaleTimeString([],{
+      hour:"2-digit",
+      minute:"2-digit"
+    });
+
+  const item =
+    document.createElement("div");
+
+  item.className = "event";
+
+  item.innerHTML = `
+    <div class="event-icon">
+      ${success ? "✦" : "!"}
+    </div>
+
+    <div class="event-main">
+      <div class="event-command"></div>
+      <div class="event-result"></div>
+    </div>
+
+    <div class="event-time">${time}</div>
+  `;
+
+  item.querySelector(".event-command")
+    .textContent = command;
+
+  item.querySelector(".event-result")
+    .textContent = result;
+
+  activity.prepend(item);
+
+  while(activity.children.length > 25){
+    activity.lastElementChild.remove();
+  }
+
+  updateStats();
+
+  if(settings.memory){
+
+    const old =
+      JSON.parse(
+        localStorage.getItem("nebulaHistory") || "[]"
+      );
+
+    old.unshift({
+      command,
+      result,
+      time
+    });
+
+    localStorage.setItem(
+      "nebulaHistory",
+      JSON.stringify(old.slice(0,50))
+    );
+
+  }
+
+}
+
+
+/* ==========================================================
+   STATS
+   ========================================================== */
+
+function updateStats(){
+
+  $("#statCommands").textContent =
+    commandTotal;
+
+  $("#commandCount").textContent =
+    `${commandTotal} command${commandTotal === 1 ? "" : "s"}`;
+
+  $("#statWords").textContent =
+    wordTotal;
+
+  const rate =
+    commandTotal
+      ? Math.round(successTotal / commandTotal * 100)
+      : 100;
+
+  $("#statSuccess").textContent =
+    rate + "%";
+
+}
+
+
+/* ==========================================================
+   CALCULATOR
+   ========================================================== */
+
+function calculateExpression(expression){
+
+  let clean =
+    expression
+      .toLowerCase()
+      .replace(/what is/g,"")
+      .replace(/calculate/g,"")
+      .replace(/compute/g,"")
+      .replace(/plus/g,"+")
+      .replace(/minus/g,"-")
+      .replace(/times/g,"*")
+      .replace(/multiplied by/g,"*")
+      .replace(/divided by/g,"/")
+      .replace(/over/g,"/")
+      .replace(/modulo/g,"%")
+      .replace(/percent of/g,"*")
+      .replace(/[^0-9+\-*/%.() ]/g," ")
+      .trim();
+
+  if(!clean) return null;
+
+  try{
 
     /*
-        RETURN null for demo mode.
-
-        To connect your real AI agent, replace this
-        function with your own secure backend.
-
-        Example:
-
-        const response = await fetch("/api/agent", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ command })
-        });
-
-        if (!response.ok) {
-            throw new Error("Backend failed");
-        }
-
-        const data = await response.json();
-
-        return data.response;
+      This is intentionally restricted to numeric
+      expressions after sanitization.
     */
 
-    return null;
+    const result =
+      Function(
+        '"use strict";return (' + clean + ')'
+      )();
+
+    if(Number.isFinite(result)){
+      return result;
+    }
+
+  }catch(e){}
+
+  return null;
 }
 
 
-/* =========================================================
-   EXECUTE BUTTON
-   ========================================================= */
+/* ==========================================================
+   COMMAND ENGINE
+   ========================================================== */
 
-executeBtn.addEventListener("click", () => {
+async function executeCommand(rawCommand){
 
-    executeCommand(
-        commandInput.value
+  const command =
+    rawCommand.trim();
+
+  if(!command) return;
+
+  input.value = "";
+
+  responseText.textContent =
+    "Processing your command...";
+
+  systemStatus.textContent =
+    "EXECUTING";
+
+  const lower =
+    command.toLowerCase();
+
+  let result = "";
+  let success = true;
+
+
+  /* TIME */
+
+  if(
+    /\b(time|clock)\b/.test(lower) &&
+    !/\btimer\b/.test(lower)
+  ){
+
+    const now =
+      new Date();
+
+    result =
+      `It is ${now.toLocaleTimeString([],{
+        hour:"numeric",
+        minute:"2-digit"
+      })}.`;
+
+  }
+
+
+  /* DATE */
+
+  else if(
+    /\b(date|today|day)\b/.test(lower)
+  ){
+
+    result =
+      `Today is ${new Date().toLocaleDateString(
+        undefined,
+        {
+          weekday:"long",
+          year:"numeric",
+          month:"long",
+          day:"numeric"
+        }
+      )}.`;
+
+  }
+
+
+  /* CALCULATOR */
+
+  else if(
+    /\b(calculate|compute|plus|minus|times|divided|multiply)\b/
+      .test(lower)
+  ){
+
+    const answer =
+      calculateExpression(lower);
+
+    if(answer !== null){
+
+      result =
+        `The answer is ${answer}.`;
+
+    }else{
+
+      result =
+        "I could not safely evaluate that expression.";
+
+      success = false;
+
+    }
+
+  }
+
+
+  /* TIMER */
+
+  else if(
+    /\b(timer|countdown)\b/.test(lower)
+  ){
+
+    const match =
+      lower.match(
+        /(\d+(?:\.\d+)?)\s*(second|seconds|minute|minutes|hour|hours)/
+      );
+
+    if(match){
+
+      let seconds =
+        parseFloat(match[1]);
+
+      const unit = match[2];
+
+      if(unit.startsWith("minute"))
+        seconds *= 60;
+
+      if(unit.startsWith("hour"))
+        seconds *= 3600;
+
+      seconds = Math.min(seconds,86400);
+
+      result =
+        `Timer started for ${formatDuration(seconds)}.`;
+
+      showToast(result);
+
+      setTimeout(()=>{
+
+        showToast("⏰ Timer complete.");
+
+        speak("Your timer is complete.");
+
+      },seconds * 1000);
+
+    }else{
+
+      result =
+        "Say something like: start a timer for 30 seconds.";
+
+      success = false;
+
+    }
+
+  }
+
+
+  /* SEARCH */
+
+  else if(
+    /\b(search|google|look up|find)\b/.test(lower)
+  ){
+
+    let query =
+      command
+        .replace(
+          /^(search|google|look up|find)\s*/i,
+          ""
+        )
+        .replace(
+          /^the web for\s*/i,
+          ""
+        )
+        .trim();
+
+    if(!query)
+      query = "artificial intelligence";
+
+    result =
+      `Opening a web search for "${query}".`;
+
+    setTimeout(()=>{
+
+      window.open(
+        "https://www.google.com/search?q=" +
+        encodeURIComponent(query),
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+    },100);
+
+  }
+
+
+  /* YOUTUBE */
+
+  else if(
+    /\b(open|launch|go to)\b.*\b(youtube)\b/.test(lower)
+  ){
+
+    result =
+      "Opening YouTube.";
+
+    window.open(
+      "https://www.youtube.com/",
+      "_blank",
+      "noopener,noreferrer"
     );
 
-    commandInput.value = "";
+  }
+
+
+  /* GOOGLE */
+
+  else if(
+    /\b(open|launch|go to)\b.*\b(google)\b/.test(lower)
+  ){
+
+    result =
+      "Opening Google.";
+
+    window.open(
+      "https://www.google.com/",
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+  }
+
+
+  /* GITHUB */
+
+  else if(
+    /\b(open|launch|go to)\b.*\bgithub\b/.test(lower)
+  ){
+
+    result =
+      "Opening GitHub.";
+
+    window.open(
+      "https://github.com/",
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+  }
+
+
+  /* NOTES */
+
+  else if(
+    /\b(note|remember|save this)\b/.test(lower)
+  ){
+
+    let note =
+      command
+        .replace(
+          /^(note|remember|save this)\s*/i,
+          ""
+        )
+        .trim();
+
+    if(note){
+
+      const notes =
+        JSON.parse(
+          localStorage.getItem("nebulaNotes") || "[]"
+        );
+
+      notes.unshift({
+        text:note,
+        time:new Date().toISOString()
+      });
+
+      localStorage.setItem(
+        "nebulaNotes",
+        JSON.stringify(notes.slice(0,100))
+      );
+
+      result =
+        `Saved your note: "${note}"`;
+
+    }else{
+
+      result =
+        "Tell me what you want me to remember.";
+
+      success = false;
+
+    }
+
+  }
+
+
+  /* CLEAR HISTORY */
+
+  else if(
+    /\b(clear|delete|erase)\b.*\b(history|commands)\b/.test(lower)
+  ){
+
+    activity.innerHTML = "";
+
+    commandTotal = 0;
+    successTotal = 0;
+    wordTotal = 0;
+
+    localStorage.removeItem("nebulaHistory");
+
+    result =
+      "Command history cleared.";
+
+  }
+
+
+  /* THEME */
+
+  else if(
+    /\b(dark|night|black)\b.*\b(theme|mode)\b/.test(lower)
+  ){
+
+    document.body.style.setProperty(
+      "--bg",
+      "#020205"
+    );
+
+    result =
+      "Dark mode intensified.";
+
+  }
+
+
+  /* STOP SPEAKING */
+
+  else if(
+    /\b(stop|cancel|silence)\b.*\b(speaking|voice)\b/.test(lower)
+  ){
+
+    if("speechSynthesis" in window)
+      speechSynthesis.cancel();
+
+    result =
+      "Voice output stopped.";
+
+  }
+
+
+  /* HELP */
+
+  else if(
+    /\b(help|what can you do|commands)\b/.test(lower)
+  ){
+
+    result =
+      "I can handle voice and text commands for time, dates, calculations, timers, notes, web searches, websites, history, and browser-safe automations.";
+
+  }
+
+
+  /* FUTURISTIC RESPONSE */
+
+  else if(
+    /\b(inspire|futuristic|magic|motivate)\b/.test(lower)
+  ){
+
+    const messages = [
+      "The future is not waiting. It is being built one command at a time.",
+      "Your interface is only the beginning. Your imagination is the real command language.",
+      "Think boldly. Automate the repetitive. Create the extraordinary.",
+      "Every great system begins with a single instruction."
+    ];
+
+    result =
+      messages[
+        Math.floor(Math.random()*messages.length)
+      ];
+
+  }
+
+
+  /* GENERIC */
+
+  else{
+
+    result =
+      `Command received: "${command}". This browser edition cannot directly perform arbitrary device or internet actions without a permitted API or backend integration.`;
+
+    success = false;
+
+  }
+
+
+  addEvent(
+    command,
+    result,
+    success
+  );
+
+  responseText.textContent =
+    result;
+
+  systemStatus.textContent =
+    success
+      ? "COMMAND COMPLETE"
+      : "READY";
+
+  showToast(
+    success
+      ? "✦ Command executed"
+      : "Command needs an integration"
+  );
+
+  speak(result);
+
+}
+
+
+/* ==========================================================
+   TIMER FORMAT
+   ========================================================== */
+
+function formatDuration(seconds){
+
+  seconds = Math.round(seconds);
+
+  if(seconds < 60)
+    return `${seconds} seconds`;
+
+  if(seconds < 3600)
+    return `${Math.floor(seconds/60)} minutes`;
+
+  return `${Math.floor(seconds/3600)} hours`;
+
+}
+
+
+/* ==========================================================
+   VOICE RECOGNITION
+   ========================================================== */
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+let recognition = null;
+let listening = false;
+
+if(SpeechRecognition){
+
+  recognition =
+    new SpeechRecognition();
+
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  recognition.lang = "en-US";
+
+  recognition.onstart = ()=>{
+
+    listening = true;
+
+    core.classList.add("listening");
+
+    systemStatus.textContent =
+      "LISTENING";
+
+    responseText.textContent =
+      "I'm listening...";
+
+  };
+
+
+  recognition.onresult = event =>{
+
+    let transcript = "";
+
+    for(
+      let i = event.resultIndex;
+      i < event.results.length;
+      i++
+    ){
+
+      transcript +=
+        event.results[i][0].transcript;
+
+    }
+
+    input.value = transcript;
+
+    const finalResult =
+      event.results[event.results.length - 1];
+
+    if(finalResult.isFinal){
+
+      const words =
+        transcript.trim()
+          .split(/\s+/)
+          .filter(Boolean)
+          .length;
+
+      wordTotal += words;
+
+      executeCommand(transcript);
+
+    }
+
+  };
+
+
+  recognition.onerror = event =>{
+
+    listening = false;
+
+    core.classList.remove("listening");
+
+    systemStatus.textContent =
+      "READY";
+
+    let message =
+      "Voice recognition error.";
+
+    if(event.error === "not-allowed")
+      message =
+        "Microphone permission was denied.";
+
+    if(event.error === "no-speech")
+      message =
+        "I didn't hear anything.";
+
+    responseText.textContent =
+      message;
+
+    showToast(message);
+
+  };
+
+
+  recognition.onend = ()=>{
+
+    listening = false;
+
+    core.classList.remove("listening");
+
+    if(
+      systemStatus.textContent === "LISTENING"
+    ){
+
+      systemStatus.textContent =
+        "READY";
+
+    }
+
+  };
+
+}else{
+
+  systemStatus.textContent =
+    "TEXT MODE";
+
+  responseText.textContent =
+    "Voice recognition is unavailable in this browser. Text commands remain active.";
+
+}
+
+
+/* ==========================================================
+   MIC
+   ========================================================== */
+
+micButton.addEventListener("click",()=>{
+
+  if(!recognition){
+
+    showToast(
+      "Voice recognition is unavailable. Try Chrome or Edge."
+    );
+
+    return;
+
+  }
+
+  if(listening){
+
+    recognition.stop();
+
+  }else{
+
+    try{
+
+      recognition.start();
+
+    }catch(e){}
+
+  }
+
 });
 
 
-/* =========================================================
-   ENTER KEY
-   ========================================================= */
+/* ==========================================================
+   TEXT COMMAND
+   ========================================================== */
 
-commandInput.addEventListener(
-    "keydown",
-    event => {
-
-        if (event.key === "Enter") {
-
-            event.preventDefault();
-
-            executeCommand(
-                commandInput.value
-            );
-
-            commandInput.value = "";
-        }
-
-    }
+$("#sendButton").addEventListener(
+  "click",
+  ()=>executeCommand(input.value)
 );
 
+input.addEventListener("keydown",event=>{
 
-/* =========================================================
-   QUICK COMMANDS
-   ========================================================= */
+  if(event.key === "Enter"){
+
+    event.preventDefault();
+
+    executeCommand(input.value);
+
+  }
+
+});
+
+
+/* ==========================================================
+   QUICK ACTIONS
+   ========================================================== */
 
 document
-    .querySelectorAll(".quick")
-    .forEach(button => {
+  .querySelectorAll(".quick")
+  .forEach(button=>{
 
-        button.addEventListener(
-            "click",
-            () => {
+    button.addEventListener("click",()=>{
 
-                const command =
-                    button.dataset.command;
-
-                commandInput.value =
-                    command;
-
-                executeCommand(command);
-
-                commandInput.value = "";
-            }
-        );
+      executeCommand(
+        button.dataset.command
+      );
 
     });
 
+  });
 
-/* =========================================================
-   AUTOMATION TOGGLES
-   ========================================================= */
+
+/* ==========================================================
+   AUTOMATION SWITCHES
+   ========================================================== */
 
 document
-    .querySelectorAll(".toggle")
-    .forEach(toggle => {
+  .querySelectorAll(".switch")
+  .forEach(button=>{
 
-        toggle.addEventListener(
-            "click",
-            () => {
+    button.addEventListener("click",()=>{
 
-                const key =
-                    toggle.dataset.toggle;
+      const key =
+        button.dataset.setting;
 
-                toggle.classList.toggle("on");
+      settings[key] =
+        !settings[key];
 
-                const enabled =
-                    toggle.classList.contains("on");
+      button.classList.toggle(
+        "active",
+        settings[key]
+      );
 
-                if (key === "voice") {
-                    settings.voice = enabled;
+      saveSettings();
 
-                    if (!enabled) {
-                        stopListening();
-                    }
-                }
-
-                if (key === "speech") {
-                    settings.speech = enabled;
-
-                    if (!enabled) {
-                        speechSynthesis.cancel();
-                        setSpeaking(false);
-                    }
-                }
-
-                if (key === "continuous") {
-                    continuousListening =
-                        enabled;
-
-                    if (
-                        enabled &&
-                        settings.voice
-                    ) {
-                        startListening();
-                    }
-                }
-
-                if (key === "execute") {
-                    settings.execute = enabled;
-                }
-
-                logActivity(
-                    `${key} automation ${enabled ? "enabled" : "disabled"}.`,
-                    enabled ? "success" : "normal"
-                );
-            }
-        );
+      showToast(
+        `${key} ${settings[key] ? "enabled" : "disabled"}`
+      );
 
     });
 
-
-/* =========================================================
-   VIDEO FALLBACK
-   ========================================================= */
-
-video.addEventListener(
-    "error",
-    () => {
-
-        video.style.display = "none";
-        placeholder.style.display = "grid";
-
-        logActivity(
-            "Avatar video not found. Using holographic fallback.",
-            "warning"
-        );
-    }
-);
+  });
 
 
-video.addEventListener(
-    "loadeddata",
-    () => {
-
-        placeholder.style.display =
-            "none";
-
-        logActivity(
-            "Avatar video loaded.",
-            "success"
-        );
-    }
-);
-
-
-/* =========================================================
+/* ==========================================================
    KEYBOARD SHORTCUT
-   ========================================================= */
+   ========================================================== */
 
-document.addEventListener(
-    "keydown",
-    event => {
+document.addEventListener("keydown",event=>{
 
-        /*
-            SPACE = voice activation
-        */
+  if(
+    event.code === "Space" &&
+    document.activeElement !== input
+  ){
 
-        if (
-            event.code === "Space" &&
-            document.activeElement !== commandInput
-        ) {
+    event.preventDefault();
 
-            event.preventDefault();
+    micButton.click();
 
-            if (isListening) {
-                stopListening();
-            } else {
-                startListening();
-            }
-        }
+  }
 
-        /*
-            CTRL/CMD + K = command box
-        */
-
-        if (
-            (event.ctrlKey || event.metaKey) &&
-            event.key.toLowerCase() === "k"
-        ) {
-
-            event.preventDefault();
-
-            commandInput.focus();
-        }
-
-    }
-);
+});
 
 
-/* =========================================================
-   INITIALIZE
-   ========================================================= */
+/* ==========================================================
+   UPTIME
+   ========================================================== */
 
-logActivity(
-    "NEXUS interface initialized.",
-    "success"
-);
+function updateUptime(){
 
-logActivity(
-    "Command center ready.",
-    "success"
-);
-
-if (!recognition) {
-
-    logActivity(
-        "Voice recognition unavailable in this browser.",
-        "warning"
+  const elapsed =
+    Math.floor(
+      (Date.now()-startTime)/1000
     );
 
+  const minutes =
+    Math.floor(elapsed/60)
+      .toString()
+      .padStart(2,"0");
+
+  const seconds =
+    (elapsed%60)
+      .toString()
+      .padStart(2,"0");
+
+  $("#statUptime").textContent =
+    `${minutes}:${seconds}`;
+
 }
+
+setInterval(updateUptime,1000);
+
+
+/* ==========================================================
+   RESTORE HISTORY
+   ========================================================== */
+
+function restoreHistory(){
+
+  if(!settings.memory) return;
+
+  try{
+
+    const history =
+      JSON.parse(
+        localStorage.getItem("nebulaHistory") || "[]"
+      );
+
+    history.slice(0,12)
+      .reverse()
+      .forEach(item=>{
+
+        const el =
+          document.createElement("div");
+
+        el.className = "event";
+
+        el.innerHTML = `
+          <div class="event-icon">✦</div>
+
+          <div class="event-main">
+            <div class="event-command"></div>
+            <div class="event-result"></div>
+          </div>
+
+          <div class="event-time"></div>
+        `;
+
+        el.querySelector(".event-command")
+          .textContent = item.command;
+
+        el.querySelector(".event-result")
+          .textContent = item.result;
+
+        el.querySelector(".event-time")
+          .textContent = item.time;
+
+        activity.appendChild(el);
+
+      });
+
+  }catch(e){}
+
+}
+
+
+/* ==========================================================
+   COSMIC PARTICLE FIELD
+   ========================================================== */
+
+const canvas =
+  document.getElementById("cosmos");
+
+const ctx =
+  canvas.getContext("2d");
+
+let particles = [];
+
+function resizeCanvas(){
+
+  const ratio =
+    Math.min(window.devicePixelRatio || 1,2);
+
+  canvas.width =
+    innerWidth * ratio;
+
+  canvas.height =
+    innerHeight * ratio;
+
+  canvas.style.width =
+    innerWidth + "px";
+
+  canvas.style.height =
+    innerHeight + "px";
+
+  ctx.setTransform(
+    ratio,0,0,ratio,0,0
+  );
+
+  createParticles();
+
+}
+
+
+function createParticles(){
+
+  particles = [];
+
+  const count =
+    Math.min(
+      140,
+      Math.floor(innerWidth / 9)
+    );
+
+  for(let i=0;i<count;i++){
+
+    particles.push({
+
+      x:Math.random()*innerWidth,
+
+      y:Math.random()*innerHeight,
+
+      r:Math.random()*1.5+.2,
+
+      vx:(Math.random()-.5)*.12,
+
+      vy:(Math.random()-.5)*.12,
+
+      alpha:Math.random()*.55+.1
+
+    });
+
+  }
+
+}
+
+
+function animateCosmos(){
+
+  ctx.clearRect(
+    0,
+    0,
+    innerWidth,
+    innerHeight
+  );
+
+  if(!settings.visual){
+
+    requestAnimationFrame(
+      animateCosmos
+    );
+
+    return;
+
+  }
+
+  for(const p of particles){
+
+    p.x += p.vx;
+    p.y += p.vy;
+
+    if(p.x < -10) p.x = innerWidth+10;
+    if(p.x > innerWidth+10) p.x = -10;
+    if(p.y < -10) p.y = innerHeight+10;
+    if(p.y > innerHeight+10) p.y = -10;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      p.x,
+      p.y,
+      p.r,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fillStyle =
+      `rgba(166,132,255,${p.alpha})`;
+
+    ctx.fill();
+
+  }
+
+  requestAnimationFrame(
+    animateCosmos
+  );
+
+}
+
+window.addEventListener(
+  "resize",
+  resizeCanvas
+);
+
+
+/* ==========================================================
+   INITIALIZE
+   ========================================================== */
+
+loadSettings();
+
+document
+  .querySelectorAll(".switch")
+  .forEach(button=>{
+
+    const key =
+      button.dataset.setting;
+
+    button.classList.toggle(
+      "active",
+      settings[key]
+    );
+
+  });
+
+restoreHistory();
+resizeCanvas();
+animateCosmos();
+updateUptime();
+
+window.speechSynthesis?.getVoices();
+
+
+/* ==========================================================
+   WELCOME
+   ========================================================== */
+
+setTimeout(()=>{
+
+  responseText.textContent =
+    "Ready. Say “what time is it” or give me a command.";
+
+},1200);
 
 </script>
 
