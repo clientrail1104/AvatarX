@@ -1,1340 +1,951 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="theme-color" content="#02030a" />
-<title>JARVIS // Afflatus Command Nexus</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#050512">
+<title>∞ COSMOS — Voice Command OS</title>
 
 <style>
-:root {
-  --bg: #02030a;
-  --panel: rgba(8, 13, 30, .58);
-  --panel2: rgba(12, 21, 45, .72);
-  --cyan: #55f6ff;
-  --blue: #4c7dff;
-  --violet: #a855f7;
-  --pink: #ff4fd8;
-  --green: #55ffb0;
-  --gold: #ffd76a;
-  --text: #eef8ff;
-  --muted: #7190ae;
-  --danger: #ff5277;
-  --border: rgba(117, 221, 255, .16);
-  --shadow: 0 0 70px rgba(55, 170, 255, .12);
+:root{
+  --bg:#03030b;
+  --panel:rgba(12,13,35,.62);
+  --panel2:rgba(19,20,53,.72);
+  --line:rgba(255,255,255,.10);
+  --text:#f8f8ff;
+  --muted:#9c9dbd;
+  --cyan:#5cf7ff;
+  --violet:#9b6cff;
+  --pink:#ff5edb;
+  --blue:#5887ff;
+  --green:#55ffb0;
+  --gold:#ffd66b;
+  --danger:#ff5f78;
+  --shadow:0 25px 100px rgba(0,0,0,.5);
 }
 
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);
+  background:var(--bg);
 }
 
-html, body {
-  margin: 0;
-  min-height: 100%;
-  background: var(--bg);
-  color: var(--text);
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  overflow-x: hidden;
-}
-
-body {
-  min-height: 100vh;
+body{
   background:
-    radial-gradient(circle at 50% 40%, rgba(64, 99, 255, .12), transparent 30%),
-    radial-gradient(circle at 15% 20%, rgba(0, 255, 255, .07), transparent 25%),
-    radial-gradient(circle at 85% 70%, rgba(190, 0, 255, .08), transparent 25%),
-    #02030a;
+    radial-gradient(circle at 50% 45%,rgba(103,61,255,.14),transparent 25%),
+    radial-gradient(circle at 20% 20%,rgba(0,238,255,.10),transparent 22%),
+    radial-gradient(circle at 80% 80%,rgba(255,0,205,.08),transparent 25%),
+    #03030b;
 }
 
-/* ---------- MAGIC BACKGROUND ---------- */
-
-#universe {
-  position: fixed;
-  inset: 0;
-  z-index: -5;
+/* COSMIC BACKGROUND */
+.space{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
 }
 
-.noise {
-  position: fixed;
-  inset: 0;
-  z-index: -3;
-  opacity: .035;
-  pointer-events: none;
+.nebula{
+  position:absolute;
+  width:70vw;
+  height:70vw;
+  border-radius:50%;
+  filter:blur(100px);
+  opacity:.12;
+  animation:nebula 18s ease-in-out infinite alternate;
+}
+
+.n1{
+  background:#6f3cff;
+  left:-20vw;
+  top:-25vw;
+}
+
+.n2{
+  background:#00d9ff;
+  right:-25vw;
+  top:15vh;
+  animation-delay:-6s;
+}
+
+.n3{
+  background:#ff27cf;
+  bottom:-35vw;
+  left:30vw;
+  animation-delay:-11s;
+}
+
+@keyframes nebula{
+  from{transform:scale(1) rotate(0)}
+  to{transform:scale(1.2) rotate(25deg)}
+}
+
+.stars{
+  position:absolute;
+  inset:0;
   background-image:
-    repeating-radial-gradient(
-      circle at 0 0,
-      transparent 0,
-      rgba(255,255,255,.4) 1px,
-      transparent 2px
-    );
-  background-size: 7px 7px;
+    radial-gradient(1px 1px at 10% 20%,#fff,transparent),
+    radial-gradient(1px 1px at 20% 80%,#fff,transparent),
+    radial-gradient(1px 1px at 40% 30%,#fff,transparent),
+    radial-gradient(1px 1px at 70% 20%,#fff,transparent),
+    radial-gradient(1px 1px at 80% 70%,#fff,transparent),
+    radial-gradient(1px 1px at 90% 40%,#fff,transparent),
+    radial-gradient(1px 1px at 55% 90%,#fff,transparent),
+    radial-gradient(1px 1px at 35% 65%,#fff,transparent);
+  background-size:180px 180px;
+  opacity:.35;
+  animation:stars 40s linear infinite;
 }
 
-.grid {
-  position: fixed;
-  inset: -50%;
-  z-index: -4;
-  opacity: .18;
-  background-image:
-    linear-gradient(rgba(75, 239, 255, .08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(75, 239, 255, .08) 1px, transparent 1px);
-  background-size: 70px 70px;
-  transform: perspective(650px) rotateX(62deg) translateY(30%);
-  animation: gridMove 14s linear infinite;
+@keyframes stars{
+  to{transform:translate(-180px,180px)}
 }
 
-@keyframes gridMove {
-  from { transform: perspective(650px) rotateX(62deg) translateY(30%); }
-  to   { transform: perspective(650px) rotateX(62deg) translateY(35%); }
+/* APP */
+.app{
+  position:relative;
+  z-index:2;
+  width:100%;
+  height:100%;
+  display:grid;
+  grid-template-rows:76px 1fr 82px;
+  padding:14px;
 }
 
-.stars {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -2;
-  background-image:
-    radial-gradient(circle, rgba(255,255,255,.8) 0 1px, transparent 1.5px),
-    radial-gradient(circle, rgba(80,240,255,.5) 0 1px, transparent 1.5px);
-  background-size: 97px 113px, 173px 191px;
-  animation: starDrift 35s linear infinite;
-  opacity: .28;
+/* TOP BAR */
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
 }
 
-@keyframes starDrift {
-  to { transform: translate3d(-120px, 100px, 0); }
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
-/* ---------- APP ---------- */
-
-.app {
-  width: min(1500px, 100%);
-  min-height: 100vh;
-  margin: auto;
-  padding: 20px;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  gap: 16px;
+.logo{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  font-size:20px;
+  background:
+    radial-gradient(circle,#fff 0 5%,transparent 6%),
+    conic-gradient(from 180deg,var(--cyan),var(--violet),var(--pink),var(--cyan));
+  box-shadow:
+    0 0 25px rgba(92,247,255,.35),
+    inset 0 0 20px rgba(255,255,255,.25);
+  animation:spin 8s linear infinite;
 }
 
-/* ---------- HEADER ---------- */
+@keyframes spin{to{transform:rotate(360deg)}}
 
-.header {
-  min-height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 20px;
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  background: rgba(4, 8, 19, .55);
-  backdrop-filter: blur(22px);
-  box-shadow: var(--shadow);
+.brand strong{
+  letter-spacing:.22em;
+  font-size:13px;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+.brand small{
+  display:block;
+  color:var(--muted);
+  letter-spacing:.1em;
+  font-size:9px;
+  margin-top:2px;
 }
 
-.brand-mark {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  position: relative;
+.status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#b9bbd8;
+  font-size:11px;
+  letter-spacing:.08em;
+}
+
+.statusDot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 14px var(--green);
+}
+
+/* MAIN */
+.main{
+  min-height:0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 360px;
+  gap:14px;
+}
+
+.panel{
+  border:1px solid var(--line);
+  background:linear-gradient(
+    135deg,
+    rgba(17,18,48,.66),
+    rgba(7,8,22,.60)
+  );
+  backdrop-filter:blur(30px);
+  -webkit-backdrop-filter:blur(30px);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+}
+
+/* COMMAND CORE */
+.core{
+  position:relative;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.core::before{
+  content:"";
+  position:absolute;
+  width:550px;
+  height:550px;
+  border-radius:50%;
   background:
     conic-gradient(
       from 0deg,
-      var(--cyan),
-      var(--violet),
-      var(--pink),
-      var(--cyan)
-    );
-  animation: spin 5s linear infinite;
-  box-shadow:
-    0 0 20px rgba(85,246,255,.45),
-    0 0 60px rgba(168,85,247,.2);
-}
-
-.brand-mark::after {
-  content: "";
-  position: absolute;
-  inset: 5px;
-  border-radius: inherit;
-  background: #050814;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.brand h1 {
-  margin: 0;
-  font-size: 16px;
-  letter-spacing: .22em;
-  font-weight: 800;
-}
-
-.brand span {
-  display: block;
-  color: var(--cyan);
-  font-size: 10px;
-  letter-spacing: .18em;
-  margin-top: 4px;
-}
-
-.system {
-  display: flex;
-  gap: 9px;
-  align-items: center;
-  font-size: 11px;
-  color: var(--muted);
-}
-
-.pulse-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 15px var(--green);
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  50% {
-    transform: scale(1.5);
-    opacity: .45;
-  }
-}
-
-/* ---------- MAIN ---------- */
-
-.main {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 16px;
-  min-height: 0;
-}
-
-.hero {
-  position: relative;
-  min-height: 620px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 30px;
-  background:
-    radial-gradient(circle at 50% 48%, rgba(70, 180, 255, .1), transparent 24%),
-    linear-gradient(145deg, rgba(9,15,34,.75), rgba(3,6,15,.72));
-  backdrop-filter: blur(20px);
-  box-shadow:
-    inset 0 0 80px rgba(77, 219, 255, .025),
-    var(--shadow);
-}
-
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      90deg,
       transparent,
-      rgba(85,246,255,.035),
+      rgba(92,247,255,.18),
+      transparent,
+      rgba(155,108,255,.18),
       transparent
     );
-  animation: scan 5s ease-in-out infinite;
+  filter:blur(10px);
+  animation:orbit 12s linear infinite;
 }
 
-@keyframes scan {
-  0%,100% { transform: translateX(-100%); }
-  50% { transform: translateX(100%); }
+@keyframes orbit{
+  to{transform:rotate(360deg)}
 }
 
-/* ---------- ORB ---------- */
-
-.orb-stage {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  width: min(54vw, 500px);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  display: grid;
-  place-items: center;
+.eyebrow{
+  position:relative;
+  color:#aeb1d3;
+  font-size:10px;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  margin-bottom:22px;
 }
 
-.orb {
-  position: relative;
-  width: 190px;
-  height: 190px;
-  border-radius: 50%;
+.core h1{
+  position:relative;
+  margin:0;
+  text-align:center;
+  font-size:clamp(32px,5vw,76px);
+  line-height:.95;
+  letter-spacing:-.06em;
+  max-width:800px;
+}
+
+.gradient{
+  background:linear-gradient(
+    90deg,
+    #fff,
+    var(--cyan),
+    #fff,
+    var(--pink),
+    #fff
+  );
+  background-size:300% auto;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:shine 7s linear infinite;
+}
+
+@keyframes shine{
+  to{background-position:300% center}
+}
+
+.subtitle{
+  position:relative;
+  margin:20px 0 35px;
+  color:var(--muted);
+  text-align:center;
+  max-width:620px;
+  font-size:13px;
+  line-height:1.7;
+}
+
+/* VOICE ORB */
+.orbWrap{
+  position:relative;
+  width:220px;
+  height:220px;
+  display:grid;
+  place-items:center;
+}
+
+.ring{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  border:1px solid rgba(92,247,255,.2);
+  animation:ring 5s linear infinite;
+}
+
+.ring:nth-child(2){
+  inset:14px;
+  border-color:rgba(155,108,255,.25);
+  animation-direction:reverse;
+  animation-duration:7s;
+}
+
+.ring:nth-child(3){
+  inset:28px;
+  border-color:rgba(255,94,219,.22);
+  animation-duration:9s;
+}
+
+@keyframes ring{
+  to{transform:rotate(360deg)}
+}
+
+.orb{
+  position:relative;
+  width:130px;
+  height:130px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.22);
   background:
-    radial-gradient(
-      circle at 40% 34%,
-      #ffffff 0%,
-      #bafcff 3%,
-      #51e8ff 12%,
-      #1678ff 31%,
-      #4322ba 56%,
-      #070817 75%
-    );
+    radial-gradient(circle at 35% 30%,#fff,rgba(255,255,255,.2) 5%,transparent 10%),
+    radial-gradient(circle,#733cff 0%,#25146c 35%,#050513 72%);
   box-shadow:
-    0 0 25px #55f6ff,
-    0 0 70px rgba(0, 181, 255, .7),
-    0 0 150px rgba(129, 67, 255, .35),
-    inset -25px -25px 60px rgba(0,0,0,.65),
-    inset 10px 10px 35px rgba(255,255,255,.3);
-  animation: orbFloat 4s ease-in-out infinite;
-  cursor: pointer;
+    0 0 35px rgba(120,70,255,.7),
+    0 0 100px rgba(92,247,255,.24),
+    inset 0 0 40px rgba(92,247,255,.18);
+  cursor:pointer;
+  transition:.3s;
 }
 
-@keyframes orbFloat {
-  0%,100% {
-    transform: translateY(-8px) scale(1);
-  }
-  50% {
-    transform: translateY(8px) scale(1.035);
-  }
+.orb:hover{
+  transform:scale(1.05);
+  box-shadow:
+    0 0 50px rgba(120,70,255,.9),
+    0 0 130px rgba(92,247,255,.35);
 }
 
-.orb::before,
-.orb::after {
-  content: "";
-  position: absolute;
-  inset: -25px;
-  border: 1px solid rgba(85,246,255,.28);
-  border-radius: 50%;
-  transform: rotate(20deg) scaleX(.65);
-  box-shadow: 0 0 30px rgba(85,246,255,.15);
+.orb.listening{
+  animation:pulse 1s ease-in-out infinite;
+  box-shadow:
+    0 0 55px rgba(92,247,255,.95),
+    0 0 140px rgba(92,247,255,.45);
 }
 
-.orb::after {
-  inset: -50px;
-  border-color: rgba(168,85,247,.25);
-  transform: rotate(-30deg) scaleY(.55);
+@keyframes pulse{
+  50%{transform:scale(1.12)}
 }
 
-.orbit {
-  position: absolute;
-  border: 1px solid rgba(85,246,255,.22);
-  border-radius: 50%;
-  pointer-events: none;
+.orbIcon{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  font-size:36px;
 }
 
-.o1 {
-  width: 330px;
-  height: 110px;
-  transform: rotate(25deg);
-  animation: orbit1 6s linear infinite;
+.orbLabel{
+  position:absolute;
+  bottom:-27px;
+  left:0;
+  right:0;
+  text-align:center;
+  font-size:9px;
+  color:#aaaed0;
+  letter-spacing:.2em;
+  text-transform:uppercase;
 }
 
-.o2 {
-  width: 400px;
-  height: 160px;
-  transform: rotate(-40deg);
-  animation: orbit2 8s linear infinite reverse;
-  border-color: rgba(168,85,247,.25);
+/* INPUT */
+.commandBox{
+  position:relative;
+  width:min(700px,90%);
+  margin-top:42px;
 }
 
-.o3 {
-  width: 480px;
-  height: 210px;
-  transform: rotate(70deg);
-  animation: orbit3 11s linear infinite;
-  border-color: rgba(255,79,216,.16);
+.commandBox input{
+  width:100%;
+  height:52px;
+  padding:0 58px 0 20px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  outline:none;
+  color:#fff;
+  background:rgba(255,255,255,.045);
+  font-size:13px;
+  box-shadow:inset 0 0 30px rgba(255,255,255,.02);
 }
 
-@keyframes orbit1 {
-  to { transform: rotate(385deg); }
+.commandBox input:focus{
+  border-color:rgba(92,247,255,.5);
+  box-shadow:
+    0 0 0 4px rgba(92,247,255,.05),
+    0 0 35px rgba(92,247,255,.08);
 }
 
-@keyframes orbit2 {
-  to { transform: rotate(320deg); }
+.send{
+  position:absolute;
+  right:6px;
+  top:6px;
+  width:40px;
+  height:40px;
+  border:0;
+  border-radius:13px;
+  color:#03030b;
+  background:linear-gradient(135deg,var(--cyan),#fff);
+  cursor:pointer;
+  font-weight:800;
 }
 
-@keyframes orbit3 {
-  to { transform: rotate(430deg); }
+/* QUICK COMMANDS */
+.quick{
+  position:relative;
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:14px;
 }
 
-.orb-listening .orb {
-  animation:
-    orbFloat 2s ease-in-out infinite,
-    listeningPulse .7s ease-in-out infinite alternate;
+.chip{
+  border:1px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.035);
+  color:#bfc1db;
+  border-radius:999px;
+  padding:7px 11px;
+  font-size:9px;
+  cursor:pointer;
+  transition:.2s;
 }
 
-@keyframes listeningPulse {
-  to {
-    box-shadow:
-      0 0 35px var(--cyan),
-      0 0 110px var(--cyan),
-      0 0 200px var(--violet),
-      inset -25px -25px 60px rgba(0,0,0,.65);
-  }
+.chip:hover{
+  color:#fff;
+  border-color:rgba(92,247,255,.35);
+  background:rgba(92,247,255,.06);
 }
 
-.voice-label {
-  position: absolute;
-  top: calc(50% + 145px);
-  left: 0;
-  right: 0;
-  text-align: center;
-  letter-spacing: .25em;
-  font-size: 11px;
-  color: var(--cyan);
-  text-transform: uppercase;
+/* RIGHT SIDE */
+.side{
+  min-height:0;
+  display:grid;
+  grid-template-rows:1fr 1fr;
+  gap:14px;
 }
 
-/* ---------- TERMINAL ---------- */
-
-.terminal {
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  bottom: 24px;
-  padding: 14px 16px;
-  border: 1px solid rgba(85,246,255,.15);
-  border-radius: 18px;
-  background: rgba(0,0,0,.36);
-  backdrop-filter: blur(16px);
+.section{
+  min-height:0;
+  padding:18px;
+  overflow:hidden;
 }
 
-.terminal-line {
-  color: var(--muted);
-  font-family: "SFMono-Regular", Consolas, monospace;
-  font-size: 11px;
-  margin-bottom: 8px;
+.sectionHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
 }
 
-.terminal-line strong {
-  color: var(--green);
+.sectionHead strong{
+  font-size:11px;
+  letter-spacing:.12em;
 }
 
-.command-form {
-  display: flex;
-  gap: 10px;
+.sectionHead span{
+  font-size:9px;
+  color:#767997;
 }
 
-.command-input {
-  min-width: 0;
-  flex: 1;
-  color: white;
-  background: transparent;
-  border: 0;
-  outline: 0;
-  font: inherit;
-  font-size: 14px;
+.activity{
+  height:calc(100% - 30px);
+  overflow:auto;
+  padding-right:5px;
 }
 
-.command-input::placeholder {
-  color: #45627f;
+.activity::-webkit-scrollbar{
+  width:3px;
+}
+.activity::-webkit-scrollbar-thumb{
+  background:#292a48;
+  border-radius:99px;
 }
 
-.icon-btn,
-.execute-btn {
-  border: 1px solid rgba(85,246,255,.25);
-  background: rgba(85,246,255,.06);
-  color: var(--cyan);
-  border-radius: 12px;
-  cursor: pointer;
-  transition: .25s;
+.event{
+  display:grid;
+  grid-template-columns:28px 1fr;
+  gap:10px;
+  padding:11px 0;
+  border-bottom:1px solid rgba(255,255,255,.055);
+  animation:appear .35s ease;
 }
 
-.icon-btn {
-  width: 42px;
-  height: 42px;
+@keyframes appear{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:none}
 }
 
-.execute-btn {
-  padding: 0 17px;
-  font-weight: 700;
+.eventIcon{
+  width:28px;
+  height:28px;
+  border-radius:9px;
+  display:grid;
+  place-items:center;
+  background:rgba(92,247,255,.08);
+  color:var(--cyan);
+  font-size:11px;
 }
 
-.icon-btn:hover,
-.execute-btn:hover {
-  transform: translateY(-2px);
-  background: rgba(85,246,255,.13);
-  box-shadow: 0 0 25px rgba(85,246,255,.15);
+.eventText{
+  min-width:0;
 }
 
-/* ---------- SIDEBAR ---------- */
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-height: 0;
+.eventText b{
+  display:block;
+  font-size:10px;
+  font-weight:600;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
-.card {
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  background: var(--panel);
-  backdrop-filter: blur(20px);
-  box-shadow: var(--shadow);
-  padding: 18px;
+.eventText small{
+  display:block;
+  color:#737694;
+  font-size:8px;
+  margin-top:3px;
 }
 
-.card-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 15px;
-  color: #c9eaff;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .18em;
+/* CAPABILITIES */
+.capabilities{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
 }
 
-.card-title span {
-  color: var(--cyan);
+.cap{
+  padding:12px;
+  border-radius:15px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);
+  transition:.2s;
 }
 
-.quick-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 9px;
+.cap:hover{
+  transform:translateY(-2px);
+  border-color:rgba(92,247,255,.2);
 }
 
-.quick {
-  min-height: 74px;
-  padding: 12px;
-  text-align: left;
-  color: #c9d8e8;
-  background: rgba(255,255,255,.025);
-  border: 1px solid rgba(255,255,255,.07);
-  border-radius: 15px;
-  cursor: pointer;
-  transition: .25s;
+.capIcon{
+  font-size:17px;
+  margin-bottom:8px;
 }
 
-.quick:hover {
-  transform: translateY(-3px);
-  border-color: rgba(85,246,255,.35);
-  background: rgba(85,246,255,.055);
+.cap b{
+  display:block;
+  font-size:9px;
 }
 
-.quick b {
-  display: block;
-  color: var(--cyan);
-  margin-bottom: 6px;
-  font-size: 12px;
+.cap small{
+  display:block;
+  color:#777997;
+  font-size:7px;
+  margin-top:4px;
 }
 
-.quick small {
-  color: var(--muted);
+/* FOOTER */
+.footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:0 18px;
 }
 
-/* ---------- HISTORY ---------- */
-
-.history {
-  flex: 1;
-  min-height: 220px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+.footerStats{
+  display:flex;
+  gap:18px;
 }
 
-.log {
-  overflow-y: auto;
-  padding-right: 4px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.stat small{
+  display:block;
+  color:#6d708e;
+  font-size:7px;
+  letter-spacing:.12em;
 }
 
-.log::-webkit-scrollbar {
-  width: 4px;
+.stat b{
+  font-size:11px;
+  color:#d7d8e9;
 }
 
-.log::-webkit-scrollbar-thumb {
-  background: rgba(85,246,255,.2);
-  border-radius: 10px;
+.footerButtons{
+  display:flex;
+  gap:7px;
 }
 
-.log-item {
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: rgba(255,255,255,.025);
-  border-left: 2px solid var(--cyan);
-  animation: enter .35s ease;
+.toolBtn{
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.035);
+  color:#aaaed0;
+  border-radius:12px;
+  width:37px;
+  height:37px;
+  cursor:pointer;
 }
 
-.log-item.user {
-  border-left-color: var(--violet);
+.toolBtn:hover{
+  color:#fff;
+  border-color:rgba(92,247,255,.3);
 }
 
-.log-item.success {
-  border-left-color: var(--green);
+/* TOAST */
+.toast{
+  position:fixed;
+  z-index:99;
+  left:50%;
+  bottom:95px;
+  transform:translate(-50%,20px);
+  padding:12px 18px;
+  border-radius:14px;
+  background:rgba(10,11,29,.92);
+  border:1px solid rgba(92,247,255,.25);
+  box-shadow:0 15px 50px rgba(0,0,0,.45);
+  font-size:11px;
+  color:#dfe0ef;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
 }
 
-.log-item.error {
-  border-left-color: var(--danger);
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
 }
 
-.log-meta {
-  color: #4d6b88;
-  font-size: 9px;
-  margin-bottom: 4px;
-  letter-spacing: .1em;
-}
+/* RESPONSIVE */
+@media(max-width:900px){
+  body{overflow:auto}
 
-.log-text {
-  color: #c8d9e9;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-@keyframes enter {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-
-/* ---------- FOOTER ---------- */
-
-.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-  color: #48647f;
-  font-size: 10px;
-}
-
-.footer b {
-  color: #7798b5;
-}
-
-.badges {
-  display: flex;
-  gap: 7px;
-  flex-wrap: wrap;
-}
-
-.badge {
-  padding: 6px 9px;
-  border: 1px solid rgba(255,255,255,.07);
-  border-radius: 999px;
-}
-
-/* ---------- RESPONSIVE ---------- */
-
-@media (max-width: 980px) {
-  .main {
-    grid-template-columns: 1fr;
+  .app{
+    min-height:100vh;
+    height:auto;
+    grid-template-rows:auto auto auto;
+    padding:8px;
   }
 
-  .hero {
-    min-height: 650px;
+  .main{
+    grid-template-columns:1fr;
   }
 
-  .sidebar {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  .side{
+    grid-template-rows:300px 250px;
   }
 
-  .history {
-    grid-column: span 2;
+  .core{
+    min-height:650px;
+  }
+
+  .footer{
+    padding:15px 5px;
   }
 }
 
-@media (max-width: 650px) {
-  .app {
-    padding: 10px;
-  }
-
-  .header {
-    border-radius: 18px;
-  }
-
-  .system {
-    display: none;
-  }
-
-  .hero {
-    min-height: 620px;
-    border-radius: 22px;
-  }
-
-  .orb-stage {
-    width: 100vw;
-  }
-
-  .orb {
-    width: 145px;
-    height: 145px;
-  }
-
-  .o1 { width: 270px; }
-  .o2 { width: 320px; }
-  .o3 { width: 370px; }
-
-  .voice-label {
-    top: calc(50% + 120px);
-  }
-
-  .terminal {
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
-  }
-
-  .sidebar {
-    display: flex;
-  }
-
-  .history {
-    min-height: 260px;
-  }
-
-  .footer {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+@media(max-width:550px){
+  .brand small{display:none}
+  .status span{display:none}
+  .core h1{font-size:42px}
+  .orbWrap{transform:scale(.85)}
+  .footerStats{gap:9px}
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="universe"></canvas>
-<div class="stars"></div>
-<div class="grid"></div>
-<div class="noise"></div>
+<div class="space">
+  <div class="nebula n1"></div>
+  <div class="nebula n2"></div>
+  <div class="nebula n3"></div>
+  <div class="stars"></div>
+</div>
 
 <div class="app">
 
-  <!-- HEADER -->
-  <header class="header">
+  <!-- TOP -->
+  <header class="topbar">
     <div class="brand">
-      <div class="brand-mark"></div>
+      <div class="logo">∞</div>
       <div>
-        <h1>AFFLATUS // JARVIS</h1>
-        <span>OMNIDIRECTIONAL COMMAND NEXUS</span>
+        <strong>COSMOS</strong>
+        <small>UNIVERSAL COMMAND INTERFACE</small>
       </div>
     </div>
 
-    <div class="system">
-      <i class="pulse-dot"></i>
-      <span id="systemStatus">SYSTEM ONLINE</span>
+    <div class="status">
+      <i class="statusDot"></i>
+      <span id="statusText">SYSTEM READY</span>
     </div>
   </header>
 
   <!-- MAIN -->
   <main class="main">
 
-    <!-- HERO -->
-    <section class="hero" id="hero">
+    <!-- COMMAND CORE -->
+    <section class="panel core">
 
-      <div class="orb-stage" id="orbStage">
-        <div class="orbit o1"></div>
-        <div class="orbit o2"></div>
-        <div class="orbit o3"></div>
+      <div class="eyebrow">Your command becomes action</div>
 
-        <div class="orb" id="orb" title="Click to speak"></div>
+      <h1>
+        Speak to your
+        <span class="gradient">universe.</span>
+      </h1>
 
-        <div class="voice-label" id="voiceLabel">
-          CLICK OR SAY "JARVIS"
-        </div>
+      <p class="subtitle">
+        Command your digital workspace naturally.
+        Speak, type, automate, search, create, calculate,
+        navigate and orchestrate connected services.
+      </p>
+
+      <div class="orbWrap">
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+
+        <button class="orb" id="voiceOrb" aria-label="Start voice command">
+          <div class="orbIcon" id="orbIcon">✦</div>
+          <div class="orbLabel" id="orbLabel">Tap to speak</div>
+        </button>
       </div>
 
-      <div class="terminal">
-        <div class="terminal-line">
-          <strong>JARVIS:</strong>
-          <span id="response">Awaiting your command...</span>
-        </div>
+      <div class="commandBox">
+        <input
+          id="commandInput"
+          autocomplete="off"
+          placeholder="Type a command… e.g. search the web for quantum computing"
+        >
+        <button class="send" id="sendBtn">↗</button>
+      </div>
 
-        <form class="command-form" id="commandForm">
-          <button
-            class="icon-btn"
-            type="button"
-            id="micBtn"
-            title="Voice command"
-          >◉</button>
-
-          <input
-            id="commandInput"
-            class="command-input"
-            autocomplete="off"
-            placeholder="Command anything... e.g. 'open YouTube'"
-          />
-
-          <button class="execute-btn" type="submit">
-            EXECUTE
-          </button>
-        </form>
+      <div class="quick">
+        <button class="chip" data-command="What time is it?">TIME</button>
+        <button class="chip" data-command="Open YouTube">YOUTUBE</button>
+        <button class="chip" data-command="Search the web for today's technology news">SEARCH</button>
+        <button class="chip" data-command="Create a note called Ideas">NOTE</button>
+        <button class="chip" data-command="Set a timer for 10 seconds">TIMER</button>
+        <button class="chip" data-command="What can you do?">CAPABILITIES</button>
       </div>
 
     </section>
 
     <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <aside class="side">
 
-      <section class="card">
-        <div class="card-title">
-          <span>Quick Nexus</span>
-          <span>∞</span>
+      <section class="panel section">
+        <div class="sectionHead">
+          <strong>LIVE ACTIVITY</strong>
+          <span id="eventCount">0 EVENTS</span>
         </div>
 
-        <div class="quick-grid">
-
-          <button class="quick" data-command="What time is it?">
-            <b>TIME</b>
-            <small>Temporal status</small>
-          </button>
-
-          <button class="quick" data-command="Open YouTube">
-            <b>YOUTUBE</b>
-            <small>Launch media nexus</small>
-          </button>
-
-          <button class="quick" data-command="Open Google">
-            <b>SEARCH</b>
-            <small>Open search engine</small>
-          </button>
-
-          <button class="quick" data-command="Tell me a joke">
-            <b>JOKE</b>
-            <small>Activate humor protocol</small>
-          </button>
-
-          <button class="quick" data-command="Set a timer for 10 seconds">
-            <b>TIMER</b>
-            <small>Temporal automation</small>
-          </button>
-
-          <button class="quick" data-command="What is 123 multiplied by 456?">
-            <b>CALCULATE</b>
-            <small>Compute instantly</small>
-          </button>
-
-        </div>
+        <div class="activity" id="activity"></div>
       </section>
 
-      <section class="card history">
-        <div class="card-title">
-          <span>Command Stream</span>
-          <button
-            id="clearLog"
-            style="
-              border:0;
-              background:none;
-              color:#54718d;
-              cursor:pointer;
-              font-size:10px;
-            "
-          >CLEAR</button>
+      <section class="panel section">
+        <div class="sectionHead">
+          <strong>COMMAND MATRIX</strong>
+          <span>READY</span>
         </div>
 
-        <div class="log" id="log"></div>
+        <div class="capabilities">
+
+          <div class="cap">
+            <div class="capIcon">🌐</div>
+            <b>Web</b>
+            <small>Search & navigate</small>
+          </div>
+
+          <div class="cap">
+            <div class="capIcon">🧠</div>
+            <b>AI</b>
+            <small>Connect your AI API</small>
+          </div>
+
+          <div class="cap">
+            <div class="capIcon">📝</div>
+            <b>Workspace</b>
+            <small>Notes & tasks</small>
+          </div>
+
+          <div class="cap">
+            <div class="capIcon">⏱️</div>
+            <b>Automation</b>
+            <small>Timers & workflows</small>
+          </div>
+
+          <div class="cap">
+            <div class="capIcon">📋</div>
+            <b>Clipboard</b>
+            <small>Copy & paste actions</small>
+          </div>
+
+          <div class="cap">
+            <div class="capIcon">⚡</div>
+            <b>Parallel</b>
+            <small>Run safe actions together</small>
+          </div>
+
+        </div>
       </section>
 
     </aside>
 
   </main>
 
-  <footer class="footer">
-    <div>
-      <b>LOCAL CORE</b> · Browser Automation Matrix
+  <!-- FOOTER -->
+  <footer class="panel footer">
+
+    <div class="footerStats">
+      <div class="stat">
+        <small>COMMANDS</small>
+        <b id="commands">0</b>
+      </div>
+
+      <div class="stat">
+        <small>SUCCESS</small>
+        <b id="success">0</b>
+      </div>
+
+      <div class="stat">
+        <small>UPTIME</small>
+        <b id="uptime">00:00</b>
+      </div>
     </div>
 
-    <div class="badges">
-      <span class="badge">VOICE</span>
-      <span class="badge">TTS</span>
-      <span class="badge">WEB</span>
-      <span class="badge">AUTOMATION</span>
-      <span class="badge">LOCAL STORAGE</span>
+    <div class="footerButtons">
+      <button class="toolBtn" id="clearBtn" title="Clear activity">⌫</button>
+      <button class="toolBtn" id="voiceToggle" title="Voice feedback">🔊</button>
+      <button class="toolBtn" id="themeBtn" title="Change theme">◉</button>
     </div>
+
   </footer>
 
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
 /* =========================================================
-   AFFLATUS JARVIS CORE
+   COSMOS COMMAND ENGINE
    ========================================================= */
 
-const $ = selector => document.querySelector(selector);
+const state = {
+  commands: 0,
+  success: 0,
+  events: 0,
+  voiceOutput: true,
+  started: Date.now(),
+  listening: false
+};
 
-const input = $("#commandInput");
-const response = $("#response");
-const orb = $("#orb");
-const orbStage = $("#orbStage");
-const hero = $("#hero");
-const voiceLabel = $("#voiceLabel");
-const micBtn = $("#micBtn");
-const log = $("#log");
-const form = $("#commandForm");
-const systemStatus = $("#systemStatus");
+const $ = id => document.getElementById(id);
 
-let recognition = null;
-let listening = false;
+const orb = $("voiceOrb");
+const input = $("commandInput");
+const activity = $("activity");
+const toast = $("toast");
 
-/* ---------- PARTICLE UNIVERSE ---------- */
+function showToast(message){
+  toast.textContent = message;
+  toast.classList.add("show");
 
-const canvas = $("#universe");
-const ctx = canvas.getContext("2d");
+  clearTimeout(showToast.timer);
 
-let W, H, particles = [];
-
-function resizeCanvas() {
-  W = canvas.width = window.innerWidth * devicePixelRatio;
-  H = canvas.height = window.innerHeight * devicePixelRatio;
-
-  canvas.style.width = window.innerWidth + "px";
-  canvas.style.height = window.innerHeight + "px";
-
-  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-
-  particles = Array.from({
-    length: Math.min(180, Math.floor(window.innerWidth / 7))
-  }, () => ({
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * window.innerHeight,
-    r: Math.random() * 1.5 + .2,
-    vx: (Math.random() - .5) * .15,
-    vy: (Math.random() - .5) * .15,
-    hue: Math.random() > .5 ? 185 : 270
-  }));
+  showToast.timer = setTimeout(()=>{
+    toast.classList.remove("show");
+  },2600);
 }
 
-function drawUniverse() {
-  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+function logEvent(title, detail="", icon="✦"){
+  state.events++;
 
-  for (const p of particles) {
-    p.x += p.vx;
-    p.y += p.vy;
+  const el = document.createElement("div");
+  el.className = "event";
 
-    if (p.x < 0) p.x = window.innerWidth;
-    if (p.x > window.innerWidth) p.x = 0;
-    if (p.y < 0) p.y = window.innerHeight;
-    if (p.y > window.innerHeight) p.y = 0;
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle =
-      `hsla(${p.hue},100%,70%,${.2 + p.r / 5})`;
-    ctx.fill();
-  }
-
-  requestAnimationFrame(drawUniverse);
-}
-
-window.addEventListener("resize", resizeCanvas);
-resizeCanvas();
-drawUniverse();
-
-/* ---------- LOG ---------- */
-
-function timestamp() {
-  return new Date().toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit"
-  });
-}
-
-function addLog(text, type = "") {
-  const item = document.createElement("div");
-  item.className = `log-item ${type}`;
-
-  item.innerHTML = `
-    <div class="log-meta">${timestamp()}</div>
-    <div class="log-text">${escapeHTML(text)}</div>
+  el.innerHTML = `
+    <div class="eventIcon">${icon}</div>
+    <div class="eventText">
+      <b>${escapeHTML(title)}</b>
+      <small>${escapeHTML(detail)}</small>
+    </div>
   `;
 
-  log.appendChild(item);
-  log.scrollTop = log.scrollHeight;
-}
+  activity.prepend(el);
 
-function escapeHTML(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function say(text) {
-  response.textContent = text;
-
-  if ("speechSynthesis" in window) {
-    speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = .95;
-    utterance.pitch = .85;
-    utterance.volume = .9;
-
-    const voices = speechSynthesis.getVoices();
-    const preferred =
-      voices.find(v => /Google UK English Male/i.test(v.name)) ||
-      voices.find(v => /Microsoft David/i.test(v.name)) ||
-      voices.find(v => /Daniel/i.test(v.name));
-
-    if (preferred) utterance.voice = preferred;
-
-    speechSynthesis.speak(utterance);
-  }
-}
-
-/* ---------- COMMAND ENGINE ---------- */
-
-const commands = [
-
-  {
-    test: c => /^(hi|hello|hey|wake up|jarvis)$/i.test(c),
-    run: async () => {
-      say("Systems online. I am listening.");
-    }
-  },
-
-  {
-    test: c => /what time|current time|time is it/i.test(c),
-    run: async () => {
-      const now = new Date();
-
-      say(
-        `The current time is ${now.toLocaleTimeString([], {
-          hour: "numeric",
-          minute: "2-digit"
-        })}.`
-      );
-    }
-  },
-
-  {
-    test: c => /what date|today|date is it/i.test(c),
-    run: async () => {
-      say(
-        `Today is ${new Date().toLocaleDateString([], {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric"
-        })}.`
-      );
-    }
-  },
-
-  {
-    test: c => /open youtube/i.test(c),
-    run: async () => {
-      say("Opening YouTube.");
-      window.open("https://www.youtube.com/", "_blank");
-    }
-  },
-
-  {
-    test: c => /open google/i.test(c),
-    run: async () => {
-      say("Opening Google.");
-      window.open("https://www.google.com/", "_blank");
-    }
-  },
-
-  {
-    test: c => /open github/i.test(c),
-    run: async () => {
-      say("Opening GitHub.");
-      window.open("https://github.com/", "_blank");
-    }
-  },
-
-  {
-    test: c => /search (?:for )?(.+)/i.test(c),
-    run: async c => {
-      const match = c.match(/search (?:for )?(.+)/i);
-
-      if (!match) return;
-
-      const query = match[1].trim();
-
-      say(`Searching for ${query}.`);
-
-      window.open(
-        "https://www.google.com/search?q=" +
-        encodeURIComponent(query),
-        "_blank"
-      );
-    }
-  },
-
-  {
-    test: c => /tell me a joke|make me laugh/i.test(c),
-    run: async () => {
-      const jokes = [
-        "I would tell you a UDP joke, but you might not get it.",
-        "Why do programmers prefer dark mode? Because light attracts bugs.",
-        "I have optimized my joke engine. Unfortunately, the results are still questionable.",
-        "There are only 10 kinds of people: those who understand binary and those who don't."
-      ];
-
-      say(jokes[Math.floor(Math.random() * jokes.length)]);
-    }
-  },
-
-  {
-    test: c => /remember (.+)/i.test(c),
-    run: async c => {
-      const match = c.match(/remember (.+)/i);
-
-      if (!match) return;
-
-      const note = match[1].trim();
-
-      const notes =
-        JSON.parse(localStorage.getItem("jarvisNotes") || "[]");
-
-      notes.push({
-        text: note,
-        created: Date.now()
-      });
-
-      localStorage.setItem(
-        "jarvisNotes",
-        JSON.stringify(notes)
-      );
-
-      say("Memory stored locally.");
-    }
-  },
-
-  {
-    test: c => /show my memories|show my notes|what do you remember/i.test(c),
-    run: async () => {
-      const notes =
-        JSON.parse(localStorage.getItem("jarvisNotes") || "[]");
-
-      if (!notes.length) {
-        say("My local memory is currently empty.");
-        return;
-      }
-
-      const latest = notes.slice(-3).map(n => n.text).join(". ");
-
-      say(`Recent memories: ${latest}`);
-    }
-  },
-
-  {
-    test: c => /set (?:a )?timer for (\d+)\s*(second|seconds|minute|minutes)/i.test(c),
-    run: async c => {
-      const match = c.match(
-        /set (?:a )?timer for (\d+)\s*(second|seconds|minute|minutes)/i
-      );
-
-      if (!match) return;
-
-      const amount = Number(match[1]);
-      const unit = match[2].toLowerCase();
-
-      const milliseconds =
-        unit.startsWith("minute")
-          ? amount * 60 * 1000
-          : amount * 1000;
-
-      say(`Timer armed for ${amount} ${unit}.`);
-
-      setTimeout(() => {
-        say(`Timer complete. ${amount} ${unit} have elapsed.`);
-        addLog("Timer completed.", "success");
-      }, milliseconds);
-    }
-  },
-
-  {
-    test: c => /calculate|what is|compute/i.test(c),
-    run: async c => {
-      let expression = c
-        .replace(/calculate/i, "")
-        .replace(/what is/i, "")
-        .replace(/compute/i, "")
-        .trim()
-        .toLowerCase();
-
-      expression = expression
-        .replace(/multiplied by/g, "*")
-        .replace(/times/g, "*")
-        .replace(/divided by/g, "/")
-        .replace(/plus/g, "+")
-        .replace(/minus/g, "-")
-        .replace(/modulo/g, "%")
-        .replace(/[^0-9+\-*/%.()\s]/g, "");
-
-      if (!expression) {
-        say("I need a mathematical expression.");
-        return;
-      }
-
-      try {
-        /*
-          eval is restricted to the sanitized mathematical
-          expression above. For production applications,
-          replace this with a dedicated math parser.
-        */
-        const result = Function(
-          `"use strict"; return (${expression})`
-        )();
-
-        say(`${expression} equals ${result}.`);
-      } catch {
-        say("I could not safely calculate that expression.");
-      }
-    }
-  },
-
-  {
-    test: c => /dark mode|night mode/i.test(c),
-    run: async () => {
-      document.body.style.setProperty(
-        "--cyan",
-        "#7df9ff"
-      );
-
-      say("Night protocol optimized.");
-    }
-  },
-
-  {
-    test: c => /clear (?:the )?(screen|history|log)/i.test(c),
-    run: async () => {
-      log.innerHTML = "";
-      say("Command stream cleared.");
-    }
-  },
-
-  {
-    test: c => /reload|refresh page/i.test(c),
-    run: async () => {
-      say("Reloading interface.");
-      setTimeout(() => location.reload(), 500);
-    }
-  },
-
-  {
-    test: c => /stop speaking|silence|be quiet/i.test(c),
-    run: async () => {
-      speechSynthesis.cancel();
-      response.textContent = "Audio output terminated.";
-    }
+  while(activity.children.length > 30){
+    activity.lastElementChild.remove();
   }
 
-];
-
-/* ---------- COMMAND EXECUTION ---------- */
-
-async function executeCommand(rawCommand) {
-
-  const command = rawCommand.trim();
-
-  if (!command) return;
-
-  addLog(`YOU → ${command}`, "user");
-
-  input.value = "";
-
-  systemStatus.textContent = "PROCESSING";
-  voiceLabel.textContent = "EXECUTING COMMAND...";
-
-  hero.style.setProperty(
-    "--command-energy",
-    Math.random()
-  );
-
-  let matched = false;
-
-  for (const commandDefinition of commands) {
-
-    if (commandDefinition.test(command)) {
-
-      matched = true;
-
-      try {
-        await commandDefinition.run(command);
-        addLog("Command executed successfully.", "success");
-      } catch (error) {
-        console.error(error);
-        say("The command encountered an execution error.");
-        addLog("Execution error.", "error");
-      }
-
-      break;
-    }
-  }
-
-  if (!matched) {
-
-    /*
-      Unknown commands are not secretly executed.
-      This is where an authenticated AI backend can be connected.
-
-      Example architecture:
-
-      Browser
-        ↓
-      /api/agent
-        ↓
-      LLM / Agent Orchestrator
-        ↓
-      Approved Tools
-        ↓
-      Result
-        ↓
-      Browser
-
-      Never expose private API keys directly in this HTML file.
-    */
-
-    say(
-      `Command received: "${command}". ` +
-      `This command needs an AI/tool integration to execute safely.`
-    );
-
-    addLog(
-      "No local capability matched. Connect an AI/tool backend for this command.",
-      "error"
-    );
-  }
-
-  systemStatus.textContent = "SYSTEM ONLINE";
-  voiceLabel.textContent = listening
-    ? "LISTENING..."
-    : 'CLICK OR SAY "JARVIS"';
+  $("eventCount").textContent = `${state.events} EVENTS`;
 }
 
-/* ---------- FORM ---------- */
+function escapeHTML(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
 
-form.addEventListener("submit", event => {
-  event.preventDefault();
-  executeCommand(input.value);
-});
+function updateStats(){
+  $("commands").textContent = state.commands;
+  $("success").textContent = state.success;
+}
 
-/* ---------- QUICK COMMANDS ---------- */
+/* =========================================================
+   TEXT TO SPEECH
+   ========================================================= */
 
-document.querySelectorAll(".quick").forEach(button => {
-  button.addEventListener("click", () => {
-    executeCommand(button.dataset.command);
-  });
-});
+function speak(text){
+  if(!state.voiceOutput || !("speechSynthesis" in window)) return;
 
-$("#clearLog").addEventListener("click", () => {
-  log.innerHTML = "";
-  say("Command stream cleared.");
-});
+  speechSynthesis.cancel();
 
-/* ---------- VOICE RECOGNITION ---------- */
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 1.02;
+  utterance.pitch = 1.02;
+  utterance.volume = .8;
+
+  speechSynthesis.speak(utterance);
+}
+
+/* =========================================================
+   WEB SPEECH API
+   ========================================================= */
 
 const SpeechRecognition =
   window.SpeechRecognition ||
   window.webkitSpeechRecognition;
 
-if (SpeechRecognition) {
+let recognition = null;
+
+if(SpeechRecognition){
 
   recognition = new SpeechRecognition();
 
@@ -1342,209 +953,605 @@ if (SpeechRecognition) {
   recognition.interimResults = true;
   recognition.lang = navigator.language || "en-US";
 
-  recognition.onstart = () => {
-    listening = true;
+  recognition.onstart = ()=>{
+    state.listening = true;
 
-    orbStage.classList.add("orb-listening");
-    voiceLabel.textContent = "LISTENING...";
-    systemStatus.textContent = "VOICE CHANNEL OPEN";
+    orb.classList.add("listening");
 
-    addLog("Voice channel activated.");
+    $("orbIcon").textContent = "◉";
+    $("orbLabel").textContent = "Listening…";
+    $("statusText").textContent = "LISTENING";
   };
 
   recognition.onresult = event => {
 
     let transcript = "";
 
-    for (
-      let i = event.resultIndex;
-      i < event.results.length;
-      i++
-    ) {
+    for(let i=event.resultIndex;i<event.results.length;i++){
       transcript += event.results[i][0].transcript;
     }
-
-    transcript = transcript.trim();
 
     input.value = transcript;
 
     const finalResult =
-      event.results[event.results.length - 1].isFinal;
+      event.results[event.results.length-1].isFinal;
 
-    if (finalResult) {
-
-      /*
-        Optional wake-word behavior:
-        "Jarvis open YouTube"
-        "Jarvis what time is it"
-      */
-
-      const cleaned = transcript.replace(
-        /^jarvis[\s,:-]*/i,
-        ""
-      );
-
-      executeCommand(cleaned || "hello");
+    if(finalResult){
+      executeCommand(transcript);
     }
   };
 
   recognition.onerror = event => {
+    logEvent(
+      "Voice error",
+      event.error || "Speech recognition failed",
+      "!"
+    );
 
-    console.warn("Speech recognition:", event.error);
-
-    if (event.error === "not-allowed") {
-      say("Microphone permission was denied.");
-    } else {
-      say("Voice recognition encountered a temporary problem.");
-    }
+    showToast("Voice recognition: " + event.error);
   };
 
-  recognition.onend = () => {
+  recognition.onend = ()=>{
+    state.listening = false;
 
-    listening = false;
+    orb.classList.remove("listening");
 
-    orbStage.classList.remove("orb-listening");
-
-    systemStatus.textContent = "SYSTEM ONLINE";
-    voiceLabel.textContent = 'CLICK OR SAY "JARVIS"';
+    $("orbIcon").textContent = "✦";
+    $("orbLabel").textContent = "Tap to speak";
+    $("statusText").textContent = "SYSTEM READY";
   };
 
-} else {
-
-  micBtn.disabled = true;
-  micBtn.style.opacity = ".4";
-
-  voiceLabel.textContent =
-    "VOICE API NOT SUPPORTED — USE CHROME/EDGE";
+}else{
+  $("statusText").textContent = "VOICE API UNAVAILABLE";
+  $("orbLabel").textContent = "Voice unavailable";
 }
 
-/* ---------- MIC ---------- */
+orb.addEventListener("click",()=>{
 
-function startListening() {
-
-  if (!recognition) {
-    say("Voice recognition is not supported in this browser.");
+  if(!recognition){
+    showToast("Speech recognition isn't supported here.");
     return;
   }
 
-  if (listening) {
+  if(state.listening){
     recognition.stop();
-    return;
-  }
-
-  try {
-    recognition.start();
-  } catch (error) {
-    console.warn(error);
-  }
-}
-
-micBtn.addEventListener("click", startListening);
-orb.addEventListener("click", startListening);
-
-/* ---------- KEYBOARD SHORTCUT ---------- */
-
-document.addEventListener("keydown", event => {
-
-  if (
-    event.key === "/" &&
-    document.activeElement !== input
-  ) {
-    event.preventDefault();
-    input.focus();
-  }
-
-  if (
-    event.code === "Space" &&
-    document.activeElement !== input
-  ) {
-    event.preventDefault();
-    startListening();
+  }else{
+    try{
+      recognition.start();
+    }catch(e){}
   }
 });
 
-/* ---------- WELCOME ---------- */
+/* =========================================================
+   COMMAND ENGINE
+   ========================================================= */
 
-setTimeout(() => {
+async function executeCommand(rawCommand){
 
-  addLog(
-    "AFFLATUS CORE initialized. Awaiting directive.",
-    "success"
+  const command = rawCommand.trim();
+
+  if(!command) return;
+
+  state.commands++;
+  updateStats();
+
+  logEvent(
+    "Command received",
+    command,
+    "⚡"
   );
 
-  say("Afflatus core online.");
+  $("statusText").textContent = "EXECUTING";
 
-}, 700);
+  try{
 
-/* ---------- EXPOSE EXTENSION API ---------- */
+    /*
+      Parse first, then execute.
 
-/*
-  Other JavaScript modules can register new capabilities:
+      In a production version this function is the
+      integration point for your AI/backend orchestration
+      system.
+    */
 
-  window.JARVIS.register({
-    test: command => /send email/i.test(command),
-    run: async command => {
-      // Your authenticated backend integration
-    }
-  });
+    const result = await commandRouter(command);
 
-  This makes the interface an extensible command shell.
-*/
+    state.success++;
+    updateStats();
 
-window.JARVIS = {
-
-  execute: executeCommand,
-
-  register(definition) {
-
-    if (
-      typeof definition?.test !== "function" ||
-      typeof definition?.run !== "function"
-    ) {
-      throw new Error(
-        "A JARVIS capability requires test() and run()."
-      );
-    }
-
-    commands.unshift(definition);
-
-    addLog(
-      "New capability registered.",
-      "success"
+    logEvent(
+      "Completed",
+      result.message || "Action completed",
+      "✓"
     );
-  },
 
-  speak: say,
+    if(result.message){
+      speak(result.message);
+      showToast(result.message);
+    }
 
-  memory: {
+  }catch(error){
 
-    save(value) {
+    logEvent(
+      "Execution failed",
+      error.message || "Unknown error",
+      "!"
+    );
 
-      const notes =
-        JSON.parse(
-          localStorage.getItem("jarvisNotes") || "[]"
+    speak("I couldn't complete that command.");
+    showToast("Command failed.");
+  }
+
+  $("statusText").textContent = "SYSTEM READY";
+}
+
+/* =========================================================
+   COMMAND ROUTER
+   ========================================================= */
+
+async function commandRouter(command){
+
+  const c = command.toLowerCase();
+
+  /* ---- TIME ---- */
+
+  if(
+    c.includes("what time") ||
+    c.includes("current time") ||
+    c === "time"
+  ){
+    const now = new Date();
+
+    return {
+      message:
+        "It is " +
+        now.toLocaleTimeString([],{
+          hour:"numeric",
+          minute:"2-digit"
+        }) +
+        "."
+    };
+  }
+
+  /* ---- OPEN WEBSITES ---- */
+
+  if(
+    c.includes("open youtube") ||
+    c.includes("go to youtube")
+  ){
+
+    window.open(
+      "https://www.youtube.com/",
+      "_blank",
+      "noopener"
+    );
+
+    return {
+      message:"Opening YouTube."
+    };
+  }
+
+  if(
+    c.includes("open google") ||
+    c.includes("go to google")
+  ){
+
+    window.open(
+      "https://www.google.com/",
+      "_blank",
+      "noopener"
+    );
+
+    return {
+      message:"Opening Google."
+    };
+  }
+
+  /* ---- SEARCH ---- */
+
+  if(
+    c.startsWith("search ") ||
+    c.includes("search the web")
+  ){
+
+    let query = command
+      .replace(/search the web for/i,"")
+      .replace(/^search/i,"")
+      .trim();
+
+    if(!query) query = "latest news";
+
+    window.open(
+      "https://www.google.com/search?q=" +
+      encodeURIComponent(query),
+      "_blank",
+      "noopener"
+    );
+
+    return {
+      message:"Searching the web for " + query + "."
+    };
+  }
+
+  /* ---- CREATE NOTE ---- */
+
+  if(
+    c.startsWith("create a note") ||
+    c.startsWith("make a note") ||
+    c.startsWith("take a note")
+  ){
+
+    const note =
+      command
+        .replace(/create a note/i,"")
+        .replace(/make a note/i,"")
+        .replace(/take a note/i,"")
+        .trim() || "Untitled note";
+
+    const notes =
+      JSON.parse(localStorage.getItem("cosmosNotes") || "[]");
+
+    notes.push({
+      text:note,
+      created:new Date().toISOString()
+    });
+
+    localStorage.setItem(
+      "cosmosNotes",
+      JSON.stringify(notes)
+    );
+
+    return {
+      message:"Note created: " + note
+    };
+  }
+
+  /* ---- LIST NOTES ---- */
+
+  if(
+    c.includes("show my notes") ||
+    c.includes("list my notes")
+  ){
+
+    const notes =
+      JSON.parse(localStorage.getItem("cosmosNotes") || "[]");
+
+    if(!notes.length){
+      return {
+        message:"You don't have any saved notes yet."
+      };
+    }
+
+    return {
+      message:`You have ${notes.length} saved note${notes.length===1?"":"s"}.`
+    };
+  }
+
+  /* ---- TIMER ---- */
+
+  const timerMatch =
+    c.match(/timer.*?(\d+)\s*(second|seconds|minute|minutes)/i);
+
+  if(timerMatch){
+
+    const amount = Number(timerMatch[1]);
+    const unit = timerMatch[2].toLowerCase();
+
+    const ms =
+      unit.startsWith("minute")
+        ? amount * 60 * 1000
+        : amount * 1000;
+
+    setTimeout(()=>{
+
+      logEvent(
+        "Timer completed",
+        `${amount} ${unit}`,
+        "⏰"
+      );
+
+      speak("Your timer is complete.");
+      showToast("⏰ Timer complete");
+
+    },ms);
+
+    return {
+      message:`Timer set for ${amount} ${unit}.`
+    };
+  }
+
+  /* ---- COPY ---- */
+
+  if(
+    c.startsWith("copy ")
+  ){
+
+    const text =
+      command.substring(5).trim();
+
+    if(navigator.clipboard){
+
+      await navigator.clipboard.writeText(text);
+
+      return {
+        message:"Copied that to your clipboard."
+      };
+
+    }
+
+    throw new Error("Clipboard permission unavailable.");
+  }
+
+  /* ---- CAPABILITIES ---- */
+
+  if(
+    c.includes("what can you do") ||
+    c.includes("your capabilities")
+  ){
+
+    return {
+      message:
+        "I can route commands for web search, websites, notes, timers, clipboard actions, voice interaction and connected services."
+    };
+  }
+
+  /* ---- CLEAR ---- */
+
+  if(
+    c.includes("clear activity") ||
+    c.includes("clear history")
+  ){
+
+    activity.innerHTML = "";
+    state.events = 0;
+    $("eventCount").textContent = "0 EVENTS";
+
+    return {
+      message:"Activity cleared."
+    };
+  }
+
+  /* ---- MULTI ACTION ---- */
+
+  if(
+    c.includes(" and ") &&
+    c.length > 20
+  ){
+
+    const parts = command
+      .split(/\s+and\s+/i)
+      .map(x=>x.trim())
+      .filter(Boolean);
+
+    if(parts.length > 1){
+
+      logEvent(
+        "Parallel orchestration",
+        `${parts.length} actions detected`,
+        "∞"
+      );
+
+      /*
+        Safe browser-level actions can execute in parallel.
+
+        For arbitrary external automation, connect this
+        section to your backend/API orchestrator.
+      */
+
+      const results =
+        await Promise.all(
+          parts.map(part => commandRouter(part))
         );
 
-      notes.push({
-        text: String(value),
-        created: Date.now()
-      });
-
-      localStorage.setItem(
-        "jarvisNotes",
-        JSON.stringify(notes)
-      );
-    },
-
-    get() {
-
-      return JSON.parse(
-        localStorage.getItem("jarvisNotes") || "[]"
-      );
+      return {
+        message:
+          `Completed ${results.length} requested actions.`
+      };
     }
   }
-};
 
+  /* ---- FALLBACK ---- */
+
+  /*
+    This is where a real AI backend should receive the
+    natural-language command.
+
+    Example architecture:
+
+    Browser
+       ↓
+    POST /api/command
+       ↓
+    Authentication / permissions
+       ↓
+    AI planner
+       ↓
+    Tool registry
+       ↓
+    Parallel execution
+       ↓
+    Results → browser
+  */
+
+  logEvent(
+    "Command queued for AI",
+    "No local handler — connect your backend here.",
+    "🧠"
+  );
+
+  return {
+    message:
+      "I understand the command, but this browser-only demo needs an AI backend or connected tool to execute that action."
+  };
+}
+
+/* =========================================================
+   SEND BUTTON
+   ========================================================= */
+
+function submitInput(){
+
+  const command = input.value.trim();
+
+  if(!command){
+    showToast("Speak or type a command first.");
+    return;
+  }
+
+  executeCommand(command);
+  input.value = "";
+}
+
+$("sendBtn").addEventListener("click",submitInput);
+
+input.addEventListener("keydown",event=>{
+  if(event.key === "Enter"){
+    submitInput();
+  }
+});
+
+/* =========================================================
+   QUICK COMMANDS
+   ========================================================= */
+
+document.querySelectorAll(".chip").forEach(button=>{
+
+  button.addEventListener("click",()=>{
+
+    const command = button.dataset.command;
+
+    input.value = command;
+
+    executeCommand(command);
+
+    input.value = "";
+  });
+
+});
+
+/* =========================================================
+   CLEAR
+   ========================================================= */
+
+$("clearBtn").addEventListener("click",()=>{
+
+  activity.innerHTML = "";
+
+  state.events = 0;
+
+  $("eventCount").textContent = "0 EVENTS";
+
+  showToast("Activity cleared.");
+});
+
+/* =========================================================
+   VOICE OUTPUT
+   ========================================================= */
+
+$("voiceToggle").addEventListener("click",()=>{
+
+  state.voiceOutput = !state.voiceOutput;
+
+  $("voiceToggle").textContent =
+    state.voiceOutput ? "🔊" : "🔇";
+
+  showToast(
+    state.voiceOutput
+      ? "Voice feedback enabled."
+      : "Voice feedback disabled."
+  );
+});
+
+/* =========================================================
+   THEME
+   ========================================================= */
+
+let alternateTheme = false;
+
+$("themeBtn").addEventListener("click",()=>{
+
+  alternateTheme = !alternateTheme;
+
+  if(alternateTheme){
+
+    document.documentElement.style.setProperty(
+      "--cyan","#ffdd6b"
+    );
+
+    document.documentElement.style.setProperty(
+      "--violet","#ff5f91"
+    );
+
+    document.documentElement.style.setProperty(
+      "--pink","#ff9f43"
+    );
+
+    showToast("Solar mode activated.");
+
+  }else{
+
+    document.documentElement.style.setProperty(
+      "--cyan","#5cf7ff"
+    );
+
+    document.documentElement.style.setProperty(
+      "--violet","#9b6cff"
+    );
+
+    document.documentElement.style.setProperty(
+      "--pink","#ff5edb"
+    );
+
+    showToast("Cosmic mode restored.");
+  }
+});
+
+/* =========================================================
+   UPTIME
+   ========================================================= */
+
+setInterval(()=>{
+
+  const seconds =
+    Math.floor((Date.now()-state.started)/1000);
+
+  const mins =
+    Math.floor(seconds/60)
+      .toString()
+      .padStart(2,"0");
+
+  const secs =
+    (seconds%60)
+      .toString()
+      .padStart(2,"0");
+
+  $("uptime").textContent =
+    `${mins}:${secs}`;
+
+},1000);
+
+/* =========================================================
+   WELCOME
+   ========================================================= */
+
+logEvent(
+  "Cosmos initialized",
+  "Universal command interface online.",
+  "✦"
+);
+
+logEvent(
+  "Voice engine",
+  recognition
+    ? "Speech recognition available."
+    : "Use Chrome/Edge for speech recognition.",
+  "🎙️"
+);
+
+logEvent(
+  "Automation core",
+  "Local browser command router ready.",
+  "⚡"
+);
 </script>
 
 </body>
