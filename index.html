@@ -12,21 +12,30 @@
     .avatar-card.selected { border-color: #6366f1; box-shadow: 0 0 0 2px #6366f1; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col relative">
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed top-20 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
   <!-- Navigation -->
-  <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+  <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-40 px-6 py-4 flex justify-between items-center">
     <div class="flex items-center gap-3">
       <div class="h-9 w-9 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/30">
-        <i class="fa-solid me-0.5 fa-video"></i>
+        <i class="fa-solid fa-video"></i>
       </div>
       <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">AvatarStudio</span>
     </div>
-    <div class="flex items-center gap-4">
-      <span class="text-xs bg-indigo-950 border border-indigo-800 text-indigo-300 px-3 py-1.5 rounded-full font-medium flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span> 50 Credits Available
+    <div class="flex items-center gap-3">
+      <!-- API Key Action Button -->
+      <button onclick="openApiKeyModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold px-3.5 py-2 rounded-lg border border-slate-700 transition-all flex items-center gap-2">
+        <i class="fa-solid fa-key text-indigo-400"></i>
+        <span>API Key</span>
+      </button>
+      
+      <span class="text-xs bg-indigo-950 border border-indigo-800 text-indigo-300 px-3 py-2 rounded-lg font-medium flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span> 50 Credits
       </span>
-      <button class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all shadow-md shadow-indigo-600/20">
+      <button class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all shadow-md shadow-indigo-600/20">
         Upgrade
       </button>
     </div>
@@ -48,34 +57,42 @@
             <i class="fa-solid fa-wand-magic-sparkles"></i> AI Enhance Script
           </button>
         </div>
-        <textarea id="scriptInput" rows="5" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none placeholder-slate-600" placeholder="Type or paste what you want your avatar to say here..."></textarea>
+        <textarea id="scriptInput" rows="5" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none placeholder-slate-600" placeholder="Type or paste what you want your avatar to say here...">Hello! Welcome to our avatar generator platform. I can speak naturally in high resolution.</textarea>
         <div class="flex justify-between items-center text-xs text-slate-500">
           <span>Supported languages: 29+</span>
-          <span id="charCounter">0 / 1000 characters</span>
+          <span id="charCounter">102 / 1000 characters</span>
         </div>
       </div>
 
       <!-- Voice Selection -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col gap-4 shadow-sm">
         <label class="font-semibold text-sm text-slate-200 flex items-center gap-2">
-          <i class="fa-solid fa-microphone text-indigo-400"></i> Voice Settings
+          <i class="fa-solid fa-microphone text-indigo-400"></i> Voice & Quality Settings
         </label>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label class="block text-xs font-medium text-slate-400 mb-2">Voice Model</label>
             <select id="voiceSelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="en-US-ChristopherNeural">Christopher (Male - Natural, US)</option>
-              <option value="en-US-JennyNeural">Jenny (Female - Professional, US)</option>
-              <option value="en-GB-SoniaNeural">Sonia (Female - Warm, UK)</option>
-              <option value="es-ES-AlvaroNeural">Alvaro (Male - Formal, ES)</option>
+              <option value="en-US-ChristopherNeural">Christopher (Male - US)</option>
+              <option value="en-US-JennyNeural">Jenny (Female - US)</option>
+              <option value="en-GB-SoniaNeural">Sonia (Female - UK)</option>
+              <option value="es-ES-AlvaroNeural">Alvaro (Male - ES)</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-400 mb-2">Pacing & Emotion</label>
+            <label class="block text-xs font-medium text-slate-400 mb-2">Pacing & Tone</label>
             <select class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
               <option>Neutral & Clear</option>
               <option>Friendly & Engaging</option>
               <option>Professional Presentation</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-2">Export Resolution</label>
+            <select id="qualitySelect" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="1080p">1080p Full HD (60 FPS)</option>
+              <option value="4k">4K Ultra HD (Studio Quality)</option>
+              <option value="720p">720p HD (Fast Render)</option>
             </select>
           </div>
         </div>
@@ -92,41 +109,72 @@
         
         <!-- Avatar Grid -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          
           <!-- Avatar 1 -->
-          <div class="avatar-card selected cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-2 transition-all hover:border-slate-700" onclick="selectAvatar(this, 'Sarah - Business Professional', 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400')">
-            <div class="aspect-[3/4] rounded-lg overflow-hidden bg-slate-800 mb-2">
+          <div class="avatar-card selected relative group cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-2 transition-all hover:border-slate-700" 
+               onclick="selectAvatar(this, 'Sarah - Business Professional', 'avatar_sarah_01', 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400')">
+            <div class="aspect-[3/4] rounded-lg overflow-hidden bg-slate-800 mb-2 relative">
               <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400" class="w-full h-full object-cover" alt="Sarah">
+              <!-- Quick Copy ID Overlay Button -->
+              <button onclick="copyAvatarId(event, 'avatar_sarah_01')" title="Copy Avatar ID" class="absolute top-2 right-2 bg-slate-900/80 hover:bg-indigo-600 text-slate-200 hover:text-white p-1.5 rounded-md text-xs backdrop-blur transition-all opacity-0 group-hover:opacity-100">
+                <i class="fa-regular fa-copy"></i>
+              </button>
             </div>
             <p class="text-xs font-medium text-slate-200 truncate">Sarah</p>
-            <p class="text-[10px] text-slate-500">Business Professional</p>
+            <div class="flex justify-between items-center mt-0.5">
+              <span class="text-[10px] text-slate-500 font-mono">ID: sarah_01</span>
+              <button onclick="copyAvatarId(event, 'avatar_sarah_01')" class="text-[10px] text-indigo-400 hover:underline">Copy ID</button>
+            </div>
           </div>
 
           <!-- Avatar 2 -->
-          <div class="avatar-card cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-2 transition-all hover:border-slate-700" onclick="selectAvatar(this, 'David - Executive', 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400')">
-            <div class="aspect-[3/4] rounded-lg overflow-hidden bg-slate-800 mb-2">
+          <div class="avatar-card relative group cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-2 transition-all hover:border-slate-700" 
+               onclick="selectAvatar(this, 'David - Executive', 'avatar_david_02', 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400')">
+            <div class="aspect-[3/4] rounded-lg overflow-hidden bg-slate-800 mb-2 relative">
               <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400" class="w-full h-full object-cover" alt="David">
+              <button onclick="copyAvatarId(event, 'avatar_david_02')" title="Copy Avatar ID" class="absolute top-2 right-2 bg-slate-900/80 hover:bg-indigo-600 text-slate-200 hover:text-white p-1.5 rounded-md text-xs backdrop-blur transition-all opacity-0 group-hover:opacity-100">
+                <i class="fa-regular fa-copy"></i>
+              </button>
             </div>
             <p class="text-xs font-medium text-slate-200 truncate">David</p>
-            <p class="text-[10px] text-slate-500">Corporate Presenter</p>
+            <div class="flex justify-between items-center mt-0.5">
+              <span class="text-[10px] text-slate-500 font-mono">ID: david_02</span>
+              <button onclick="copyAvatarId(event, 'avatar_david_02')" class="text-[10px] text-indigo-400 hover:underline">Copy ID</button>
+            </div>
           </div>
 
           <!-- Avatar 3 -->
-          <div class="avatar-card cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-2 transition-all hover:border-slate-700" onclick="selectAvatar(this, 'Elena - Casual Educator', 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400')">
-            <div class="aspect-[3/4] rounded-lg overflow-hidden bg-slate-800 mb-2">
+          <div class="avatar-card relative group cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-2 transition-all hover:border-slate-700" 
+               onclick="selectAvatar(this, 'Elena - Educator', 'avatar_elena_03', 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400')">
+            <div class="aspect-[3/4] rounded-lg overflow-hidden bg-slate-800 mb-2 relative">
               <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400" class="w-full h-full object-cover" alt="Elena">
+              <button onclick="copyAvatarId(event, 'avatar_elena_03')" title="Copy Avatar ID" class="absolute top-2 right-2 bg-slate-900/80 hover:bg-indigo-600 text-slate-200 hover:text-white p-1.5 rounded-md text-xs backdrop-blur transition-all opacity-0 group-hover:opacity-100">
+                <i class="fa-regular fa-copy"></i>
+              </button>
             </div>
             <p class="text-xs font-medium text-slate-200 truncate">Elena</p>
-            <p class="text-[10px] text-slate-500">Casual Educator</p>
+            <div class="flex justify-between items-center mt-0.5">
+              <span class="text-[10px] text-slate-500 font-mono">ID: elena_03</span>
+              <button onclick="copyAvatarId(event, 'avatar_elena_03')" class="text-[10px] text-indigo-400 hover:underline">Copy ID</button>
+            </div>
           </div>
 
           <!-- Avatar 4 -->
-          <div class="avatar-card cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-2 transition-all hover:border-slate-700" onclick="selectAvatar(this, 'Marcus - Tech Host', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400')">
-            <div class="aspect-[3/4] rounded-lg overflow-hidden bg-slate-800 mb-2">
+          <div class="avatar-card relative group cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-2 transition-all hover:border-slate-700" 
+               onclick="selectAvatar(this, 'Marcus - Tech Host', 'avatar_marcus_04', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400')">
+            <div class="aspect-[3/4] rounded-lg overflow-hidden bg-slate-800 mb-2 relative">
               <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" class="w-full h-full object-cover" alt="Marcus">
+              <button onclick="copyAvatarId(event, 'avatar_marcus_04')" title="Copy Avatar ID" class="absolute top-2 right-2 bg-slate-900/80 hover:bg-indigo-600 text-slate-200 hover:text-white p-1.5 rounded-md text-xs backdrop-blur transition-all opacity-0 group-hover:opacity-100">
+                <i class="fa-regular fa-copy"></i>
+              </button>
             </div>
             <p class="text-xs font-medium text-slate-200 truncate">Marcus</p>
-            <p class="text-[10px] text-slate-500">Technical Lead</p>
+            <div class="flex justify-between items-center mt-0.5">
+              <span class="text-[10px] text-slate-500 font-mono">ID: marcus_04</span>
+              <button onclick="copyAvatarId(event, 'avatar_marcus_04')" class="text-[10px] text-indigo-400 hover:underline">Copy ID</button>
+            </div>
           </div>
+
         </div>
       </div>
 
@@ -137,9 +185,13 @@
       <div class="flex flex-col gap-4">
         <div class="flex justify-between items-center">
           <h2 class="font-semibold text-sm text-slate-200 flex items-center gap-2">
-            <i class="fa-solid fa-play text-indigo-400"></i> Video Canvas
+            <i class="fa-solid fa-play text-indigo-400"></i> Studio Canvas
           </h2>
-          <span id="selectedAvatarLabel" class="text-xs text-slate-400 bg-slate-800 px-2.5 py-1 rounded-md">Sarah - Business Professional</span>
+          <div class="flex items-center gap-2">
+            <span id="activeAvatarId" class="text-[11px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded cursor-pointer hover:text-slate-200" onclick="copyAvatarId(event, currentAvatarId)" title="Click to copy ID">
+              ID: avatar_sarah_01
+            </span>
+          </div>
         </div>
 
         <!-- Preview Viewport -->
@@ -150,8 +202,8 @@
           <div id="renderOverlay" class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm hidden flex-col items-center justify-center p-6 text-center gap-4">
             <div class="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
             <div>
-              <p class="font-semibold text-sm text-slate-100">Rendering AI Avatar...</p>
-              <p class="text-xs text-slate-400 mt-1">Generating speech audio & lip-syncing frames</p>
+              <p class="font-semibold text-sm text-slate-100">Rendering High-Quality Avatar Video...</p>
+              <p class="text-xs text-slate-400 mt-1">Generating speech audio & high-res facial motion</p>
             </div>
             <div class="w-full bg-slate-800 rounded-full h-2 max-w-xs overflow-hidden">
               <div id="progressBar" class="bg-indigo-600 h-full w-0 transition-all duration-300"></div>
@@ -163,37 +215,180 @@
       <!-- Action Panel -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col gap-3">
         <button id="generateBtn" onclick="startGeneration()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2">
-          <i class="fa-solid fa-bolt"></i> Generate Avatar Video
+          <i class="fa-solid fa-bolt"></i> Generate High-Quality Video
         </button>
-        <p class="text-[11px] text-center text-slate-500">Estimated render time: ~15-30 seconds (1 credit per render)</p>
+        <p class="text-[11px] text-center text-slate-500">Render in 1080p/4K resolution • High precision lip-syncing</p>
       </div>
 
     </section>
   </main>
 
+  <!-- Video Output / Download Modal -->
+  <div id="videoModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col">
+      <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-circle-check text-emerald-400"></i>
+          <h3 class="font-semibold text-sm text-slate-100">Video Render Ready</h3>
+        </div>
+        <button onclick="closeVideoModal()" class="text-slate-400 hover:text-white text-lg px-2">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      
+      <div class="p-6 flex flex-col gap-5">
+        <!-- Sample High Quality Video Output -->
+        <div class="aspect-video bg-black rounded-xl overflow-hidden relative shadow-inner">
+          <video id="modalVideoPlayer" controls class="w-full h-full object-cover" poster="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800">
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+            Your browser does not support video playback.
+          </video>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-between items-center bg-slate-950 p-4 rounded-xl border border-slate-800">
+          <div>
+            <p class="text-xs font-semibold text-slate-200">Export Specs:</p>
+            <p class="text-[11px] text-slate-400">1080p MP4 • 60 FPS • High Bitrate H.264 Audio/Video</p>
+          </div>
+          <div class="flex gap-2 w-full sm:w-auto">
+            <!-- Direct Download Button -->
+            <a id="downloadVideoBtn" href="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" download="Avatar_Video_1080p.mp4" class="flex-1 sm:flex-initial bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs px-4 py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 shadow-md shadow-indigo-600/20">
+              <i class="fa-solid fa-download"></i> Download HQ Video
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Key Modal -->
+  <div id="apiKeyModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 flex flex-col gap-5 shadow-2xl">
+      <div class="flex justify-between items-center">
+        <h3 class="font-semibold text-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-key text-indigo-400"></i> Developer API Secret Key
+        </h3>
+        <button onclick="closeApiKeyModal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-400">Use this API Key to authenticate requests from your Python backend or external HTTP clients.</p>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-[11px] font-mono text-slate-400">Active API Key</label>
+        <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl p-2.5">
+          <input id="apiKeyInput" type="password" value="hg_live_9f8a7b6c5d4e3f2a1b0c9d8e7f" readonly class="bg-transparent text-xs text-slate-300 font-mono flex-1 focus:outline-none">
+          <button onclick="toggleApiKeyVisibility()" class="text-slate-400 hover:text-slate-200 px-1 text-xs">
+            <i id="apiKeyEyeIcon" class="fa-regular fa-eye"></i>
+          </button>
+          <button onclick="copyApiKey()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-1.5 rounded-lg transition-all font-medium flex items-center gap-1.5">
+            <i class="fa-regular fa-copy"></i> Copy
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-slate-950/50 border border-slate-800 rounded-lg p-3 text-[11px] text-slate-400">
+        <p><span class="text-indigo-400 font-semibold">Header format:</span></p>
+        <code class="text-slate-300 block mt-1">Authorization: Bearer hg_live_9f8a...</code>
+      </div>
+    </div>
+  </div>
+
   <script>
+    let currentAvatarId = 'avatar_sarah_01';
+
     // Character Counter
     const scriptInput = document.getElementById('scriptInput');
     const charCounter = document.getElementById('charCounter');
-
     scriptInput.addEventListener('input', () => {
-      const len = scriptInput.value.length;
-      charCounter.textContent = `${len} / 1000 characters`;
+      charCounter.textContent = `${scriptInput.value.length} / 1000 characters`;
     });
 
-    // Avatar Selection logic
-    function selectAvatar(element, name, imageUrl) {
+    // Toast Notification Utility
+    function showToast(message, icon = 'fa-check') {
+      const toastContainer = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'bg-slate-800 border border-slate-700 text-slate-100 text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 pointer-events-auto transform transition-all duration-300 translate-y-2 opacity-0';
+      toast.innerHTML = `<i class="fa-solid ${icon} text-indigo-400"></i> <span>${message}</span>`;
+      
+      toastContainer.appendChild(toast);
+      
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Copy Avatar ID Function
+    function copyAvatarId(event, avatarId) {
+      event.stopPropagation(); // Stop parent card click event
+      navigator.clipboard.writeText(avatarId).then(() => {
+        showToast(`Copied Avatar ID: <strong>${avatarId}</strong>`, 'fa-copy');
+      });
+    }
+
+    // Avatar Selection
+    function selectAvatar(element, name, avatarId, imageUrl) {
       document.querySelectorAll('.avatar-card').forEach(card => card.classList.remove('selected'));
       element.classList.add('selected');
-      document.getElementById('selectedAvatarLabel').textContent = name;
+      currentAvatarId = avatarId;
+      document.getElementById('activeAvatarId').textContent = `ID: ${avatarId}`;
       document.getElementById('previewImage').src = imageUrl;
     }
 
-    // Simulate AI Video Generation Pipeline
+    // API Key Modal Controls
+    function openApiKeyModal() {
+      document.getElementById('apiKeyModal').classList.remove('hidden');
+      document.getElementById('apiKeyModal').classList.add('flex');
+    }
+
+    function closeApiKeyModal() {
+      document.getElementById('apiKeyModal').classList.add('hidden');
+      document.getElementById('apiKeyModal').classList.remove('flex');
+    }
+
+    function toggleApiKeyVisibility() {
+      const apiKeyInput = document.getElementById('apiKeyInput');
+      const eyeIcon = document.getElementById('apiKeyEyeIcon');
+      if (apiKeyInput.type === 'password') {
+        apiKeyInput.type = 'text';
+        eyeIcon.className = 'fa-regular fa-eye-slash';
+      } else {
+        apiKeyInput.type = 'password';
+        eyeIcon.className = 'fa-regular fa-eye';
+      }
+    }
+
+    function copyApiKey() {
+      const apiKeyInput = document.getElementById('apiKeyInput');
+      navigator.clipboard.writeText(apiKeyInput.value).then(() => {
+        showToast('API Key copied to clipboard!', 'fa-key');
+      });
+    }
+
+    // Video Output Modal Controls
+    function openVideoModal() {
+      document.getElementById('videoModal').classList.remove('hidden');
+      document.getElementById('videoModal').classList.add('flex');
+    }
+
+    function closeVideoModal() {
+      const videoPlayer = document.getElementById('modalVideoPlayer');
+      videoPlayer.pause();
+      document.getElementById('videoModal').classList.add('hidden');
+      document.getElementById('videoModal').classList.remove('flex');
+    }
+
+    // Generation Process Simulation
     function startGeneration() {
       const script = scriptInput.value.trim();
       if (!script) {
-        alert('Please enter a script before generating.');
+        showToast('Please enter a script before generating.', 'fa-exclamation-triangle');
         return;
       }
 
@@ -207,7 +402,7 @@
 
       let progress = 0;
       const interval = setInterval(() => {
-        progress += 5;
+        progress += 10;
         progressBar.style.width = `${progress}%`;
 
         if (progress >= 100) {
@@ -217,10 +412,10 @@
             overlay.classList.remove('flex');
             generateBtn.disabled = false;
             progressBar.style.width = '0%';
-            alert('Video generation complete! In production, this plays the rendered MP4.');
-          }, 400);
+            openVideoModal();
+          }, 300);
         }
-      }, 150);
+      }, 200);
     }
   </script>
 </body>
