@@ -3,498 +3,616 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Gemini Clone</title>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  
+  <title>HD Human Avatar Generator</title>
   <style>
     :root {
-      --bg-primary: #131314;
-      --bg-secondary: #1e1f20;
-      --bg-hover: #282a2c;
-      --text-primary: #e3e3e3;
-      --text-secondary: #c4c7c5;
-      --border-color: #444746;
-      --accent-gradient: linear-gradient(135deg, #4285f4, #9b51e0, #d93025);
-      --card-bg: #1e1f20;
-      --input-bg: #1e1f20;
-      --sidebar-width: 280px;
-    }
-
-    [data-theme="light"] {
-      --bg-primary: #ffffff;
-      --bg-secondary: #f0f4f9;
-      --bg-hover: #e1e5ea;
-      --text-primary: #1f1f1f;
-      --text-secondary: #444746;
-      --border-color: #c4c7c5;
-      --card-bg: #f0f4f9;
-      --input-bg: #f0f4f9;
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #334155;
+      --accent-color: #6366f1;
+      --accent-hover: #4f46e5;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #475569;
+      --radius: 12px;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Google Sans', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     }
 
     body {
       background-color: var(--bg-primary);
-      color: var(--text-primary);
+      color: var(--text-main);
+      min-height: 100vh;
       display: flex;
-      height: 100vh;
-      overflow: hidden;
+      flex-direction: column;
     }
 
-    /* Sidebar */
-    .sidebar {
-      width: 68px;
+    header {
+      padding: 1.5rem 2rem;
       background-color: var(--bg-secondary);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 16px 12px;
-      transition: width 0.3s ease;
-      z-index: 100;
-    }
-
-    .sidebar.expanded {
-      width: var(--sidebar-width);
-    }
-
-    .sidebar-top, .sidebar-bottom {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .icon-btn {
-      background: none;
-      border: none;
-      color: var(--text-primary);
-      padding: 10px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-
-    .icon-btn:hover {
-      background-color: var(--bg-hover);
-    }
-
-    .new-chat-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      border: 1px solid var(--border-color);
-      padding: 10px 16px;
-      border-radius: 28px;
-      cursor: pointer;
-      margin-top: 16px;
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    .sidebar:not(.expanded) .new-chat-btn span:not(.material-symbols-outlined) {
-      display: none;
-    }
-
-    /* Main Container */
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    /* Header */
-    .header {
+      border-bottom: 1px solid var(--border-color);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 24px;
     }
 
-    .header .title {
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--text-secondary);
-    }
-
-    /* Chat View */
-    .chat-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .chat-wrapper {
-      width: 100%;
-      max-width: 800px;
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-      padding-bottom: 120px;
-    }
-
-    /* Welcome Container */
-    .welcome-container {
-      margin-top: 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-    }
-
-    .greeting-text {
-      font-size: 56px;
-      font-weight: 500;
-      line-height: 1.2;
-    }
-
-    .gradient-text {
-      background: var(--accent-gradient);
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #a5b4fc, #6366f1);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .suggestion-cards {
+    .main-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
+      grid-template-columns: 1fr 420px;
+      gap: 2rem;
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
     }
 
-    .card {
-      background-color: var(--card-bg);
-      padding: 16px;
-      border-radius: 12px;
-      cursor: pointer;
+    @media (max-width: 968px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Preview Section */
+    .preview-card {
+      background-color: var(--bg-secondary);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      padding: 2rem;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      height: 180px;
-      transition: background 0.2s;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 2rem;
+      max-height: calc(100vh - 8rem);
     }
 
-    .card:hover {
-      background-color: var(--bg-hover);
-    }
-
-    .card p {
-      font-size: 14px;
-      color: var(--text-primary);
-    }
-
-    .card .material-symbols-outlined {
-      align-self: flex-end;
-      background: var(--bg-primary);
-      padding: 8px;
+    .svg-wrapper {
+      width: 100%;
+      max-width: 380px;
+      aspect-ratio: 1;
       border-radius: 50%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      background: #e2e8f0;
+      transition: transform 0.2s ease;
     }
 
-    /* Chat Message Elements */
-    .message {
+    .svg-wrapper svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .action-buttons {
       display: flex;
-      gap: 16px;
-      margin-top: 16px;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 380px;
     }
 
-    .message.user {
-      justify-content: flex-end;
+    .btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
     }
 
-    .message.user .message-content {
+    .btn-primary {
+      background-color: var(--accent-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--border-color);
+    }
+
+    /* Controls Panel */
+    .controls-card {
       background-color: var(--bg-secondary);
-      border-radius: 18px 18px 4px 18px;
-      padding: 12px 18px;
-      max-width: 70%;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      overflow-y: auto;
     }
 
-    .message.model {
-      justify-content: flex-start;
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .message.model .avatar {
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.5rem 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background-color: var(--bg-card);
+      color: var(--text-main);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .control-group label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .opt-btn {
+      aspect-ratio: 1;
+      background-color: var(--bg-card);
+      border: 2px solid transparent;
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .opt-btn:hover {
+      border-color: var(--text-muted);
+    }
+
+    .opt-btn.active {
+      border-color: var(--accent-color);
+      background-color: rgba(99, 102, 241, 0.15);
+    }
+
+    .color-picker-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .color-swatch {
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: var(--accent-gradient);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s ease;
     }
 
-    .message.model .message-content {
-      max-width: 85%;
-      line-height: 1.6;
+    .color-swatch:hover {
+      transform: scale(1.1);
     }
 
-    pre {
-      background-color: #000;
-      padding: 12px;
-      border-radius: 8px;
-      overflow-x: auto;
-      margin: 10px 0;
+    .color-swatch.active {
+      border-color: #ffffff;
+      box-shadow: 0 0 0 2px var(--accent-color);
     }
 
-    code {
-      font-family: monospace;
-    }
-
-    /* Input Dock */
-    .input-container {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: center;
-      padding: 16px;
-      background: linear-gradient(180deg, transparent 0%, var(--bg-primary) 40%);
-    }
-
-    .input-box {
-      width: 100%;
-      max-width: 800px;
-      background-color: var(--input-bg);
-      border-radius: 28px;
-      padding: 12px 16px;
-      display: flex;
+    .tab-content {
+      display: none;
       flex-direction: column;
-      gap: 8px;
-      border: 1px solid transparent;
-      transition: border-color 0.2s;
+      gap: 1.5rem;
     }
 
-    .input-box:focus-within {
-      border-color: var(--border-color);
-    }
-
-    .input-box textarea {
-      background: none;
-      border: none;
-      outline: none;
-      color: var(--text-primary);
-      font-size: 16px;
-      resize: none;
-      max-height: 150px;
-      height: 24px;
-    }
-
-    .input-actions {
+    .tab-content.active {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .input-tools {
-      display: flex;
-      gap: 8px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-top">
-      <button class="icon-btn" id="menu-btn"><span class="material-symbols-outlined">menu</span></button>
-      <button class="new-chat-btn" id="new-chat-btn">
-        <span class="material-symbols-outlined">add</span>
-        <span>New chat</span>
-      </button>
-    </div>
-    <div class="sidebar-bottom">
-      <button class="icon-btn" id="theme-btn"><span class="material-symbols-outlined">dark_mode</span></button>
-      <button class="icon-btn"><span class="material-symbols-outlined">settings</span></button>
-    </div>
-  </aside>
+  <header>
+    <h1>Vector Human Avatar Generator</h1>
+    <button class="btn btn-secondary" onclick="randomizeAvatar()">🎲 Randomize</button>
+  </header>
 
-  <!-- Main View -->
-  <main class="main-content">
-    <header class="header">
-      <div class="title">Gemini</div>
-      <button class="icon-btn"><span class="material-symbols-outlined">account_circle</span></button>
-    </header>
+  <main class="main-container">
+    <!-- Left: Canvas Preview -->
+    <section class="preview-card">
+      <div class="svg-wrapper" id="avatarContainer">
+        <!-- SVG will be rendered dynamically here -->
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-primary" onclick="downloadSVG()">Download SVG</button>
+        <button class="btn btn-secondary" onclick="downloadPNG()">Download PNG</button>
+      </div>
+    </section>
 
-    <div class="chat-container">
-      <div class="chat-wrapper" id="chat-wrapper">
-        
-        <!-- Default Welcome View -->
-        <div class="welcome-container" id="welcome-container">
-          <div class="greeting-text">
-            <span class="gradient-text">Hello, Dev</span><br>
-            <span style="color: var(--text-secondary);">How can I help you today?</span>
-          </div>
+    <!-- Right: Customization Controls -->
+    <section class="controls-card">
+      <nav class="tabs">
+        <button class="tab-btn active" onclick="switchTab('face')">Face</button>
+        <button class="tab-btn" onclick="switchTab('hair')">Hair</button>
+        <button class="tab-btn" onclick="switchTab('eyes')">Eyes</button>
+        <button class="tab-btn" onclick="switchTab('style')">Style</button>
+      </nav>
 
-          <div class="suggestion-cards">
-            <div class="card" onclick="sendSuggested('Suggest a quiet, scenic road trip itinerary')">
-              <p>Suggest a quiet, scenic road trip itinerary</p>
-              <span class="material-symbols-outlined">compass_calibration</span>
-            </div>
-            <div class="card" onclick="sendSuggested('Summarize the concept of urban planning')">
-              <p>Summarize the concept of urban planning</p>
-              <span class="material-symbols-outlined">draw</span>
-            </div>
-            <div class="card" onclick="sendSuggested('Provide Javascript code for an image carousel')">
-              <p>Provide Javascript code for an image carousel</p>
-              <span class="material-symbols-outlined">code</span>
-            </div>
-          </div>
+      <!-- TAB 1: Face -->
+      <div id="tab-face" class="tab-content active">
+        <div class="control-group">
+          <label>Skin Tone</label>
+          <div class="color-picker-grid" id="skinColors"></div>
         </div>
 
-      </div>
-    </div>
-
-    <!-- Input Bar -->
-    <div class="input-container">
-      <div class="input-box">
-        <textarea id="user-input" rows="1" placeholder="Ask Gemini..."></textarea>
-        <div class="input-actions">
-          <div class="input-tools">
-            <button class="icon-btn"><span class="material-symbols-outlined">add_photo_alternate</span></button>
-            <button class="icon-btn"><span class="material-symbols-outlined">mic</span></button>
-          </div>
-          <button class="icon-btn" id="send-btn"><span class="material-symbols-outlined">send</span></button>
+        <div class="control-group">
+          <label>Background Color</label>
+          <div class="color-picker-grid" id="bgColors"></div>
         </div>
       </div>
-    </div>
+
+      <!-- TAB 2: Hair -->
+      <div id="tab-hair" class="tab-content">
+        <div class="control-group">
+          <label>Hair Style</label>
+          <div class="options-grid" id="hairStyles"></div>
+        </div>
+
+        <div class="control-group">
+          <label>Hair Color</label>
+          <div class="color-picker-grid" id="hairColors"></div>
+        </div>
+
+        <div class="control-group">
+          <label>Facial Hair</label>
+          <div class="options-grid" id="facialHairStyles"></div>
+        </div>
+      </div>
+
+      <!-- TAB 3: Eyes & Expressions -->
+      <div id="tab-eyes" class="tab-content">
+        <div class="control-group">
+          <label>Eyes</label>
+          <div class="options-grid" id="eyeStyles"></div>
+        </div>
+
+        <div class="control-group">
+          <label>Eyebrows</label>
+          <div class="options-grid" id="eyebrowStyles"></div>
+        </div>
+
+        <div class="control-group">
+          <label>Mouth</label>
+          <div class="options-grid" id="mouthStyles"></div>
+        </div>
+      </div>
+
+      <!-- TAB 4: Accessories -->
+      <div id="tab-style" class="tab-content">
+        <div class="control-group">
+          <label>Eyewear</label>
+          <div class="options-grid" id="glassesStyles"></div>
+        </div>
+
+        <div class="control-group">
+          <label>Clothing Color</label>
+          <div class="color-picker-grid" id="clothColors"></div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script>
-    // System Configurations & State
-    const API_KEY = "YOUR_GEMINI_API_KEY"; // Replace with your actual Google Gemini API Key
-    const sidebar = document.getElementById('sidebar');
-    const menuBtn = document.getElementById('menu-btn');
-    const themeBtn = document.getElementById('theme-btn');
-    const newChatBtn = document.getElementById('new-chat-btn');
-    const userInput = document.getElementById('user-input');
-    const sendBtn = document.getElementById('send-btn');
-    const chatWrapper = document.getElementById('chat-wrapper');
-    const welcomeContainer = document.getElementById('welcome-container');
+    // Asset Palette & Options Definition
+    const PALETTES = {
+      skin: ['#fdbcb4', '#f1c27d', '#e0ac69', '#c68642', '#8d5524', '#523315'],
+      bg: ['#6366f1', '#ec4899', '#14b8a6', '#f59e0b', '#8b5cf6', '#3b82f6', '#10b981', '#334155'],
+      hair: ['#090806', '#2c222b', '#716355', '#b7a282', '#a56b46', '#b55239', '#e6cea8', '#888888'],
+      clothing: ['#1e293b', '#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#ffffff']
+    };
 
-    // UI Logic: Sidebar Toggle
-    menuBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('expanded');
-    });
+    const AVATAR_STATE = {
+      skinColor: PALETTES.skin[1],
+      bgColor: PALETTES.bg[0],
+      hairStyle: 1,
+      hairColor: PALETTES.hair[0],
+      facialHairStyle: 0,
+      eyeStyle: 0,
+      eyebrowStyle: 0,
+      mouthStyle: 0,
+      glassesStyle: 0,
+      clothColor: PALETTES.clothing[1]
+    };
 
-    // UI Logic: Dark/Light Mode
-    themeBtn.addEventListener('click', () => {
-      const isDark = document.body.getAttribute('data-theme') !== 'light';
-      document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-      themeBtn.querySelector('span').textContent = isDark ? 'light_mode' : 'dark_mode';
-    });
+    // Vector Graphics Renderer Engine
+    function renderSVG() {
+      const { skinColor, bgColor, hairStyle, hairColor, facialHairStyle, eyeStyle, eyebrowStyle, mouthStyle, glassesStyle, clothColor } = AVATAR_STATE;
 
-    // UI Logic: Auto-expand Input Box
-    userInput.addEventListener('input', () => {
-      userInput.style.height = 'auto';
-      userInput.style.height = Math.min(userInput.scrollHeight, 150) + 'px';
-    });
+      // Base Head Path
+      const headSVG = `<path d="M 120 140 C 120 70, 280 70, 280 140 C 280 230, 260 280, 200 280 C 140 280, 120 230, 120 140 Z" fill="${skinColor}" />`;
+      
+      // Ears
+      const earsSVG = `
+        <ellipse cx="115" cy="170" rx="12" ry="20" fill="${skinColor}" />
+        <ellipse cx="285" cy="170" rx="12" ry="20" fill="${skinColor}" />
+      `;
 
-    // Enter Key Handler
-    userInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        handleSendMessage();
-      }
-    });
+      // Neck & Shoulders / Clothes
+      const bodySVG = `
+        <path d="M 170 260 L 230 260 L 230 320 L 170 320 Z" fill="${skinColor}" />
+        <path d="M 80 400 C 80 310, 130 300, 200 300 C 270 300, 320 310, 320 400 Z" fill="${clothColor}" />
+      `;
 
-    sendBtn.addEventListener('click', handleSendMessage);
-
-    newChatBtn.addEventListener('click', () => {
-      chatWrapper.innerHTML = '';
-      chatWrapper.appendChild(welcomeContainer);
-      welcomeContainer.style.display = 'flex';
-    });
-
-    function sendSuggested(text) {
-      userInput.value = text;
-      handleSendMessage();
-    }
-
-    // Message Rendering Engine
-    async function handleSendMessage() {
-      const prompt = userInput.value.trim();
-      if (!prompt) return;
-
-      // Hide landing page on first message
-      welcomeContainer.style.display = 'none';
-
-      // Clear & reset input
-      userInput.value = '';
-      userInput.style.height = '24px';
-
-      // Append User Bubble
-      appendMessage(prompt, 'user');
-
-      // Append Empty Model Bubble for streaming
-      const modelBubble = appendMessage("Thinking...", 'model');
-
-      // Process API Call
-      try {
-        if (API_KEY === "YOUR_GEMINI_API_KEY") {
-          // Mock response fallback if no API key set
-          setTimeout(() => {
-            modelBubble.innerHTML = marked.parse(`This is a mock Gemini response to: **"${prompt}"**.\n\nTo fetch real responses, add your free **Gemini API key** inside the HTML source code.`);
-          }, 1000);
-        } else {
-          await fetchGeminiResponse(prompt, modelBubble);
-        }
-      } catch (err) {
-        modelBubble.textContent = "Error: Could not retrieve response from Gemini API.";
-        console.error(err);
-      }
-    }
-
-    function appendMessage(text, sender) {
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${sender}`;
-
-      if (sender === 'user') {
-        messageDiv.innerHTML = `<div class="message-content">${text}</div>`;
-      } else {
-        messageDiv.innerHTML = `
-          <div class="avatar"><span class="material-symbols-outlined" style="color:white; font-size: 20px;">sparkles</span></div>
-          <div class="message-content">${marked.parse(text)}</div>
+      // Eyes
+      let eyesSVG = '';
+      if (eyeStyle === 0) { // Normal
+        eyesSVG = `
+          <circle cx="160" cy="165" r="8" fill="#1e293b" />
+          <circle cx="240" cy="165" r="8" fill="#1e293b" />
+          <circle cx="162" cy="163" r="2.5" fill="#ffffff" />
+          <circle cx="242" cy="163" r="2.5" fill="#ffffff" />
+        `;
+      } else if (eyeStyle === 1) { // Happy
+        eyesSVG = `
+          <path d="M 148 165 Q 160 150 172 165" stroke="#1e293b" stroke-width="4" stroke-linecap="round" fill="none" />
+          <path d="M 228 165 Q 240 150 252 165" stroke="#1e293b" stroke-width="4" stroke-linecap="round" fill="none" />
+        `;
+      } else if (eyeStyle === 2) { // Wink
+        eyesSVG = `
+          <circle cx="160" cy="165" r="8" fill="#1e293b" />
+          <circle cx="162" cy="163" r="2.5" fill="#ffffff" />
+          <path d="M 228 165 Q 240 152 252 165" stroke="#1e293b" stroke-width="4" stroke-linecap="round" fill="none" />
         `;
       }
 
-      chatWrapper.appendChild(messageDiv);
-      chatWrapper.scrollTop = chatWrapper.scrollHeight;
-      return messageDiv.querySelector('.message-content');
+      // Eyebrows
+      let eyebrowsSVG = '';
+      if (eyebrowStyle === 0) { // Neutral
+        eyebrowsSVG = `
+          <path d="M 145 148 Q 160 142 175 148" stroke="${hairColor}" stroke-width="4" stroke-linecap="round" fill="none" />
+          <path d="M 225 148 Q 240 142 255 148" stroke="${hairColor}" stroke-width="4" stroke-linecap="round" fill="none" />
+        `;
+      } else if (eyebrowStyle === 1) { // Confident
+        eyebrowsSVG = `
+          <path d="M 145 152 Q 160 140 175 145" stroke="${hairColor}" stroke-width="4" stroke-linecap="round" fill="none" />
+          <path d="M 225 145 Q 240 140 255 152" stroke="${hairColor}" stroke-width="4" stroke-linecap="round" fill="none" />
+        `;
+      }
+
+      // Nose
+      const noseSVG = `<path d="M 196 175 Q 200 195 204 195 Q 208 195 204 200" stroke="#00000022" stroke-width="3" stroke-linecap="round" fill="none" />`;
+
+      // Mouth
+      let mouthSVG = '';
+      if (mouthStyle === 0) { // Smile
+        mouthSVG = `<path d="M 170 220 Q 200 245 230 220" stroke="#1e293b" stroke-width="4" stroke-linecap="round" fill="none" />`;
+      } else if (mouthStyle === 1) { // Open Smile
+        mouthSVG = `<path d="M 170 215 Q 200 250 230 215 Z" fill="#1e293b" />`;
+      } else if (mouthStyle === 2) { // Neutral
+        mouthSVG = `<path d="M 175 225 L 225 225" stroke="#1e293b" stroke-width="4" stroke-linecap="round" fill="none" />`;
+      }
+
+      // Hair Styles
+      let hairSVG = '';
+      if (hairStyle === 1) { // Short
+        hairSVG = `<path d="M 120 140 C 110 80, 160 60, 200 60 C 240 60, 290 80, 280 140 C 270 100, 240 80, 200 80 C 160 80, 130 100, 120 140 Z" fill="${hairColor}" />`;
+      } else if (hairStyle === 2) { // Long
+        hairSVG = `
+          <path d="M 115 140 C 110 70, 290 70, 285 140 C 290 220, 295 280, 275 300 C 265 240, 275 120, 200 75 C 125 120, 135 240, 125 300 C 105 280, 110 220, 115 140 Z" fill="${hairColor}" />
+        `;
+      } else if (hairStyle === 3) { // Curly / Volume
+        hairSVG = `
+          <circle cx="200" cy="100" r="60" fill="${hairColor}" />
+          <circle cx="150" cy="110" r="45" fill="${hairColor}" />
+          <circle cx="250" cy="110" r="45" fill="${hairColor}" />
+        `;
+      }
+
+      // Facial Hair
+      let facialHairSVG = '';
+      if (facialHairStyle === 1) { // Beard
+        facialHairSVG = `<path d="M 130 190 C 130 280, 270 280, 270 190 C 270 240, 250 285, 200 285 C 150 285, 130 240, 130 190 Z" fill="${hairColor}" opacity="0.9" />`;
+      } else if (facialHairStyle === 2) { // Mustache
+        facialHairSVG = `<path d="M 170 210 Q 200 215 200 222 Q 200 215 230 210 Q 200 200 170 210 Z" fill="${hairColor}" />`;
+      }
+
+      // Glasses / Accessories
+      let glassesSVG = '';
+      if (glassesStyle === 1) { // Modern Glasses
+        glassesSVG = `
+          <rect x="140" y="150" width="45" height="30" rx="6" stroke="#1e293b" stroke-width="4" fill="none" />
+          <rect x="215" y="150" width="45" height="30" rx="6" stroke="#1e293b" stroke-width="4" fill="none" />
+          <line x1="185" y1="162" x2="215" y2="162" stroke="#1e293b" stroke-width="4" />
+          <line x1="115" y1="162" x2="140" y2="162" stroke="#1e293b" stroke-width="3" />
+          <line x1="260" y1="162" x2="285" y2="162" stroke="#1e293b" stroke-width="3" />
+        `;
+      } else if (glassesStyle === 2) { // Sunglasses
+        glassesSVG = `
+          <path d="M 135 150 L 190 150 L 180 180 L 145 180 Z" fill="#1e293b" />
+          <path d="M 210 150 L 265 150 L 255 180 L 220 180 Z" fill="#1e293b" />
+          <line x1="190" y1="155" x2="210" y2="155" stroke="#1e293b" stroke-width="4" />
+        `;
+      }
+
+      // Assemble final SVG string
+      return `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+          <rect width="400" height="400" fill="${bgColor}" />
+          ${bodySVG}
+          ${earsSVG}
+          ${headSVG}
+          ${eyebrowsSVG}
+          ${eyesSVG}
+          ${noseSVG}
+          ${mouthSVG}
+          ${facialHairSVG}
+          ${hairSVG}
+          ${glassesSVG}
+        </svg>
+      `;
     }
 
-    // Direct Integration with Gemini REST API
-    async function fetchGeminiResponse(prompt, targetElement) {
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-      
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
-      });
+    // UI Controller & Render Operations
+    function updateAvatar() {
+      document.getElementById('avatarContainer').innerHTML = renderSVG();
+    }
 
-      const data = await response.json();
-      if (data.candidates && data.candidates[0].content.parts[0].text) {
-        const replyText = data.candidates[0].content.parts[0].text;
-        targetElement.innerHTML = marked.parse(replyText);
-      } else {
-        targetElement.textContent = "Unable to process response structure.";
+    function buildColorPickers(containerId, colors, stateKey) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      colors.forEach(color => {
+        const swatch = document.createElement('div');
+        swatch.className = `color-swatch ${AVATAR_STATE[stateKey] === color ? 'active' : ''}`;
+        swatch.style.backgroundColor = color;
+        swatch.onclick = () => {
+          AVATAR_STATE[stateKey] = color;
+          document.querySelectorAll(`#${containerId} .color-swatch`).forEach(s => s.classList.remove('active'));
+          swatch.classList.add('active');
+          updateAvatar();
+        };
+        container.appendChild(swatch);
+      });
+    }
+
+    function buildOptionGrid(containerId, count, stateKey, labelPrefix = '') {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        const btn = document.createElement('button');
+        btn.className = `opt-btn ${AVATAR_STATE[stateKey] === i ? 'active' : ''}`;
+        btn.textContent = i === 0 ? 'None' : `${labelPrefix} ${i}`;
+        btn.onclick = () => {
+          AVATAR_STATE[stateKey] = i;
+          document.querySelectorAll(`#${containerId} .opt-btn`).forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          updateAvatar();
+        };
+        container.appendChild(btn);
       }
     }
+
+    function initUI() {
+      buildColorPickers('skinColors', PALETTES.skin, 'skinColor');
+      buildColorPickers('bgColors', PALETTES.bg, 'bgColor');
+      buildColorPickers('hairColors', PALETTES.hair, 'hairColor');
+      buildColorPickers('clothColors', PALETTES.clothing, 'clothColor');
+
+      buildOptionGrid('hairStyles', 4, 'hairStyle', 'Style');
+      buildOptionGrid('facialHairStyles', 3, 'facialHairStyle', 'Style');
+      buildOptionGrid('eyeStyles', 3, 'eyeStyle', 'Type');
+      buildOptionGrid('eyebrowStyles', 2, 'eyebrowStyle', 'Type');
+      buildOptionGrid('mouthStyles', 3, 'mouthStyle', 'Type');
+      buildOptionGrid('glassesStyles', 3, 'glassesStyle', 'Style');
+
+      updateAvatar();
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+    }
+
+    function randomizeAvatar() {
+      AVATAR_STATE.skinColor = PALETTES.skin[Math.floor(Math.random() * PALETTES.skin.length)];
+      AVATAR_STATE.bgColor = PALETTES.bg[Math.floor(Math.random() * PALETTES.bg.length)];
+      AVATAR_STATE.hairColor = PALETTES.hair[Math.floor(Math.random() * PALETTES.hair.length)];
+      AVATAR_STATE.clothColor = PALETTES.clothing[Math.floor(Math.random() * PALETTES.clothing.length)];
+      
+      AVATAR_STATE.hairStyle = Math.floor(Math.random() * 4);
+      AVATAR_STATE.facialHairStyle = Math.floor(Math.random() * 3);
+      AVATAR_STATE.eyeStyle = Math.floor(Math.random() * 3);
+      AVATAR_STATE.eyebrowStyle = Math.floor(Math.random() * 2);
+      AVATAR_STATE.mouthStyle = Math.floor(Math.random() * 3);
+      AVATAR_STATE.glassesStyle = Math.floor(Math.random() * 3);
+
+      initUI();
+    }
+
+    // Export Handlers
+    function downloadSVG() {
+      const svgData = renderSVG();
+      const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'avatar.svg';
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function downloadPNG() {
+      const svgData = renderSVG();
+      const canvas = document.createElement('canvas');
+      canvas.width = 800; // High Definition Canvas output
+      canvas.height = 800;
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, 800, 800);
+        const pngUrl = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = pngUrl;
+        link.download = 'avatar-hd.png';
+        link.click();
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+    }
+
+    // Initialize application on load
+    window.onload = initUI;
   </script>
 </body>
 </html>
