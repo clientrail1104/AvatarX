@@ -1,299 +1,1429 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Multimodal Voice & Chat Assistant</title>
-  <style>
-    :root {
-      --bg-primary: #0f172a;
-      --bg-surface: #1e293b;
-      --bg-card: #334155;
-      --accent-cyan: #38bdf8;
-      --accent-purple: #a855f7;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: #475569;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EnableX AI Assistant</title>
+
+<style>
+:root{
+    --bg:#07090d;
+    --panel:#0d1118;
+    --panel2:#11161f;
+    --border:rgba(255,255,255,.08);
+    --text:#f5f7fb;
+    --muted:#8d96a6;
+    --accent:#7c5cff;
+    --accent2:#29d9ff;
+    --success:#36d399;
+    --danger:#ff647c;
+    --radius:20px;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:
+        radial-gradient(circle at 70% 20%,rgba(124,92,255,.10),transparent 28%),
+        radial-gradient(circle at 20% 80%,rgba(41,217,255,.06),transparent 25%),
+        var(--bg);
+    color:var(--text);
+}
+
+button,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.app{
+    height:100vh;
+    display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:250px;
+    border-right:1px solid var(--border);
+    background:rgba(7,9,13,.82);
+    backdrop-filter:blur(30px);
+    display:flex;
+    flex-direction:column;
+    padding:22px 16px;
+    flex-shrink:0;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:4px 10px 28px;
+}
+
+.logo-mark{
+    width:30px;
+    height:30px;
+    border-radius:9px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:grid;
+    place-items:center;
+    font-weight:800;
+    color:white;
+    box-shadow:0 0 25px rgba(124,92,255,.35);
+}
+
+.logo span{
+    font-size:18px;
+    font-weight:700;
+    letter-spacing:-.4px;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.nav button{
+    border:0;
+    background:transparent;
+    color:var(--muted);
+    text-align:left;
+    padding:12px 13px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    transition:.2s;
+}
+
+.nav button:hover{
+    background:rgba(255,255,255,.05);
+    color:white;
+}
+
+.nav button.active{
+    background:rgba(124,92,255,.14);
+    color:white;
+}
+
+.nav-icon{
+    width:20px;
+    text-align:center;
+}
+
+.sidebar-bottom{
+    margin-top:auto;
+}
+
+.user{
+    border-top:1px solid var(--border);
+    padding:18px 8px 0;
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.avatar-small{
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#6d5dfc,#22d3ee);
+    display:grid;
+    place-items:center;
+    font-weight:700;
+}
+
+.user-info strong{
+    display:block;
+    font-size:13px;
+}
+
+.user-info span{
+    color:var(--muted);
+    font-size:11px;
+}
+
+/* MAIN */
+
+.main{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+}
+
+/* TOPBAR */
+
+.topbar{
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    border-bottom:1px solid var(--border);
+    background:rgba(7,9,13,.45);
+    backdrop-filter:blur(20px);
+}
+
+.page-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.page-title strong{
+    font-size:15px;
+}
+
+.status-dot{
+    width:7px;
+    height:7px;
+    background:var(--success);
+    border-radius:50%;
+    box-shadow:0 0 10px var(--success);
+}
+
+.top-actions{
+    display:flex;
+    gap:8px;
+}
+
+.icon-btn{
+    width:38px;
+    height:38px;
+    border:1px solid var(--border);
+    border-radius:11px;
+    background:rgba(255,255,255,.025);
+    color:#cbd1dc;
+}
+
+.icon-btn:hover{
+    background:rgba(255,255,255,.07);
+}
+
+/* CONTENT */
+
+.content{
+    flex:1;
+    display:flex;
+    min-height:0;
+}
+
+/* CHAT */
+
+.chat-area{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+}
+
+.messages{
+    flex:1;
+    overflow:auto;
+    padding:42px clamp(20px,6vw,100px) 25px;
+}
+
+.welcome{
+    text-align:center;
+    max-width:700px;
+    margin:40px auto 35px;
+}
+
+.welcome h1{
+    font-size:clamp(30px,4vw,48px);
+    letter-spacing:-1.8px;
+    margin-bottom:12px;
+}
+
+.welcome p{
+    color:var(--muted);
+    font-size:15px;
+}
+
+.ai-message,
+.user-message{
+    max-width:780px;
+    margin:0 auto 22px;
+    display:flex;
+    gap:13px;
+}
+
+.user-message{
+    justify-content:flex-end;
+}
+
+.message-avatar{
+    width:32px;
+    height:32px;
+    border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:grid;
+    place-items:center;
+    flex-shrink:0;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.message-content{
+    max-width:680px;
+}
+
+.message-name{
+    color:#aab2c0;
+    font-size:11px;
+    margin-bottom:6px;
+}
+
+.message-bubble{
+    line-height:1.65;
+    font-size:14px;
+    color:#e9edf4;
+}
+
+.user-message .message-bubble{
+    background:#171d27;
+    border:1px solid var(--border);
+    padding:12px 15px;
+    border-radius:17px 17px 4px 17px;
+}
+
+/* AI CARD */
+
+.ai-card{
+    margin-top:14px;
+    border:1px solid var(--border);
+    background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
+    border-radius:17px;
+    padding:16px;
+}
+
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:14px;
+}
+
+.card-title{
+    font-size:13px;
+    font-weight:650;
+}
+
+.card-badge{
+    font-size:10px;
+    padding:5px 8px;
+    border-radius:20px;
+    background:rgba(54,211,153,.1);
+    color:var(--success);
+}
+
+.document{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:11px 0;
+    border-top:1px solid var(--border);
+}
+
+.doc-icon{
+    width:34px;
+    height:34px;
+    border-radius:9px;
+    background:rgba(124,92,255,.12);
+    display:grid;
+    place-items:center;
+}
+
+.document-info{
+    flex:1;
+}
+
+.document-info strong{
+    display:block;
+    font-size:12px;
+}
+
+.document-info span{
+    color:var(--muted);
+    font-size:10px;
+}
+
+.open-btn{
+    border:0;
+    background:rgba(124,92,255,.12);
+    color:#b9adff;
+    border-radius:8px;
+    padding:7px 10px;
+    font-size:11px;
+}
+
+/* SUGGESTIONS */
+
+.suggestions{
+    max-width:780px;
+    margin:0 auto 15px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.suggestion{
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.025);
+    color:#b8c0cd;
+    padding:9px 12px;
+    border-radius:12px;
+    font-size:11px;
+}
+
+.suggestion:hover{
+    background:rgba(124,92,255,.1);
+    color:white;
+}
+
+/* COMPOSER */
+
+.composer-wrap{
+    padding:15px clamp(20px,6vw,100px) 24px;
+}
+
+.composer{
+    max-width:780px;
+    margin:auto;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(16,21,29,.88);
+    backdrop-filter:blur(25px);
+    border-radius:20px;
+    padding:8px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+
+.composer input{
+    flex:1;
+    border:0;
+    outline:0;
+    background:transparent;
+    color:white;
+    padding:12px;
+    min-width:0;
+}
+
+.composer input::placeholder{
+    color:#687181;
+}
+
+.compose-btn{
+    width:42px;
+    height:42px;
+    border:0;
+    border-radius:13px;
+    background:transparent;
+    color:#9ba4b3;
+}
+
+.compose-btn:hover{
+    background:rgba(255,255,255,.06);
+    color:white;
+}
+
+.voice-btn{
+    width:44px;
+    height:44px;
+    border:0;
+    border-radius:14px;
+    background:linear-gradient(135deg,var(--accent),#5c43dc);
+    color:white;
+    box-shadow:0 8px 25px rgba(124,92,255,.3);
+}
+
+.voice-btn.active{
+    animation:pulse 1.2s infinite;
+}
+
+@keyframes pulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(124,92,255,.35)}
+    50%{box-shadow:0 0 0 10px rgba(124,92,255,0)}
+}
+
+.send-btn{
+    width:44px;
+    height:44px;
+    border:0;
+    border-radius:14px;
+    background:#202733;
+    color:white;
+}
+
+.send-btn:hover{
+    background:#2a3342;
+}
+
+/* VOICE PANEL */
+
+.voice-panel{
+    width:360px;
+    border-left:1px solid var(--border);
+    background:
+        radial-gradient(circle at 50% 35%,rgba(124,92,255,.12),transparent 35%),
+        rgba(8,11,16,.6);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:30px;
+    position:relative;
+}
+
+.voice-title{
+    position:absolute;
+    top:25px;
+    left:25px;
+    right:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.voice-title strong{
+    font-size:12px;
+}
+
+.live-badge{
+    font-size:9px;
+    padding:5px 8px;
+    border-radius:20px;
+    background:rgba(54,211,153,.08);
+    color:var(--success);
+}
+
+/* ORB */
+
+.orb-container{
+    width:190px;
+    height:190px;
+    display:grid;
+    place-items:center;
+    position:relative;
+}
+
+.orb-ring{
+    position:absolute;
+    border:1px solid rgba(124,92,255,.22);
+    border-radius:50%;
+    animation:rotate 8s linear infinite;
+}
+
+.ring1{
+    width:190px;
+    height:190px;
+}
+
+.ring2{
+    width:155px;
+    height:155px;
+    animation-duration:5s;
+    animation-direction:reverse;
+}
+
+.ring3{
+    width:120px;
+    height:120px;
+    animation-duration:3s;
+}
+
+@keyframes rotate{
+    to{transform:rotate(360deg)}
+}
+
+.orb{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:
+        radial-gradient(circle at 35% 30%,#d4ccff,#8068ff 38%,#35258b 70%,#0c0923);
+    box-shadow:
+        0 0 30px rgba(124,92,255,.65),
+        0 0 80px rgba(124,92,255,.25);
+    position:relative;
+    transition:.3s;
+}
+
+.orb::before{
+    content:"";
+    position:absolute;
+    inset:18px;
+    border-radius:50%;
+    background:rgba(255,255,255,.12);
+    filter:blur(8px);
+}
+
+.orb.listening{
+    transform:scale(1.12);
+    box-shadow:
+        0 0 35px rgba(41,217,255,.8),
+        0 0 100px rgba(41,217,255,.3);
+}
+
+.orb.speaking{
+    animation:speak 1s infinite alternate;
+}
+
+@keyframes speak{
+    from{transform:scale(.96)}
+    to{transform:scale(1.08)}
+}
+
+/* WAVE */
+
+.wave{
+    height:38px;
+    margin-top:35px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+}
+
+.wave span{
+    width:3px;
+    height:10px;
+    background:#7661ef;
+    border-radius:4px;
+    transition:.2s;
+}
+
+.wave.active span{
+    animation:wave 700ms ease-in-out infinite alternate;
+}
+
+.wave span:nth-child(2){animation-delay:.08s}
+.wave span:nth-child(3){animation-delay:.16s}
+.wave span:nth-child(4){animation-delay:.24s}
+.wave span:nth-child(5){animation-delay:.32s}
+.wave span:nth-child(6){animation-delay:.4s}
+.wave span:nth-child(7){animation-delay:.48s}
+.wave span:nth-child(8){animation-delay:.56s}
+
+@keyframes wave{
+    to{height:30px}
+}
+
+.voice-state{
+    margin-top:12px;
+    color:#aeb6c5;
+    font-size:12px;
+}
+
+.voice-controls{
+    margin-top:28px;
+    display:flex;
+    gap:10px;
+}
+
+.voice-control{
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.04);
+    color:#c4cbd7;
+    border-radius:12px;
+    padding:10px 13px;
+    font-size:11px;
+}
+
+.voice-control:hover{
+    background:rgba(255,255,255,.08);
+}
+
+/* MOBILE */
+
+@media(max-width:1000px){
+
+    .sidebar{
+        width:70px;
+        padding:18px 10px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-
-    body {
-      background-color: var(--bg-primary);
-      color: var(--text-main);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      padding: 20px;
+    .logo span,
+    .nav button span:not(.nav-icon),
+    .user-info{
+        display:none;
     }
 
-    /* Main Container */
-    .assistant-container {
-      width: 100%;
-      max-width: 480px;
-      height: 800px;
-      background: var(--bg-surface);
-      border-radius: 24px;
-      border: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    .logo{
+        justify-content:center;
+        padding:4px 0 25px;
     }
 
-    /* Header & Voice Waveform Indicator */
-    .header {
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
+    .nav button{
+        justify-content:center;
+        padding:12px;
     }
 
-    .voice-status {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .user{
+        justify-content:center;
     }
 
-    .avatar-glow {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    .voice-panel{
+        width:290px;
+    }
+}
+
+@media(max-width:760px){
+
+    .voice-panel{
+        display:none;
     }
 
-    /* Live Waveform Animation */
-    .waveform {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      height: 20px;
+    .topbar{
+        padding:0 15px;
     }
 
-    .bar {
-      width: 3px;
-      height: 100%;
-      background: var(--accent-cyan);
-      border-radius: 3px;
-      animation: wave 1.2s infinite ease-in-out;
+    .messages{
+        padding:25px 16px 15px;
     }
 
-    .bar:nth-child(2) { animation-delay: 0.2s; }
-    .bar:nth-child(3) { animation-delay: 0.4s; }
-    .bar:nth-child(4) { animation-delay: 0.1s; }
-
-    @keyframes wave {
-      0%, 100% { height: 4px; }
-      50% { height: 20px; }
+    .composer-wrap{
+        padding:10px 12px 15px;
     }
 
-    .mode-badge {
-      background: rgba(56, 189, 248, 0.1);
-      color: var(--accent-cyan);
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 600;
+    .welcome{
+        margin-top:20px;
     }
 
-    /* Message Feed */
-    .chat-feed {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+    .welcome h1{
+        font-size:31px;
     }
 
-    .message {
-      max-width: 85%;
-      padding: 12px 16px;
-      border-radius: 16px;
-      font-size: 14px;
-      line-height: 1.5;
+    .sidebar{
+        width:60px;
     }
+}
 
-    .message.user {
-      align-self: flex-end;
-      background: var(--accent-purple);
-      color: #fff;
-      border-bottom-right-radius: 4px;
-    }
-
-    .message.assistant {
-      align-self: flex-start;
-      background: var(--bg-card);
-      border-bottom-left-radius: 4px;
-    }
-
-    /* Rich Content Card */
-    .rich-card {
-      background: var(--bg-surface);
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 10px;
-      border: 1px solid var(--border);
-    }
-
-    .rich-card img {
-      width: 100%;
-      border-radius: 8px;
-      margin-bottom: 8px;
-    }
-
-    .rich-card-title {
-      font-weight: 600;
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-
-    .rich-card-desc {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    /* Audio Controls */
-    .audio-playback {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 8px;
-      font-size: 12px;
-      color: var(--accent-cyan);
-      cursor: pointer;
-    }
-
-    /* Suggestion Chips */
-    .chips-container {
-      display: flex;
-      gap: 8px;
-      padding: 0 20px 12px 20px;
-      overflow-x: auto;
-    }
-
-    .chip {
-      background: var(--bg-card);
-      color: var(--text-main);
-      border: 1px solid var(--border);
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      white-space: nowrap;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .chip:hover {
-      border-color: var(--accent-cyan);
-      color: var(--accent-cyan);
-    }
-
-    /* Input Dock */
-    .input-dock {
-      padding: 16px 20px;
-      background: var(--bg-surface);
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .text-input {
-      flex: 1;
-      background: var(--bg-primary);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 10px 16px;
-      color: var(--text-main);
-      outline: none;
-      font-size: 14px;
-    }
-
-    .text-input:focus {
-      border-color: var(--accent-cyan);
-    }
-
-    .mic-button {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--accent-cyan);
-      border: none;
-      color: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .mic-button:hover {
-      transform: scale(1.05);
-    }
-  </style>
+.hidden{
+    display:none !important;
+}
+</style>
 </head>
+
 <body>
 
-<div class="assistant-container">
-  <!-- Header with Live Voice Waveform -->
-  <div class="header">
-    <div class="voice-status">
-      <div class="avatar-glow">AI</div>
-      <div>
-        <div style="font-weight:600; font-size:14px;">Voicebot Assistant</div>
-        <div class="waveform">
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-mark">✦</div>
+            <span>EnableX</span>
         </div>
-      </div>
-    </div>
-    <span class="mode-badge">Live Multimodal</span>
-  </div>
 
-  <!-- Chat & Visual Card Feed -->
-  <div class="chat-feed">
-    <div class="message user">
-      Show me popular flight options to Tokyo.
-    </div>
+        <nav class="nav">
 
-    <div class="message assistant">
-      I found several direct flights. Here is the top recommendation matching your preferences:
-      
-      <!-- Interactive Rich Card -->
-      <div class="rich-card">
-        <div class="rich-card-title">Haneda Express (JL005)</div>
-        <div class="rich-card-desc">Direct • 11h 15m • $1,120</div>
-        <div class="audio-playback">
-          ▶ <span>Listen to flight summary (0:12)</span>
+            <button>
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+            </button>
+
+            <button>
+                <span class="nav-icon">▣</span>
+                <span>Knowledge Hub</span>
+            </button>
+
+            <button class="active">
+                <span class="nav-icon">✦</span>
+                <span>AI Assistant</span>
+            </button>
+
+            <button>
+                <span class="nav-icon">◫</span>
+                <span>Analytics</span>
+            </button>
+
+            <button>
+                <span class="nav-icon">⚙</span>
+                <span>Settings</span>
+            </button>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="user">
+
+                <div class="avatar-small">R</div>
+
+                <div class="user-info">
+                    <strong>Resh</strong>
+                    <span>Administrator</span>
+                </div>
+
+            </div>
+
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Interactive Suggestion Chips -->
-  <div class="chips-container">
-    <div class="chip">Book flight JL005</div>
-    <div class="chip">Compare with connection flights</div>
-    <div class="chip">Filter by morning departure</div>
-  </div>
+    </aside>
 
-  <!-- Input Controls -->
-  <div class="input-dock">
-    <input type="text" class="text-input" placeholder="Type or tap mic to speak..." />
-    <button class="mic-button" aria-label="Voice input">
-      🎙️
-    </button>
-  </div>
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div class="page-title">
+                <span class="status-dot"></span>
+                <strong>AI Assistant</strong>
+            </div>
+
+            <div class="top-actions">
+
+                <button class="icon-btn">⌕</button>
+                <button class="icon-btn">◌</button>
+                <button class="icon-btn">⋯</button>
+
+            </div>
+
+        </header>
+
+
+        <div class="content">
+
+            <!-- CHAT -->
+
+            <section class="chat-area">
+
+                <div class="messages" id="messages">
+
+                    <div class="welcome" id="welcome">
+
+                        <h1>How can I help?</h1>
+
+                        <p>
+                            Ask, speak, search your knowledge, or let EnableX take action.
+                        </p>
+
+                    </div>
+
+                    <div class="suggestions" id="suggestions">
+
+                        <button class="suggestion"
+                                onclick="suggest('Search our knowledge hub')">
+                            Search Knowledge Hub
+                        </button>
+
+                        <button class="suggestion"
+                                onclick="suggest('Summarize our latest documents')">
+                            Summarize documents
+                        </button>
+
+                        <button class="suggestion"
+                                onclick="suggest('Show me our latest analytics')">
+                            Show analytics
+                        </button>
+
+                        <button class="suggestion"
+                                onclick="suggest('Create an onboarding summary')">
+                            Create summary
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- COMPOSER -->
+
+                <div class="composer-wrap">
+
+                    <div class="composer">
+
+                        <button class="compose-btn"
+                                title="Attach file"
+                                onclick="document.getElementById('fileInput').click()">
+                            ＋
+                        </button>
+
+                        <input
+                            id="chatInput"
+                            type="text"
+                            placeholder="Ask EnableX anything..."
+                            autocomplete="off"
+                        >
+
+                        <input
+                            id="fileInput"
+                            type="file"
+                            hidden
+                            multiple
+                        >
+
+                        <button
+                            class="voice-btn"
+                            id="voiceButton"
+                            title="Start voice"
+                            onclick="toggleVoice()">
+                            🎙
+                        </button>
+
+                        <button
+                            class="send-btn"
+                            onclick="sendMessage()">
+                            ➤
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- VOICE -->
+
+            <aside class="voice-panel">
+
+                <div class="voice-title">
+
+                    <strong>Live Assistant</strong>
+
+                    <span class="live-badge">
+                        ● LIVE
+                    </span>
+
+                </div>
+
+
+                <div class="orb-container">
+
+                    <div class="orb-ring ring1"></div>
+                    <div class="orb-ring ring2"></div>
+                    <div class="orb-ring ring3"></div>
+
+                    <div class="orb" id="orb"></div>
+
+                </div>
+
+
+                <div class="wave" id="wave">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+
+                <div class="voice-state" id="voiceState">
+                    Ready to talk
+                </div>
+
+
+                <div class="voice-controls">
+
+                    <button
+                        class="voice-control"
+                        onclick="toggleVoice()">
+                        🎙 Start
+                    </button>
+
+                    <button
+                        class="voice-control"
+                        onclick="stopVoice()">
+                        ■ Stop
+                    </button>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </main>
+
 </div>
+
+
+<script>
+
+/* =========================================================
+   ENABLEX AI ASSISTANT FRONTEND
+   ========================================================= */
+
+const messages = document.getElementById("messages");
+const input = document.getElementById("chatInput");
+const voiceButton = document.getElementById("voiceButton");
+const orb = document.getElementById("orb");
+const wave = document.getElementById("wave");
+const voiceState = document.getElementById("voiceState");
+
+let voiceActive = false;
+let recognition = null;
+
+
+/* =========================================================
+   CHAT
+   ========================================================= */
+
+function suggest(text){
+
+    input.value = text;
+    sendMessage();
+
+}
+
+
+function sendMessage(){
+
+    const text = input.value.trim();
+
+    if(!text) return;
+
+    const welcome = document.getElementById("welcome");
+    const suggestions = document.getElementById("suggestions");
+
+    if(welcome) welcome.remove();
+    if(suggestions) suggestions.remove();
+
+    addUserMessage(text);
+
+    input.value = "";
+
+    setTimeout(() => {
+
+        addAIMessage(text);
+
+    },700);
+
+}
+
+
+function addUserMessage(text){
+
+    const wrapper = document.createElement("div");
+
+    wrapper.className = "user-message";
+
+    wrapper.innerHTML = `
+        <div class="message-content">
+            <div class="message-name">You</div>
+            <div class="message-bubble">${escapeHTML(text)}</div>
+        </div>
+    `;
+
+    messages.appendChild(wrapper);
+
+    scrollMessages();
+
+}
+
+
+function addAIMessage(question){
+
+    const wrapper = document.createElement("div");
+
+    wrapper.className = "ai-message";
+
+    wrapper.innerHTML = `
+
+        <div class="message-avatar">✦</div>
+
+        <div class="message-content">
+
+            <div class="message-name">EnableX AI</div>
+
+            <div class="message-bubble">
+
+                I can help with that. I can search your
+                Knowledge Hub, analyze information, summarize
+                documents, or perform actions for you.
+
+                <div class="ai-card">
+
+                    <div class="card-header">
+
+                        <span class="card-title">
+                            ✦ Suggested action
+                        </span>
+
+                        <span class="card-badge">
+                            AI READY
+                        </span>
+
+                    </div>
+
+                    <div class="document">
+
+                        <div class="doc-icon">📚</div>
+
+                        <div class="document-info">
+
+                            <strong>
+                                Knowledge Hub
+                            </strong>
+
+                            <span>
+                                Search and retrieve relevant information
+                            </span>
+
+                        </div>
+
+                        <button
+                            class="open-btn"
+                            onclick="startAction('knowledge')">
+                            Open
+                        </button>
+
+                    </div>
+
+                    <div class="document">
+
+                        <div class="doc-icon">✦</div>
+
+                        <div class="document-info">
+
+                            <strong>
+                                AI Summary
+                            </strong>
+
+                            <span>
+                                Generate an intelligent response
+                            </span>
+
+                        </div>
+
+                        <button
+                            class="open-btn"
+                            onclick="startAction('summary')">
+                            Run
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+    messages.appendChild(wrapper);
+
+    scrollMessages();
+
+}
+
+
+function startAction(type){
+
+    const msg =
+        type === "knowledge"
+        ? "Searching the EnableX Knowledge Hub..."
+        : "Preparing an AI summary...";
+
+    addUserMessage(msg);
+
+    setTimeout(() => {
+
+        addAIMessage(
+            type === "knowledge"
+            ? "Knowledge search completed."
+            : "Your AI summary is ready."
+        );
+
+    },900);
+
+}
+
+
+function escapeHTML(text){
+
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function scrollMessages(){
+
+    messages.scrollTo({
+        top:messages.scrollHeight,
+        behavior:"smooth"
+    });
+
+}
+
+
+input.addEventListener("keydown",function(e){
+
+    if(e.key === "Enter"){
+        sendMessage();
+    }
+
+});
+
+
+/* =========================================================
+   FILE UPLOAD
+   ========================================================= */
+
+document.getElementById("fileInput").addEventListener(
+    "change",
+    function(){
+
+        if(!this.files.length) return;
+
+        const names =
+            Array.from(this.files)
+            .map(file => file.name)
+            .join(", ");
+
+        addUserMessage(
+            "Uploaded: " + names
+        );
+
+        setTimeout(() => {
+
+            addAIMessage(
+                "I received your file. Connect this event to Supabase Storage or your AI document-processing backend."
+
+            );
+
+        },700);
+
+    }
+);
+
+
+/* =========================================================
+   VOICE UI
+   ========================================================= */
+
+function toggleVoice(){
+
+    if(voiceActive){
+
+        stopVoice();
+
+    }else{
+
+        startVoice();
+
+    }
+
+}
+
+
+function startVoice(){
+
+    voiceActive = true;
+
+    voiceButton.classList.add("active");
+
+    orb.classList.add("listening");
+
+    wave.classList.add("active");
+
+    voiceState.textContent = "Listening...";
+
+
+    /*
+       OPTIONAL BROWSER SPEECH RECOGNITION
+
+       Replace this section with your ElevenLabs
+       conversational AI integration.
+    */
+
+    if("webkitSpeechRecognition" in window){
+
+        recognition =
+            new webkitSpeechRecognition();
+
+        recognition.continuous = false;
+        recognition.interimResults = true;
+        recognition.lang = "en-US";
+
+        recognition.onresult = function(event){
+
+            let transcript = "";
+
+            for(
+                let i=event.resultIndex;
+                i<event.results.length;
+                i++
+            ){
+
+                transcript +=
+                    event.results[i][0].transcript;
+
+            }
+
+            input.value = transcript;
+
+        };
+
+        recognition.onend = function(){
+
+            if(voiceActive){
+
+                voiceState.textContent =
+                    "Processing...";
+
+                setTimeout(() => {
+
+                    voiceState.textContent =
+                        "Ready to talk";
+
+                },1000);
+
+            }
+
+        };
+
+        recognition.start();
+
+    }
+
+}
+
+
+function stopVoice(){
+
+    voiceActive = false;
+
+    voiceButton.classList.remove("active");
+
+    orb.classList.remove("listening");
+    orb.classList.remove("speaking");
+
+    wave.classList.remove("active");
+
+    voiceState.textContent =
+        "Ready to talk";
+
+    if(recognition){
+
+        try{
+            recognition.stop();
+        }catch(e){}
+
+        recognition = null;
+
+    }
+
+}
+
+
+/* =========================================================
+   DEMO SPEAKING STATE
+   ========================================================= */
+
+function showSpeaking(){
+
+    orb.classList.remove("listening");
+    orb.classList.add("speaking");
+
+    wave.classList.add("active");
+
+    voiceState.textContent =
+        "Speaking...";
+
+}
+
+
+/* =========================================================
+   FILE / ELEVENLABS / ANAM CONNECTION POINTS
+   =========================================================
+
+   Replace these functions with your real APIs.
+
+   ElevenLabs:
+   - Connect your Conversational AI agent
+   - Start session
+   - Receive audio
+   - Receive transcript
+   - Handle interruptions
+
+   Anam:
+   - Initialize avatar
+   - Pass assistant text/audio
+   - Synchronize speaking state
+
+   Supabase:
+   - Store conversations
+   - Store users
+   - Store knowledge
+   - Store uploaded documents
+
+   ========================================================= */
+
+
+/*
+async function connectElevenLabs(){
+
+    // Example placeholder
+
+    // const conversation =
+    //     await ElevenLabs.startConversation({
+    //         agentId: "YOUR_AGENT_ID"
+    //     });
+
+}
+*/
+
+
+/*
+async function connectAnam(){
+
+    // Initialize your Anam avatar here.
+
+}
+*/
+
+
+/*
+async function saveConversation(message){
+
+    // Supabase example placeholder
+
+    // await supabase
+    //     .from("conversations")
+    //     .insert({
+    //         message:message
+    //     });
+
+}
+*/
+
+
+</script>
 
 </body>
 </html>
