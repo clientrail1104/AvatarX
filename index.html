@@ -3,39 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EnableX AI Assistant</title>
+
+<title>EnableX — Human AI Voice Assistant</title>
 
 <style>
 :root{
-    --bg:#07090d;
-    --panel:#0d1118;
-    --panel2:#11161f;
-    --border:rgba(255,255,255,.08);
-    --text:#f5f7fb;
-    --muted:#8d96a6;
-    --accent:#7c5cff;
-    --accent2:#29d9ff;
-    --success:#36d399;
-    --danger:#ff647c;
-    --radius:20px;
+    --bg:#06101d;
+    --panel:rgba(9,19,34,.92);
+    --panel2:rgba(13,28,48,.88);
+    --line:rgba(255,255,255,.11);
+    --text:#f7fbff;
+    --muted:#9eacbf;
+    --blue:#247cff;
+    --cyan:#35d9ff;
+    --green:#4de2a0;
+    --red:#ff5c72;
+    --shadow:0 30px 100px rgba(0,0,0,.55);
 }
 
 *{
     box-sizing:border-box;
-    margin:0;
-    padding:0;
 }
 
-html,body{
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    background:
-        radial-gradient(circle at 70% 20%,rgba(124,92,255,.10),transparent 28%),
-        radial-gradient(circle at 20% 80%,rgba(41,217,255,.06),transparent 25%),
-        var(--bg);
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
     color:var(--text);
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background:
+        radial-gradient(
+            circle at 15% 10%,
+            rgba(36,124,255,.18),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 30%,
+            rgba(53,217,255,.10),
+            transparent 28%
+        ),
+        linear-gradient(
+            135deg,
+            #050b14,
+            #071321 55%,
+            #04101d
+        );
+
+    overflow-x:hidden;
 }
 
 button,
@@ -47,1381 +71,2602 @@ button{
     cursor:pointer;
 }
 
-.app{
-    height:100vh;
-    display:flex;
+a{
+    color:inherit;
+    text-decoration:none;
 }
 
-/* SIDEBAR */
+/* =========================
+   HEADER
+========================= */
 
-.sidebar{
-    width:250px;
-    border-right:1px solid var(--border);
-    background:rgba(7,9,13,.82);
-    backdrop-filter:blur(30px);
+header{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+
+    height:72px;
+
+    z-index:100;
+
     display:flex;
-    flex-direction:column;
-    padding:22px 16px;
-    flex-shrink:0;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 30px;
+
+    background:rgba(4,10,18,.72);
+
+    backdrop-filter:blur(18px);
+
+    border-bottom:1px solid rgba(255,255,255,.06);
 }
 
 .logo{
     display:flex;
     align-items:center;
     gap:10px;
-    padding:4px 10px 28px;
-}
 
-.logo-mark{
-    width:30px;
-    height:30px;
-    border-radius:9px;
-    background:linear-gradient(135deg,var(--accent),var(--accent2));
-    display:grid;
-    place-items:center;
     font-weight:800;
-    color:white;
-    box-shadow:0 0 25px rgba(124,92,255,.35);
+    font-size:20px;
 }
 
-.logo span{
-    font-size:18px;
-    font-weight:700;
-    letter-spacing:-.4px;
-}
-
-.nav{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-}
-
-.nav button{
-    border:0;
-    background:transparent;
-    color:var(--muted);
-    text-align:left;
-    padding:12px 13px;
-    border-radius:12px;
-    display:flex;
-    align-items:center;
-    gap:12px;
-    transition:.2s;
-}
-
-.nav button:hover{
-    background:rgba(255,255,255,.05);
-    color:white;
-}
-
-.nav button.active{
-    background:rgba(124,92,255,.14);
-    color:white;
-}
-
-.nav-icon{
-    width:20px;
-    text-align:center;
-}
-
-.sidebar-bottom{
-    margin-top:auto;
-}
-
-.user{
-    border-top:1px solid var(--border);
-    padding:18px 8px 0;
-    display:flex;
-    align-items:center;
-    gap:11px;
-}
-
-.avatar-small{
+.logo-icon{
     width:35px;
     height:35px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#6d5dfc,#22d3ee);
-    display:grid;
-    place-items:center;
-    font-weight:700;
-}
 
-.user-info strong{
-    display:block;
-    font-size:13px;
-}
-
-.user-info span{
-    color:var(--muted);
-    font-size:11px;
-}
-
-/* MAIN */
-
-.main{
-    flex:1;
-    min-width:0;
-    display:flex;
-    flex-direction:column;
-}
-
-/* TOPBAR */
-
-.topbar{
-    height:70px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 28px;
-    border-bottom:1px solid var(--border);
-    background:rgba(7,9,13,.45);
-    backdrop-filter:blur(20px);
-}
-
-.page-title{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.page-title strong{
-    font-size:15px;
-}
-
-.status-dot{
-    width:7px;
-    height:7px;
-    background:var(--success);
-    border-radius:50%;
-    box-shadow:0 0 10px var(--success);
-}
-
-.top-actions{
-    display:flex;
-    gap:8px;
-}
-
-.icon-btn{
-    width:38px;
-    height:38px;
-    border:1px solid var(--border);
     border-radius:11px;
-    background:rgba(255,255,255,.025);
-    color:#cbd1dc;
-}
 
-.icon-btn:hover{
-    background:rgba(255,255,255,.07);
-}
-
-/* CONTENT */
-
-.content{
-    flex:1;
-    display:flex;
-    min-height:0;
-}
-
-/* CHAT */
-
-.chat-area{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    min-width:0;
-}
-
-.messages{
-    flex:1;
-    overflow:auto;
-    padding:42px clamp(20px,6vw,100px) 25px;
-}
-
-.welcome{
-    text-align:center;
-    max-width:700px;
-    margin:40px auto 35px;
-}
-
-.welcome h1{
-    font-size:clamp(30px,4vw,48px);
-    letter-spacing:-1.8px;
-    margin-bottom:12px;
-}
-
-.welcome p{
-    color:var(--muted);
-    font-size:15px;
-}
-
-.ai-message,
-.user-message{
-    max-width:780px;
-    margin:0 auto 22px;
-    display:flex;
-    gap:13px;
-}
-
-.user-message{
-    justify-content:flex-end;
-}
-
-.message-avatar{
-    width:32px;
-    height:32px;
-    border-radius:10px;
-    background:linear-gradient(135deg,var(--accent),var(--accent2));
-    display:grid;
-    place-items:center;
-    flex-shrink:0;
-    font-size:13px;
-    font-weight:bold;
-}
-
-.message-content{
-    max-width:680px;
-}
-
-.message-name{
-    color:#aab2c0;
-    font-size:11px;
-    margin-bottom:6px;
-}
-
-.message-bubble{
-    line-height:1.65;
-    font-size:14px;
-    color:#e9edf4;
-}
-
-.user-message .message-bubble{
-    background:#171d27;
-    border:1px solid var(--border);
-    padding:12px 15px;
-    border-radius:17px 17px 4px 17px;
-}
-
-/* AI CARD */
-
-.ai-card{
-    margin-top:14px;
-    border:1px solid var(--border);
-    background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
-    border-radius:17px;
-    padding:16px;
-}
-
-.card-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:14px;
-}
-
-.card-title{
-    font-size:13px;
-    font-weight:650;
-}
-
-.card-badge{
-    font-size:10px;
-    padding:5px 8px;
-    border-radius:20px;
-    background:rgba(54,211,153,.1);
-    color:var(--success);
-}
-
-.document{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:11px 0;
-    border-top:1px solid var(--border);
-}
-
-.doc-icon{
-    width:34px;
-    height:34px;
-    border-radius:9px;
-    background:rgba(124,92,255,.12);
-    display:grid;
-    place-items:center;
-}
-
-.document-info{
-    flex:1;
-}
-
-.document-info strong{
-    display:block;
-    font-size:12px;
-}
-
-.document-info span{
-    color:var(--muted);
-    font-size:10px;
-}
-
-.open-btn{
-    border:0;
-    background:rgba(124,92,255,.12);
-    color:#b9adff;
-    border-radius:8px;
-    padding:7px 10px;
-    font-size:11px;
-}
-
-/* SUGGESTIONS */
-
-.suggestions{
-    max-width:780px;
-    margin:0 auto 15px;
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-}
-
-.suggestion{
-    border:1px solid var(--border);
-    background:rgba(255,255,255,.025);
-    color:#b8c0cd;
-    padding:9px 12px;
-    border-radius:12px;
-    font-size:11px;
-}
-
-.suggestion:hover{
-    background:rgba(124,92,255,.1);
-    color:white;
-}
-
-/* COMPOSER */
-
-.composer-wrap{
-    padding:15px clamp(20px,6vw,100px) 24px;
-}
-
-.composer{
-    max-width:780px;
-    margin:auto;
-    border:1px solid rgba(255,255,255,.12);
-    background:rgba(16,21,29,.88);
-    backdrop-filter:blur(25px);
-    border-radius:20px;
-    padding:8px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    box-shadow:0 20px 60px rgba(0,0,0,.3);
-}
-
-.composer input{
-    flex:1;
-    border:0;
-    outline:0;
-    background:transparent;
-    color:white;
-    padding:12px;
-    min-width:0;
-}
-
-.composer input::placeholder{
-    color:#687181;
-}
-
-.compose-btn{
-    width:42px;
-    height:42px;
-    border:0;
-    border-radius:13px;
-    background:transparent;
-    color:#9ba4b3;
-}
-
-.compose-btn:hover{
-    background:rgba(255,255,255,.06);
-    color:white;
-}
-
-.voice-btn{
-    width:44px;
-    height:44px;
-    border:0;
-    border-radius:14px;
-    background:linear-gradient(135deg,var(--accent),#5c43dc);
-    color:white;
-    box-shadow:0 8px 25px rgba(124,92,255,.3);
-}
-
-.voice-btn.active{
-    animation:pulse 1.2s infinite;
-}
-
-@keyframes pulse{
-    0%,100%{box-shadow:0 0 0 0 rgba(124,92,255,.35)}
-    50%{box-shadow:0 0 0 10px rgba(124,92,255,0)}
-}
-
-.send-btn{
-    width:44px;
-    height:44px;
-    border:0;
-    border-radius:14px;
-    background:#202733;
-    color:white;
-}
-
-.send-btn:hover{
-    background:#2a3342;
-}
-
-/* VOICE PANEL */
-
-.voice-panel{
-    width:360px;
-    border-left:1px solid var(--border);
     background:
-        radial-gradient(circle at 50% 35%,rgba(124,92,255,.12),transparent 35%),
-        rgba(8,11,16,.6);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    padding:30px;
-    position:relative;
-}
+        linear-gradient(
+            135deg,
+            #39d9ff,
+            #286eff
+        );
 
-.voice-title{
-    position:absolute;
-    top:25px;
-    left:25px;
-    right:25px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.voice-title strong{
-    font-size:12px;
-}
-
-.live-badge{
-    font-size:9px;
-    padding:5px 8px;
-    border-radius:20px;
-    background:rgba(54,211,153,.08);
-    color:var(--success);
-}
-
-/* ORB */
-
-.orb-container{
-    width:190px;
-    height:190px;
     display:grid;
     place-items:center;
-    position:relative;
 }
 
-.orb-ring{
-    position:absolute;
-    border:1px solid rgba(124,92,255,.22);
-    border-radius:50%;
-    animation:rotate 8s linear infinite;
-}
-
-.ring1{
-    width:190px;
-    height:190px;
-}
-
-.ring2{
-    width:155px;
-    height:155px;
-    animation-duration:5s;
-    animation-direction:reverse;
-}
-
-.ring3{
-    width:120px;
-    height:120px;
-    animation-duration:3s;
-}
-
-@keyframes rotate{
-    to{transform:rotate(360deg)}
-}
-
-.orb{
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    background:
-        radial-gradient(circle at 35% 30%,#d4ccff,#8068ff 38%,#35258b 70%,#0c0923);
-    box-shadow:
-        0 0 30px rgba(124,92,255,.65),
-        0 0 80px rgba(124,92,255,.25);
-    position:relative;
-    transition:.3s;
-}
-
-.orb::before{
+.logo-icon:before{
     content:"";
-    position:absolute;
-    inset:18px;
-    border-radius:50%;
-    background:rgba(255,255,255,.12);
-    filter:blur(8px);
-}
 
-.orb.listening{
-    transform:scale(1.12);
-    box-shadow:
-        0 0 35px rgba(41,217,255,.8),
-        0 0 100px rgba(41,217,255,.3);
-}
+    width:13px;
+    height:13px;
 
-.orb.speaking{
-    animation:speak 1s infinite alternate;
-}
+    border:3px solid white;
 
-@keyframes speak{
-    from{transform:scale(.96)}
-    to{transform:scale(1.08)}
-}
+    transform:rotate(45deg);
 
-/* WAVE */
-
-.wave{
-    height:38px;
-    margin-top:35px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:4px;
-}
-
-.wave span{
-    width:3px;
-    height:10px;
-    background:#7661ef;
     border-radius:4px;
-    transition:.2s;
 }
 
-.wave.active span{
-    animation:wave 700ms ease-in-out infinite alternate;
-}
-
-.wave span:nth-child(2){animation-delay:.08s}
-.wave span:nth-child(3){animation-delay:.16s}
-.wave span:nth-child(4){animation-delay:.24s}
-.wave span:nth-child(5){animation-delay:.32s}
-.wave span:nth-child(6){animation-delay:.4s}
-.wave span:nth-child(7){animation-delay:.48s}
-.wave span:nth-child(8){animation-delay:.56s}
-
-@keyframes wave{
-    to{height:30px}
-}
-
-.voice-state{
-    margin-top:12px;
-    color:#aeb6c5;
-    font-size:12px;
-}
-
-.voice-controls{
-    margin-top:28px;
+nav{
     display:flex;
-    gap:10px;
+    gap:28px;
+
+    color:#b7c5d8;
+
+    font-size:14px;
 }
 
-.voice-control{
-    border:1px solid var(--border);
-    background:rgba(255,255,255,.04);
-    color:#c4cbd7;
+nav a:hover{
+    color:#fff;
+}
+
+.header-button{
+    padding:10px 15px;
+
     border-radius:12px;
-    padding:10px 13px;
+
+    color:#fff;
+
+    background:rgba(255,255,255,.04);
+
+    border:1px solid var(--line);
+}
+
+/* =========================
+   HERO
+========================= */
+
+main{
+    padding-top:72px;
+}
+
+.hero{
+    width:min(1200px,calc(100% - 40px));
+
+    min-height:94vh;
+
+    margin:auto;
+
+    display:grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap:50px;
+
+    align-items:center;
+}
+
+.badge{
+    display:inline-flex;
+
+    padding:8px 12px;
+
+    border-radius:999px;
+
+    border:1px solid rgba(53,217,255,.25);
+
+    background:rgba(53,217,255,.07);
+
+    color:#bdeeff;
+
+    font-size:11px;
+
+    letter-spacing:.8px;
+
+    text-transform:uppercase;
+}
+
+h1{
+    margin:19px 0;
+
+    font-size:
+        clamp(
+            45px,
+            6vw,
+            80px
+        );
+
+    line-height:.98;
+
+    letter-spacing:-3px;
+}
+
+h1 span{
+    color:#45c8ff;
+}
+
+.hero-description{
+    color:var(--muted);
+
+    max-width:680px;
+
+    font-size:18px;
+
+    line-height:1.7;
+}
+
+.buttons{
+    display:flex;
+
+    gap:12px;
+
+    margin-top:28px;
+
+    flex-wrap:wrap;
+}
+
+.primary-button{
+    border:0;
+
+    padding:14px 19px;
+
+    color:white;
+
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #217dff,
+            #42c8ff
+        );
+
+    box-shadow:
+        0 16px 40px
+        rgba(36,124,255,.28);
+}
+
+.secondary-button{
+    padding:14px 19px;
+
+    border-radius:14px;
+
+    color:white;
+
+    background:rgba(255,255,255,.04);
+
+    border:1px solid var(--line);
+}
+
+.stats{
+    margin-top:35px;
+
+    max-width:650px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:12px;
+}
+
+.stat{
+    padding:15px;
+
+    border-radius:17px;
+
+    background:rgba(255,255,255,.035);
+
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.stat strong{
+    display:block;
+
+    font-size:21px;
+}
+
+.stat span{
+    color:var(--muted);
+
     font-size:11px;
 }
 
-.voice-control:hover{
-    background:rgba(255,255,255,.08);
+/* =========================
+   AVATAR AREA
+========================= */
+
+.avatar-section{
+    position:relative;
+
+    height:560px;
+
+    overflow:hidden;
+
+    border-radius:34px;
+
+    border:1px solid rgba(255,255,255,.10);
+
+    background:
+        radial-gradient(
+            circle at 50% 25%,
+            rgba(53,217,255,.11),
+            transparent 34%
+        ),
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.04),
+            rgba(255,255,255,.01)
+        );
+
+    box-shadow:var(--shadow);
 }
 
-/* MOBILE */
+/*
+=========================================================
+REAL HUMANOID AVATAR CONTAINER
+=========================================================
 
-@media(max-width:1000px){
+Your real Anam/video avatar should be mounted here.
 
-    .sidebar{
-        width:70px;
-        padding:18px 10px;
+IMPORTANT:
+
+The video should have:
+
+    background: transparent;
+
+The avatar should be framed approximately:
+
+    HEAD → CHEST → BELLY/WAIST
+
+NOT full body.
+
+Example:
+
+<video id="realAvatarVideo"
+       autoplay
+       playsinline
+       muted>
+</video>
+
+or mount your Anam SDK inside:
+
+<div id="anam-container"></div>
+*/
+
+#anam-container{
+    position:absolute;
+
+    left:50%;
+
+    bottom:40px;
+
+    width:430px;
+
+    height:480px;
+
+    transform:
+        translateX(-50%);
+
+    background:transparent;
+
+    z-index:4;
+
+    pointer-events:none;
+}
+
+/*
+Temporary image/video container.
+
+Replace this with your real human-avatar stream.
+*/
+
+#real-avatar{
+    position:absolute;
+
+    left:50%;
+
+    bottom:28px;
+
+    width:390px;
+
+    height:470px;
+
+    transform:
+        translateX(-50%);
+
+    object-fit:contain;
+
+    background:transparent;
+
+    border:0;
+
+    z-index:4;
+
+    pointer-events:none;
+}
+
+/* =========================
+   FALLBACK HUMAN PLACEHOLDER
+=========================
+
+This is ONLY a placeholder.
+
+For production, remove this and
+use Anam/HeyGen/Synthesia/D-ID/etc.
+*/
+
+.demo-human{
+    position:absolute;
+
+    left:50%;
+
+    bottom:-20px;
+
+    width:250px;
+
+    height:430px;
+
+    transform:
+        translateX(-50%);
+
+    z-index:3;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f6eee8 0%,
+            #f6eee8 42%,
+            #ffffff 43%,
+            #e9eef4 100%
+        );
+
+    border-radius:
+        50%
+        50%
+        12%
+        12%;
+
+    filter:
+        drop-shadow(
+            0 25px 30px
+            rgba(0,0,0,.28)
+        );
+
+    opacity:.30;
+}
+
+.demo-human::before{
+    content:"";
+
+    position:absolute;
+
+    left:50%;
+    top:18px;
+
+    transform:
+        translateX(-50%);
+
+    width:140px;
+    height:170px;
+
+    border-radius:48%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #f0c7af,
+            #d99c84
+        );
+
+    box-shadow:
+        inset 0 42px 0
+        rgba(38,27,31,.72);
+}
+
+/*
+Belly-level framing.
+Anything below the belly is intentionally hidden.
+*/
+
+.avatar-crop{
+    position:absolute;
+
+    left:0;
+    right:0;
+
+    bottom:0;
+
+    height:28%;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent,
+            #071321
+        );
+
+    z-index:8;
+
+    pointer-events:none;
+}
+
+/* =========================
+   MOVEMENT
+========================= */
+
+.avatar-motion{
+    position:absolute;
+
+    left:50%;
+
+    bottom:0;
+
+    width:100%;
+
+    height:100%;
+
+    transform:
+        translateX(-50%);
+
+    transition:
+        transform
+        2.7s
+        cubic-bezier(
+            .55,
+            0,
+            .24,
+            1
+        );
+
+    will-change:transform;
+
+    z-index:5;
+}
+
+.avatar-motion.walk-left{
+    transform:
+        translateX(
+            calc(-50% - 310px)
+        );
+}
+
+.avatar-motion.walk-right{
+    transform:
+        translateX(
+            calc(-50% + 310px)
+        );
+}
+
+.avatar-motion.stop{
+    transform:
+        translateX(-50%);
+}
+
+/*
+Mirror orientation while walking back.
+*/
+
+.avatar-motion.face-left{
+    /* Provider-specific facial/body flip goes here */
+}
+
+.avatar-motion.face-right{
+    /* Provider-specific facial/body flip goes here */
+}
+
+/* =========================
+   AVATAR STATUS
+========================= */
+
+.avatar-status{
+    position:absolute;
+
+    top:15px;
+    left:15px;
+    right:15px;
+
+    z-index:20;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:10px 12px;
+
+    border-radius:15px;
+
+    background:
+        rgba(4,12,22,.72);
+
+    backdrop-filter:
+        blur(12px);
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+}
+
+.status-left{
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-size:11px;
+}
+
+.online-dot{
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:var(--green);
+
+    box-shadow:
+        0 0 12px
+        var(--green);
+}
+
+.waveform{
+    display:flex;
+
+    align-items:center;
+
+    gap:3px;
+
+    height:20px;
+}
+
+.waveform i{
+    width:3px;
+
+    height:6px;
+
+    border-radius:4px;
+
+    background:#8beaff;
+
+    animation:
+        voiceWave
+        .55s
+        infinite
+        ease-in-out;
+}
+
+.waveform i:nth-child(2){
+    animation-delay:.08s;
+}
+
+.waveform i:nth-child(3){
+    animation-delay:.16s;
+}
+
+.waveform i:nth-child(4){
+    animation-delay:.24s;
+}
+
+.waveform i:nth-child(5){
+    animation-delay:.32s;
+}
+
+@keyframes voiceWave{
+
+    50%{
+        height:18px;
     }
 
-    .logo span,
-    .nav button span:not(.nav-icon),
-    .user-info{
+}
+
+/* =========================
+   MOTION BUTTONS
+========================= */
+
+.motion-controls{
+
+    position:absolute;
+
+    left:15px;
+    right:15px;
+    bottom:15px;
+
+    z-index:30;
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:7px;
+
+}
+
+.motion-controls button{
+
+    padding:8px 11px;
+
+    border-radius:999px;
+
+    color:#d9e7f7;
+
+    background:
+        rgba(5,13,23,.76);
+
+    border:
+        1px solid
+        rgba(255,255,255,.10);
+
+    font-size:11px;
+}
+
+.motion-controls button:hover{
+    background:
+        rgba(255,255,255,.08);
+}
+
+/* =========================
+   CONTENT CARDS
+========================= */
+
+.cards{
+
+    width:min(
+        1200px,
+        calc(100% - 40px)
+    );
+
+    margin:35px auto 90px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:16px;
+}
+
+.card{
+
+    padding:25px;
+
+    border-radius:22px;
+
+    background:
+        rgba(255,255,255,.03);
+
+    border:
+        1px solid
+        var(--line);
+
+}
+
+.card h3{
+    margin-top:0;
+}
+
+.card p{
+
+    color:var(--muted);
+
+    line-height:1.65;
+
+    font-size:13px;
+
+}
+
+/* =========================
+   AI POPUP
+========================= */
+
+.overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:1000;
+
+    background:
+        rgba(0,0,0,.66);
+
+    backdrop-filter:
+        blur(9px);
+
+    display:flex;
+
+    align-items:flex-end;
+
+    justify-content:flex-end;
+
+    padding:20px;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
+
+    transition:.25s ease;
+
+}
+
+.overlay.open{
+
+    opacity:1;
+
+    visibility:visible;
+
+    pointer-events:auto;
+
+}
+
+.assistant{
+
+    width:
+        min(
+            450px,
+            calc(100vw - 20px)
+        );
+
+    border-radius:27px;
+
+    overflow:hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(12,25,43,.98),
+            rgba(5,13,23,.99)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    box-shadow:var(--shadow);
+
+    transform:
+        translateY(25px);
+
+    transition:.35s;
+
+}
+
+.overlay.open .assistant{
+    transform:translateY(0);
+}
+
+/* popup heading */
+
+.assistant-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:15px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.07);
+
+}
+
+.assistant-title strong{
+    display:block;
+
+    font-size:14px;
+}
+
+.assistant-title span{
+
+    color:var(--muted);
+
+    font-size:10px;
+
+}
+
+.close-button{
+
+    width:35px;
+    height:35px;
+
+    border-radius:11px;
+
+    border:
+        1px solid
+        var(--line);
+
+    background:
+        rgba(255,255,255,.04);
+
+    color:#fff;
+
+    font-size:21px;
+
+}
+
+/* popup avatar */
+
+.popup-avatar{
+
+    position:relative;
+
+    height:300px;
+
+    margin:14px;
+
+    overflow:hidden;
+
+    border-radius:21px;
+
+    background:transparent;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+}
+
+/*
+The real human avatar goes here.
+*/
+
+#popup-anam-container{
+
+    position:absolute;
+
+    inset:0;
+
+    background:transparent;
+
+}
+
+/* chat */
+
+.chat{
+
+    height:105px;
+
+    overflow-y:auto;
+
+    padding:2px 15px;
+
+}
+
+.message{
+
+    max-width:82%;
+
+    padding:9px 11px;
+
+    border-radius:14px;
+
+    margin:7px 0;
+
+    font-size:11px;
+
+    line-height:1.5;
+
+}
+
+.bot-message{
+
+    background:
+        rgba(36,124,255,.11);
+
+    border:
+        1px solid
+        rgba(36,124,255,.20);
+
+}
+
+.user-message{
+
+    margin-left:auto;
+
+    background:
+        rgba(255,255,255,.045);
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+}
+
+/* controls */
+
+.input-row{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr
+        48px;
+
+    gap:9px;
+
+    padding:0 15px 15px;
+
+}
+
+.message-input{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    border:
+        1px solid
+        var(--line);
+
+    border-radius:15px;
+
+    padding:
+        8px 10px;
+
+    background:
+        rgba(255,255,255,.035);
+
+}
+
+.message-input input{
+
+    width:100%;
+
+    border:0;
+
+    outline:none;
+
+    background:transparent;
+
+    color:#fff;
+
+    font-size:12px;
+
+}
+
+.mic-button{
+
+    width:48px;
+    height:48px;
+
+    border:0;
+
+    border-radius:15px;
+
+    color:#fff;
+
+    font-size:19px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #237cff,
+            #44caff
+        );
+
+}
+
+.mic-button.listening{
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff526c,
+            #ff936d
+        );
+
+    animation:
+        microphonePulse
+        1s
+        infinite;
+
+}
+
+@keyframes microphonePulse{
+
+    50%{
+        box-shadow:
+            0 0 0 9px
+            rgba(255,82,108,.12);
+    }
+
+}
+
+.disclaimer{
+
+    padding:
+        0
+        15px
+        15px;
+
+    color:#76869a;
+
+    font-size:9px;
+
+    text-align:center;
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:900px){
+
+    nav{
         display:none;
     }
 
-    .logo{
-        justify-content:center;
-        padding:4px 0 25px;
+    .hero{
+        grid-template-columns:1fr;
+
+        padding-top:40px;
     }
 
-    .nav button{
-        justify-content:center;
-        padding:12px;
+    .avatar-section{
+        height:500px;
     }
 
-    .user{
-        justify-content:center;
+    .cards{
+        grid-template-columns:1fr;
     }
 
-    .voice-panel{
-        width:290px;
-    }
 }
 
-@media(max-width:760px){
+@media(max-width:560px){
 
-    .voice-panel{
-        display:none;
-    }
-
-    .topbar{
+    header{
         padding:0 15px;
     }
 
-    .messages{
-        padding:25px 16px 15px;
+    .hero{
+        width:
+            calc(100% - 28px);
     }
 
-    .composer-wrap{
-        padding:10px 12px 15px;
+    h1{
+        letter-spacing:-2px;
     }
 
-    .welcome{
-        margin-top:20px;
+    .stats{
+        grid-template-columns:1fr;
     }
 
-    .welcome h1{
-        font-size:31px;
+    .overlay{
+        padding:10px;
     }
 
-    .sidebar{
-        width:60px;
-    }
-}
-
-.hidden{
-    display:none !important;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<!-- =========================
+     HEADER
+========================= -->
 
-    <!-- SIDEBAR -->
+<header>
 
-    <aside class="sidebar">
+    <a class="logo" href="#">
 
-        <div class="logo">
-            <div class="logo-mark">✦</div>
-            <span>EnableX</span>
+        <span class="logo-icon"></span>
+
+        EnableX
+
+    </a>
+
+    <nav>
+
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Knowledge Hub</a>
+        <a href="#">AI Assistant</a>
+        <a href="#">Analytics</a>
+        <a href="#">Settings</a>
+
+    </nav>
+
+    <button
+        class="header-button"
+        id="openAssistant"
+    >
+        Talk to AI
+    </button>
+
+</header>
+
+
+<main>
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero">
+
+    <div>
+
+        <span class="badge">
+            AI-powered enterprise platform
+        </span>
+
+        <h1>
+
+            Empower People.
+            <br>
+
+            <span>
+                Enable Performance.
+            </span>
+
+        </h1>
+
+        <p class="hero-description">
+
+            Meet your human AI assistant.
+            It can appear naturally on the page,
+            walk casually from side to side,
+            stop when interaction is needed,
+            speak with natural voice,
+            and resume walking afterwards.
+
+        </p>
+
+        <div class="buttons">
+
+            <button
+                class="primary-button"
+                id="startConversation"
+            >
+                🎙 Start Conversation
+            </button>
+
+            <button
+                class="secondary-button"
+                id="watchMotion"
+            >
+                Watch Avatar Move
+            </button>
+
         </div>
 
-        <nav class="nav">
+        <div class="stats">
 
-            <button>
-                <span class="nav-icon">⌂</span>
-                <span>Dashboard</span>
-            </button>
+            <div class="stat">
 
-            <button>
-                <span class="nav-icon">▣</span>
-                <span>Knowledge Hub</span>
-            </button>
+                <strong>10K+</strong>
 
-            <button class="active">
-                <span class="nav-icon">✦</span>
-                <span>AI Assistant</span>
-            </button>
+                <span>
+                    Active Users
+                </span>
 
-            <button>
-                <span class="nav-icon">◫</span>
-                <span>Analytics</span>
-            </button>
+            </div>
 
-            <button>
-                <span class="nav-icon">⚙</span>
-                <span>Settings</span>
-            </button>
+            <div class="stat">
 
-        </nav>
+                <strong>95%</strong>
 
-        <div class="sidebar-bottom">
+                <span>
+                    Adoption Rate
+                </span>
 
-            <div class="user">
+            </div>
 
-                <div class="avatar-small">R</div>
+            <div class="stat">
 
-                <div class="user-info">
-                    <strong>Resh</strong>
-                    <span>Administrator</span>
-                </div>
+                <strong>50+</strong>
+
+                <span>
+                    Integrations
+                </span>
 
             </div>
 
         </div>
 
-    </aside>
+    </div>
 
 
-    <!-- MAIN -->
+    <!-- =========================
+         AVATAR
+    ========================= -->
 
-    <main class="main">
+    <div class="avatar-section">
 
-        <!-- TOP BAR -->
+        <div class="avatar-status">
 
-        <header class="topbar">
+            <div class="status-left">
 
-            <div class="page-title">
-                <span class="status-dot"></span>
-                <strong>AI Assistant</strong>
-            </div>
+                <span class="online-dot"></span>
 
-            <div class="top-actions">
-
-                <button class="icon-btn">⌕</button>
-                <button class="icon-btn">◌</button>
-                <button class="icon-btn">⋯</button>
+                <span id="statusText">
+                    Human AI Assistant • Online
+                </span>
 
             </div>
 
-        </header>
+            <div class="waveform">
 
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
 
-        <div class="content">
-
-            <!-- CHAT -->
-
-            <section class="chat-area">
-
-                <div class="messages" id="messages">
-
-                    <div class="welcome" id="welcome">
-
-                        <h1>How can I help?</h1>
-
-                        <p>
-                            Ask, speak, search your knowledge, or let EnableX take action.
-                        </p>
-
-                    </div>
-
-                    <div class="suggestions" id="suggestions">
-
-                        <button class="suggestion"
-                                onclick="suggest('Search our knowledge hub')">
-                            Search Knowledge Hub
-                        </button>
-
-                        <button class="suggestion"
-                                onclick="suggest('Summarize our latest documents')">
-                            Summarize documents
-                        </button>
-
-                        <button class="suggestion"
-                                onclick="suggest('Show me our latest analytics')">
-                            Show analytics
-                        </button>
-
-                        <button class="suggestion"
-                                onclick="suggest('Create an onboarding summary')">
-                            Create summary
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- COMPOSER -->
-
-                <div class="composer-wrap">
-
-                    <div class="composer">
-
-                        <button class="compose-btn"
-                                title="Attach file"
-                                onclick="document.getElementById('fileInput').click()">
-                            ＋
-                        </button>
-
-                        <input
-                            id="chatInput"
-                            type="text"
-                            placeholder="Ask EnableX anything..."
-                            autocomplete="off"
-                        >
-
-                        <input
-                            id="fileInput"
-                            type="file"
-                            hidden
-                            multiple
-                        >
-
-                        <button
-                            class="voice-btn"
-                            id="voiceButton"
-                            title="Start voice"
-                            onclick="toggleVoice()">
-                            🎙
-                        </button>
-
-                        <button
-                            class="send-btn"
-                            onclick="sendMessage()">
-                            ➤
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- VOICE -->
-
-            <aside class="voice-panel">
-
-                <div class="voice-title">
-
-                    <strong>Live Assistant</strong>
-
-                    <span class="live-badge">
-                        ● LIVE
-                    </span>
-
-                </div>
-
-
-                <div class="orb-container">
-
-                    <div class="orb-ring ring1"></div>
-                    <div class="orb-ring ring2"></div>
-                    <div class="orb-ring ring3"></div>
-
-                    <div class="orb" id="orb"></div>
-
-                </div>
-
-
-                <div class="wave" id="wave">
-
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-
-                </div>
-
-
-                <div class="voice-state" id="voiceState">
-                    Ready to talk
-                </div>
-
-
-                <div class="voice-controls">
-
-                    <button
-                        class="voice-control"
-                        onclick="toggleVoice()">
-                        🎙 Start
-                    </button>
-
-                    <button
-                        class="voice-control"
-                        onclick="stopVoice()">
-                        ■ Stop
-                    </button>
-
-                </div>
-
-            </aside>
+            </div>
 
         </div>
 
-    </main>
+
+        <!--
+        ========================================================
+        REAL HUMAN AVATAR
+        ========================================================
+
+        YOUR ANAM VIDEO GOES HERE.
+
+        It should be:
+
+        ✔ photorealistic
+        ✔ human
+        ✔ transparent background
+        ✔ head-to-belly framing
+        ✔ talking animation
+        ✔ blinking
+        ✔ facial expressions
+        ✔ lip sync
+        ✔ idle animation
+        ✔ walking animation
+        -->
+
+        <div
+            class="avatar-motion"
+            id="avatarMotion"
+        >
+
+            <div
+                id="anam-container"
+            >
+
+                <!--
+
+                Example:
+
+                <video
+                    id="realAvatarVideo"
+                    autoplay
+                    playsinline
+                    src="YOUR_ANAM_STREAM"
+                ></video>
+
+                OR:
+
+                Initialize your Anam SDK here.
+
+                -->
+
+            </div>
+
+
+            <!--
+
+            DEVELOPMENT PLACEHOLDER ONLY.
+
+            Remove this once your real
+            Anam avatar is mounted.
+
+            -->
+
+            <div
+                class="demo-human"
+                id="demoHuman"
+            ></div>
+
+        </div>
+
+
+        <!-- Keeps frame at belly level -->
+
+        <div class="avatar-crop"></div>
+
+
+        <!-- movement controls -->
+
+        <div class="motion-controls">
+
+            <button data-motion="left">
+                ← Walk Left
+            </button>
+
+            <button data-motion="stop">
+                ● Stop & Talk
+            </button>
+
+            <button data-motion="gesture">
+                ✦ Gesture
+            </button>
+
+            <button data-motion="right">
+                Walk Right →
+            </button>
+
+            <button data-motion="auto">
+                Auto Mode
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     FEATURE CARDS
+========================= -->
+
+<section class="cards">
+
+    <article class="card">
+
+        <h3>
+            Real Human Avatar
+        </h3>
+
+        <p>
+            Replace the placeholder with an actual
+            photorealistic Anam avatar stream.
+            No cartoon character is required.
+        </p>
+
+    </article>
+
+
+    <article class="card">
+
+        <h3>
+            Natural Walking
+        </h3>
+
+        <p>
+            The avatar can move right-to-left,
+            pause naturally, turn, speak,
+            gesture and continue walking.
+        </p>
+
+    </article>
+
+
+    <article class="card">
+
+        <h3>
+            Real Lip Sync
+        </h3>
+
+        <p>
+            ElevenLabs provides voice while
+            your avatar platform handles facial
+            animation and lip synchronization.
+        </p>
+
+    </article>
+
+</section>
+
+</main>
+
+
+<!-- ======================================================
+     VOICE ASSISTANT POPUP
+====================================================== -->
+
+<div
+    class="overlay open"
+    id="assistantOverlay"
+>
+
+    <section class="assistant">
+
+        <div class="assistant-top">
+
+            <div class="assistant-title">
+
+                <strong>
+                    EnableX AI Assistant
+                </strong>
+
+                <span id="assistantStatus">
+                    Online • Ready
+                </span>
+
+            </div>
+
+            <button
+                class="close-button"
+                id="closeAssistant"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="popup-avatar">
+
+            <!-- REAL ANAM AVATAR -->
+
+            <div
+                id="popup-anam-container"
+            ></div>
+
+        </div>
+
+
+        <div
+            class="chat"
+            id="chat"
+        >
+
+            <div class="message bot-message">
+
+                Hi! I'm your AI assistant.
+                How can I help you today?
+
+            </div>
+
+        </div>
+
+
+        <div class="input-row">
+
+            <div class="message-input">
+
+                💬
+
+                <input
+                    id="messageInput"
+                    placeholder="Ask me anything..."
+                >
+
+            </div>
+
+
+            <button
+                class="mic-button"
+                id="micButton"
+            >
+                🎙
+            </button>
+
+        </div>
+
+
+        <div class="disclaimer">
+
+            AI responses can make mistakes.
+            Verify important information.
+
+        </div>
+
+    </section>
 
 </div>
 
 
 <script>
 
-/* =========================================================
-   ENABLEX AI ASSISTANT FRONTEND
-   ========================================================= */
+/*
+===========================================================
+GLOBAL ELEMENTS
+===========================================================
+*/
 
-const messages = document.getElementById("messages");
-const input = document.getElementById("chatInput");
-const voiceButton = document.getElementById("voiceButton");
-const orb = document.getElementById("orb");
-const wave = document.getElementById("wave");
-const voiceState = document.getElementById("voiceState");
+const overlay =
+    document.getElementById(
+        "assistantOverlay"
+    );
 
-let voiceActive = false;
-let recognition = null;
+const openAssistant =
+    document.getElementById(
+        "openAssistant"
+    );
 
+const closeAssistant =
+    document.getElementById(
+        "closeAssistant"
+    );
 
-/* =========================================================
-   CHAT
-   ========================================================= */
+const startConversation =
+    document.getElementById(
+        "startConversation"
+    );
 
-function suggest(text){
+const watchMotion =
+    document.getElementById(
+        "watchMotion"
+    );
 
-    input.value = text;
-    sendMessage();
+const avatarMotion =
+    document.getElementById(
+        "avatarMotion"
+    );
 
-}
+const statusText =
+    document.getElementById(
+        "statusText"
+    );
 
+const assistantStatus =
+    document.getElementById(
+        "assistantStatus"
+    );
 
-function sendMessage(){
+const messageInput =
+    document.getElementById(
+        "messageInput"
+    );
 
-    const text = input.value.trim();
+const chat =
+    document.getElementById(
+        "chat"
+    );
 
-    if(!text) return;
-
-    const welcome = document.getElementById("welcome");
-    const suggestions = document.getElementById("suggestions");
-
-    if(welcome) welcome.remove();
-    if(suggestions) suggestions.remove();
-
-    addUserMessage(text);
-
-    input.value = "";
-
-    setTimeout(() => {
-
-        addAIMessage(text);
-
-    },700);
-
-}
-
-
-function addUserMessage(text){
-
-    const wrapper = document.createElement("div");
-
-    wrapper.className = "user-message";
-
-    wrapper.innerHTML = `
-        <div class="message-content">
-            <div class="message-name">You</div>
-            <div class="message-bubble">${escapeHTML(text)}</div>
-        </div>
-    `;
-
-    messages.appendChild(wrapper);
-
-    scrollMessages();
-
-}
+const micButton =
+    document.getElementById(
+        "micButton"
+    );
 
 
-function addAIMessage(question){
+/*
+===========================================================
+POPUP
+===========================================================
+*/
 
-    const wrapper = document.createElement("div");
+function openAI(){
 
-    wrapper.className = "ai-message";
-
-    wrapper.innerHTML = `
-
-        <div class="message-avatar">✦</div>
-
-        <div class="message-content">
-
-            <div class="message-name">EnableX AI</div>
-
-            <div class="message-bubble">
-
-                I can help with that. I can search your
-                Knowledge Hub, analyze information, summarize
-                documents, or perform actions for you.
-
-                <div class="ai-card">
-
-                    <div class="card-header">
-
-                        <span class="card-title">
-                            ✦ Suggested action
-                        </span>
-
-                        <span class="card-badge">
-                            AI READY
-                        </span>
-
-                    </div>
-
-                    <div class="document">
-
-                        <div class="doc-icon">📚</div>
-
-                        <div class="document-info">
-
-                            <strong>
-                                Knowledge Hub
-                            </strong>
-
-                            <span>
-                                Search and retrieve relevant information
-                            </span>
-
-                        </div>
-
-                        <button
-                            class="open-btn"
-                            onclick="startAction('knowledge')">
-                            Open
-                        </button>
-
-                    </div>
-
-                    <div class="document">
-
-                        <div class="doc-icon">✦</div>
-
-                        <div class="document-info">
-
-                            <strong>
-                                AI Summary
-                            </strong>
-
-                            <span>
-                                Generate an intelligent response
-                            </span>
-
-                        </div>
-
-                        <button
-                            class="open-btn"
-                            onclick="startAction('summary')">
-                            Run
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-    `;
-
-    messages.appendChild(wrapper);
-
-    scrollMessages();
+    overlay.classList.add(
+        "open"
+    );
 
 }
 
+function closeAI(){
 
-function startAction(type){
-
-    const msg =
-        type === "knowledge"
-        ? "Searching the EnableX Knowledge Hub..."
-        : "Preparing an AI summary...";
-
-    addUserMessage(msg);
-
-    setTimeout(() => {
-
-        addAIMessage(
-            type === "knowledge"
-            ? "Knowledge search completed."
-            : "Your AI summary is ready."
-        );
-
-    },900);
+    overlay.classList.remove(
+        "open"
+    );
 
 }
 
+openAssistant.onclick =
+    openAI;
 
-function escapeHTML(text){
+startConversation.onclick =
+    openAI;
 
-    return text
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+closeAssistant.onclick =
+    closeAI;
 
-}
+overlay.addEventListener(
+    "click",
+    function(event){
 
+        if(
+            event.target ===
+            overlay
+        ){
+            closeAI();
+        }
 
-function scrollMessages(){
-
-    messages.scrollTo({
-        top:messages.scrollHeight,
-        behavior:"smooth"
-    });
-
-}
-
-
-input.addEventListener("keydown",function(e){
-
-    if(e.key === "Enter"){
-        sendMessage();
     }
+);
 
-});
+document.addEventListener(
+    "keydown",
+    function(event){
 
-
-/* =========================================================
-   FILE UPLOAD
-   ========================================================= */
-
-document.getElementById("fileInput").addEventListener(
-    "change",
-    function(){
-
-        if(!this.files.length) return;
-
-        const names =
-            Array.from(this.files)
-            .map(file => file.name)
-            .join(", ");
-
-        addUserMessage(
-            "Uploaded: " + names
-        );
-
-        setTimeout(() => {
-
-            addAIMessage(
-                "I received your file. Connect this event to Supabase Storage or your AI document-processing backend."
-
-            );
-
-        },700);
+        if(
+            event.key === "Escape"
+        ){
+            closeAI();
+        }
 
     }
 );
 
 
-/* =========================================================
-   VOICE UI
-   ========================================================= */
+/*
+===========================================================
+AVATAR MOTION STATE
+===========================================================
+*/
 
-function toggleVoice(){
+let direction =
+    1;
 
-    if(voiceActive){
+let autoMode =
+    true;
 
-        stopVoice();
+let isSpeaking =
+    false;
 
-    }else{
+let isPaused =
+    false;
 
-        startVoice();
+let motionTimer;
+
+
+function setMotion(
+    state
+){
+
+    avatarMotion.classList.remove(
+        "walk-left",
+        "walk-right",
+        "stop"
+    );
+
+    if(
+        state === "left"
+    ){
+
+        avatarMotion.classList.add(
+            "walk-left"
+        );
+
+    }
+
+    if(
+        state === "right"
+    ){
+
+        avatarMotion.classList.add(
+            "walk-right"
+        );
+
+    }
+
+    if(
+        state === "stop"
+    ){
+
+        avatarMotion.classList.add(
+            "stop"
+        );
 
     }
 
 }
 
 
-function startVoice(){
+/*
+===========================================================
+WALKING ENGINE
+===========================================================
 
-    voiceActive = true;
+The avatar:
 
-    voiceButton.classList.add("active");
+1. walks
+2. reaches an area
+3. stops
+4. observes
+5. optionally speaks
+6. resumes
+7. changes direction
 
-    orb.classList.add("listening");
+This is deliberately NOT an endless rigid animation loop.
+===========================================================
+*/
 
-    wave.classList.add("active");
+function startWalking(){
 
-    voiceState.textContent = "Listening...";
+    clearTimeout(
+        motionTimer
+    );
+
+    if(
+        !autoMode ||
+        isSpeaking ||
+        isPaused
+    ){
+        return;
+    }
+
+    const side =
+        direction === 1
+        ? "right"
+        : "left";
+
+    setMotion(
+        side
+    );
+
+    statusText.textContent =
+        "Human AI Assistant • Walking";
+
+    assistantStatus.textContent =
+        "Walking • Online";
 
 
     /*
-       OPTIONAL BROWSER SPEECH RECOGNITION
-
-       Replace this section with your ElevenLabs
-       conversational AI integration.
+    Walk for a random amount
+    so behaviour feels less robotic.
     */
 
-    if("webkitSpeechRecognition" in window){
+    const walkDuration =
+        2800 +
+        Math.random() *
+        2400;
 
-        recognition =
-            new webkitSpeechRecognition();
 
-        recognition.continuous = false;
-        recognition.interimResults = true;
-        recognition.lang = "en-US";
+    motionTimer =
+        setTimeout(
 
-        recognition.onresult = function(event){
+            function(){
 
-            let transcript = "";
+                if(
+                    !autoMode ||
+                    isSpeaking
+                ){
+                    return;
+                }
 
-            for(
-                let i=event.resultIndex;
-                i<event.results.length;
-                i++
-            ){
 
-                transcript +=
-                    event.results[i][0].transcript;
+                /*
+                STOP
+                */
 
-            }
+                setMotion(
+                    "stop"
+                );
 
-            input.value = transcript;
+                isPaused =
+                    true;
 
-        };
 
-        recognition.onend = function(){
+                statusText.textContent =
+                    "Human AI Assistant • Paused";
 
-            if(voiceActive){
+                assistantStatus.textContent =
+                    "Paused • Looking around";
 
-                voiceState.textContent =
-                    "Processing...";
 
-                setTimeout(() => {
+                /*
+                Casual pause.
+                */
 
-                    voiceState.textContent =
-                        "Ready to talk";
+                const pauseDuration =
+                    1800 +
+                    Math.random() *
+                    4000;
 
-                },1000);
 
-            }
+                motionTimer =
+                    setTimeout(
 
-        };
+                        function(){
 
-        recognition.start();
+                            direction *= -1;
+
+                            isPaused =
+                                false;
+
+                            startWalking();
+
+                        },
+
+                        pauseDuration
+
+                    );
+
+            },
+
+            walkDuration
+
+        );
+
+}
+
+
+/*
+===========================================================
+STOP WHEN APPROPRIATE
+===========================================================
+*/
+
+function stopForConversation(){
+
+    clearTimeout(
+        motionTimer
+    );
+
+    isPaused =
+        true;
+
+    setMotion(
+        "stop"
+    );
+
+    statusText.textContent =
+        "Human AI Assistant • Speaking";
+
+    assistantStatus.textContent =
+        "Speaking • Online";
+
+}
+
+
+/*
+===========================================================
+RESUME AFTER CONVERSATION
+===========================================================
+*/
+
+function resumeWalking(){
+
+    if(
+        !autoMode
+    ){
+        return;
+    }
+
+    isPaused =
+        false;
+
+    isSpeaking =
+        false;
+
+    statusText.textContent =
+        "Human AI Assistant • Online";
+
+    assistantStatus.textContent =
+        "Online • Walking";
+
+    startWalking();
+
+}
+
+
+/*
+===========================================================
+TALKING STATE
+
+CALL THIS FROM ELEVENLABS
+===========================================================
+*/
+
+function setTalking(
+    talking
+){
+
+    isSpeaking =
+        talking;
+
+    if(
+        talking
+    ){
+
+        /*
+        Human avatar stops
+        when speech starts.
+        */
+
+        stopForConversation();
+
+        /*
+        Tell your Anam avatar
+        to play speaking state.
+        */
+
+        if(
+            window.anamSpeak
+        ){
+
+            window.anamSpeak(
+                true
+            );
+
+        }
+
+    }
+    else{
+
+        if(
+            window.anamSpeak
+        ){
+
+            window.anamSpeak(
+                false
+            );
+
+        }
+
+        /*
+        Give avatar a small
+        human-like pause.
+        */
+
+        setTimeout(
+
+            resumeWalking,
+
+            1200
+
+        );
 
     }
 
 }
 
 
-function stopVoice(){
+/*
+===========================================================
+MANUAL MOTION BUTTONS
+===========================================================
+*/
 
-    voiceActive = false;
+document
+    .querySelectorAll(
+        "[data-motion]"
+    )
+    .forEach(
 
-    voiceButton.classList.remove("active");
+        function(button){
 
-    orb.classList.remove("listening");
-    orb.classList.remove("speaking");
+            button.addEventListener(
+                "click",
+                function(){
 
-    wave.classList.remove("active");
+                    const motion =
+                        button.dataset.motion;
 
-    voiceState.textContent =
-        "Ready to talk";
 
-    if(recognition){
+                    if(
+                        motion ===
+                        "auto"
+                    ){
 
-        try{
-            recognition.stop();
-        }catch(e){}
+                        autoMode =
+                            true;
 
-        recognition = null;
+                        startWalking();
+
+                        return;
+
+                    }
+
+
+                    autoMode =
+                        false;
+
+
+                    if(
+                        motion ===
+                        "left"
+                    ){
+
+                        setMotion(
+                            "left"
+                        );
+
+                    }
+
+
+                    if(
+                        motion ===
+                        "right"
+                    ){
+
+                        setMotion(
+                            "right"
+                        );
+
+                    }
+
+
+                    if(
+                        motion ===
+                        "stop"
+                    ){
+
+                        stopForConversation();
+
+                    }
+
+
+                    if(
+                        motion ===
+                        "gesture"
+                    ){
+
+                        stopForConversation();
+
+
+                        /*
+                        Tell Anam to
+                        trigger gesture.
+                        */
+
+                        if(
+                            window.anamGesture
+                        ){
+
+                            window.anamGesture();
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+
+    );
+
+
+/*
+===========================================================
+WATCH MOTION
+===========================================================
+*/
+
+watchMotion.onclick =
+    function(){
+
+        autoMode =
+            true;
+
+        startWalking();
+
+    };
+
+
+/*
+===========================================================
+CHAT
+===========================================================
+*/
+
+function addMessage(
+    text,
+    type
+){
+
+    const message =
+        document.createElement(
+            "div"
+        );
+
+    message.className =
+        "message " +
+        (
+            type === "user"
+            ? "user-message"
+            : "bot-message"
+        );
+
+    message.textContent =
+        text;
+
+    chat.appendChild(
+        message
+    );
+
+    chat.scrollTop =
+        chat.scrollHeight;
+
+}
+
+
+/*
+===========================================================
+TEXT CHAT
+
+Replace this demo function with your
+ElevenLabs agent / backend request.
+===========================================================
+*/
+
+function sendMessage(){
+
+    const text =
+        messageInput.value.trim();
+
+    if(
+        !text
+    ){
+        return;
+    }
+
+
+    addMessage(
+        text,
+        "user"
+    );
+
+    messageInput.value =
+        "";
+
+
+    /*
+    Stop walking while answering.
+    */
+
+    stopForConversation();
+
+
+    /*
+    Demo response.
+    */
+
+    setTimeout(
+
+        function(){
+
+            const reply =
+                "Absolutely. I'm ready to help you. I can answer questions, search your knowledge base, and guide you through EnableX.";
+
+            addMessage(
+                reply,
+                "bot"
+            );
+
+
+            /*
+            Demo browser speech.
+
+            Replace this with ElevenLabs.
+            */
+
+            speakDemo(
+                reply
+            );
+
+        },
+
+        500
+
+    );
+
+}
+
+messageInput.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key ===
+            "Enter"
+        ){
+
+            sendMessage();
+
+        }
+
+    }
+);
+
+
+/*
+===========================================================
+DEMO BROWSER VOICE
+
+Production:
+replace with ElevenLabs.
+===========================================================
+*/
+
+function speakDemo(
+    text
+){
+
+    if(
+        !window.speechSynthesis
+    ){
+
+        resumeWalking();
+
+        return;
 
     }
 
+
+    const utterance =
+        new SpeechSynthesisUtterance(
+            text
+        );
+
+
+    utterance.rate =
+        .96;
+
+    utterance.pitch =
+        1;
+
+    utterance.volume =
+        1;
+
+
+    utterance.onstart =
+        function(){
+
+            setTalking(
+                true
+            );
+
+        };
+
+
+    utterance.onend =
+        function(){
+
+            setTalking(
+                false
+            );
+
+        };
+
+
+    utterance.onerror =
+        function(){
+
+            setTalking(
+                false
+            );
+
+        };
+
+
+    window
+        .speechSynthesis
+        .cancel();
+
+
+    window
+        .speechSynthesis
+        .speak(
+            utterance
+        );
+
 }
-
-
-/* =========================================================
-   DEMO SPEAKING STATE
-   ========================================================= */
-
-function showSpeaking(){
-
-    orb.classList.remove("listening");
-    orb.classList.add("speaking");
-
-    wave.classList.add("active");
-
-    voiceState.textContent =
-        "Speaking...";
-
-}
-
-
-/* =========================================================
-   FILE / ELEVENLABS / ANAM CONNECTION POINTS
-   =========================================================
-
-   Replace these functions with your real APIs.
-
-   ElevenLabs:
-   - Connect your Conversational AI agent
-   - Start session
-   - Receive audio
-   - Receive transcript
-   - Handle interruptions
-
-   Anam:
-   - Initialize avatar
-   - Pass assistant text/audio
-   - Synchronize speaking state
-
-   Supabase:
-   - Store conversations
-   - Store users
-   - Store knowledge
-   - Store uploaded documents
-
-   ========================================================= */
 
 
 /*
-async function connectElevenLabs(){
+===========================================================
+MICROPHONE
 
-    // Example placeholder
+Browser fallback.
+===========================================================
+*/
 
-    // const conversation =
-    //     await ElevenLabs.startConversation({
-    //         agentId: "YOUR_AGENT_ID"
-    //     });
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+if(
+    SpeechRecognition
+){
+
+    const recognition =
+        new SpeechRecognition();
+
+    recognition.lang =
+        "en-US";
+
+    recognition.interimResults =
+        false;
+
+    recognition.continuous =
+        false;
+
+
+    recognition.onstart =
+        function(){
+
+            micButton.classList.add(
+                "listening"
+            );
+
+            assistantStatus.textContent =
+                "Listening…";
+
+            stopForConversation();
+
+        };
+
+
+    recognition.onend =
+        function(){
+
+            micButton.classList.remove(
+                "listening"
+            );
+
+        };
+
+
+    recognition.onresult =
+        function(event){
+
+            const transcript =
+                event
+                    .results[0][0]
+                    .transcript;
+
+            messageInput.value =
+                transcript;
+
+            sendMessage();
+
+        };
+
+
+    recognition.onerror =
+        function(){
+
+            micButton.classList.remove(
+                "listening"
+            );
+
+            resumeWalking();
+
+        };
+
+
+    micButton.onclick =
+        function(){
+
+            recognition.start();
+
+        };
 
 }
+else{
+
+    micButton.onclick =
+        function(){
+
+            alert(
+                "Voice recognition is not available in this browser. Connect your ElevenLabs voice agent for production voice input."
+            );
+
+        };
+
+}
+
+
+/*
+===========================================================
+ANAM INTEGRATION
+===========================================================
+
+PUT YOUR REAL PHOTOREALISTIC HUMANOID AVATAR HERE.
+
+Example structure:
+
+const anam = new AnamClient(...);
+
+anam.mount(
+    document.getElementById(
+        "anam-container"
+    )
+);
+
+The same principle can be used for:
+
+#popup-anam-container
+
+
+Important:
+
+The Anam/video avatar should be configured as:
+
+- realistic human
+- transparent background
+- head → belly framing
+- idle animation
+- walking animation
+- speaking animation
+- lip synchronization
+- blinking
+- natural gestures
+
+===========================================================
 */
 
 
 /*
-async function connectAnam(){
+Example hooks used by the motion engine.
 
-    // Initialize your Anam avatar here.
+Connect these functions to your real avatar SDK.
+*/
 
-}
+window.anamSpeak =
+    function(isSpeaking){
+
+        /*
+        Example:
+
+        if(isSpeaking){
+            anam.setState("talking");
+        }else{
+            anam.setState("idle");
+        }
+
+        */
+
+    };
+
+
+window.anamGesture =
+    function(){
+
+        /*
+        Example:
+
+        anam.setState(
+            "gesture"
+        );
+
+        */
+
+    };
+
+
+/*
+===========================================================
+ANAM WALKING STATES
+===========================================================
+
+When moving LEFT:
+
+anam.setState("walkLeft");
+
+When moving RIGHT:
+
+anam.setState("walkRight");
+
+When stopping:
+
+anam.setState("idle");
+
+When answering:
+
+anam.setState("talking");
+
+When pointing:
+
+anam.setState("gesture");
+
+That produces:
+
+Walk
+ ↓
+Stop
+ ↓
+Talk
+ ↓
+Gesture
+ ↓
+Idle
+ ↓
+Resume walking
+===========================================================
 */
 
 
 /*
-async function saveConversation(message){
-
-    // Supabase example placeholder
-
-    // await supabase
-    //     .from("conversations")
-    //     .insert({
-    //         message:message
-    //     });
-
-}
+===========================================================
+AUTO OPEN
+===========================================================
 */
 
+window.addEventListener(
+    "load",
+    function(){
+
+        /*
+        Open assistant shortly
+        after page loads.
+        */
+
+        setTimeout(
+
+            function(){
+
+                openAI();
+
+            },
+
+            700
+
+        );
+
+
+        /*
+        Start avatar movement.
+        */
+
+        setTimeout(
+
+            function(){
+
+                autoMode =
+                    true;
+
+                startWalking();
+
+            },
+
+            1200
+
+        );
+
+    }
+);
 
 </script>
 
