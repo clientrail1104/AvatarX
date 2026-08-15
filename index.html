@@ -4,1572 +4,718 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>EnableX — Human AI Voice Assistant</title>
+<title>EnableX — AI Human Assistant</title>
 
 <style>
 :root{
-    --bg:#06101d;
-    --panel:rgba(9,19,34,.92);
-    --panel2:rgba(13,28,48,.88);
-    --line:rgba(255,255,255,.11);
-    --text:#f7fbff;
-    --muted:#9eacbf;
-    --blue:#247cff;
-    --cyan:#35d9ff;
-    --green:#4de2a0;
-    --red:#ff5c72;
-    --shadow:0 30px 100px rgba(0,0,0,.55);
+    --blue:#1597ff;
+    --blue2:#006dff;
+    --cyan:#00d9ff;
+    --bg:#07111f;
+    --panel:rgba(9,22,40,.82);
+    --border:rgba(255,255,255,.13);
+    --text:#f6f9ff;
+    --muted:#9fb0c7;
 }
 
 *{
     box-sizing:border-box;
 }
 
-html{
-    scroll-behavior:smooth;
-}
-
-body{
+html,body{
     margin:0;
-    min-height:100vh;
-    color:var(--text);
-    font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
+    width:100%;
+    min-height:100%;
+    font-family:Inter,Arial,sans-serif;
     background:
-        radial-gradient(
-            circle at 15% 10%,
-            rgba(36,124,255,.18),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 85% 30%,
-            rgba(53,217,255,.10),
-            transparent 28%
-        ),
-        linear-gradient(
-            135deg,
-            #050b14,
-            #071321 55%,
-            #04101d
-        );
-
-    overflow-x:hidden;
+        radial-gradient(circle at 75% 20%,rgba(0,130,255,.22),transparent 30%),
+        radial-gradient(circle at 10% 90%,rgba(0,220,255,.10),transparent 30%),
+        linear-gradient(135deg,#06101e,#0b1c32);
+    color:var(--text);
 }
 
-button,
-input{
-    font:inherit;
-}
+/* -------------------------------------------------
+   WEBSITE
+------------------------------------------------- */
 
-button{
-    cursor:pointer;
-}
-
-a{
-    color:inherit;
-    text-decoration:none;
-}
-
-/* =========================
-   HEADER
-========================= */
-
-header{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-
-    height:72px;
-
-    z-index:100;
-
+.navbar{
+    height:76px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-
-    padding:0 30px;
-
-    background:rgba(4,10,18,.72);
-
-    backdrop-filter:blur(18px);
-
-    border-bottom:1px solid rgba(255,255,255,.06);
+    padding:0 5%;
+    border-bottom:1px solid rgba(255,255,255,.07);
+    backdrop-filter:blur(20px);
+    position:relative;
+    z-index:5;
 }
 
 .logo{
     display:flex;
     align-items:center;
-    gap:10px;
-
+    gap:12px;
+    font-size:23px;
     font-weight:800;
-    font-size:20px;
 }
 
-.logo-icon{
+.logoMark{
     width:35px;
     height:35px;
-
-    border-radius:11px;
-
+    border-radius:12px;
     background:
-        linear-gradient(
-            135deg,
-            #39d9ff,
-            #286eff
-        );
-
-    display:grid;
-    place-items:center;
+        linear-gradient(135deg,#00cfff,#1677ff);
+    box-shadow:0 0 25px rgba(0,175,255,.45);
 }
 
-.logo-icon:before{
-    content:"";
-
-    width:13px;
-    height:13px;
-
-    border:3px solid white;
-
-    transform:rotate(45deg);
-
-    border-radius:4px;
-}
-
-nav{
+.navLinks{
     display:flex;
-    gap:28px;
+    gap:32px;
+}
 
-    color:#b7c5d8;
-
+.navLinks a{
+    color:#cbd6e6;
+    text-decoration:none;
     font-size:14px;
 }
 
-nav a:hover{
-    color:#fff;
-}
-
-.header-button{
-    padding:10px 15px;
-
-    border-radius:12px;
-
-    color:#fff;
-
-    background:rgba(255,255,255,.04);
-
-    border:1px solid var(--line);
-}
-
-/* =========================
-   HERO
-========================= */
-
-main{
-    padding-top:72px;
-}
-
 .hero{
-    width:min(1200px,calc(100% - 40px));
-
-    min-height:94vh;
-
-    margin:auto;
-
-    display:grid;
-
-    grid-template-columns:
-        1fr
-        1fr;
-
-    gap:50px;
-
+    min-height:calc(100vh - 76px);
+    display:flex;
     align-items:center;
+    padding:70px 8%;
+    position:relative;
+    overflow:hidden;
+}
+
+.heroContent{
+    max-width:720px;
+    z-index:2;
 }
 
 .badge{
     display:inline-flex;
-
-    padding:8px 12px;
-
-    border-radius:999px;
-
-    border:1px solid rgba(53,217,255,.25);
-
-    background:rgba(53,217,255,.07);
-
-    color:#bdeeff;
-
-    font-size:11px;
-
-    letter-spacing:.8px;
-
-    text-transform:uppercase;
+    padding:9px 15px;
+    border:1px solid rgba(0,180,255,.35);
+    border-radius:30px;
+    background:rgba(0,140,255,.09);
+    color:#8fdfff;
+    font-size:13px;
+    margin-bottom:25px;
 }
 
 h1{
-    margin:19px 0;
-
-    font-size:
-        clamp(
-            45px,
-            6vw,
-            80px
-        );
-
+    font-size:clamp(48px,6vw,86px);
     line-height:.98;
-
-    letter-spacing:-3px;
+    margin:0 0 25px;
+    letter-spacing:-4px;
 }
 
-h1 span{
-    color:#45c8ff;
+.gradient{
+    background:linear-gradient(90deg,#fff,#26c8ff);
+    -webkit-background-clip:text;
+    color:transparent;
 }
 
-.hero-description{
-    color:var(--muted);
-
-    max-width:680px;
-
+.hero p{
+    max-width:600px;
     font-size:18px;
-
     line-height:1.7;
+    color:#aabbd0;
 }
 
 .buttons{
     display:flex;
-
-    gap:12px;
-
-    margin-top:28px;
-
-    flex-wrap:wrap;
-}
-
-.primary-button{
-    border:0;
-
-    padding:14px 19px;
-
-    color:white;
-
-    border-radius:14px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #217dff,
-            #42c8ff
-        );
-
-    box-shadow:
-        0 16px 40px
-        rgba(36,124,255,.28);
-}
-
-.secondary-button{
-    padding:14px 19px;
-
-    border-radius:14px;
-
-    color:white;
-
-    background:rgba(255,255,255,.04);
-
-    border:1px solid var(--line);
-}
-
-.stats{
+    gap:15px;
     margin-top:35px;
-
-    max-width:650px;
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    gap:12px;
 }
 
-.stat{
-    padding:15px;
-
-    border-radius:17px;
-
-    background:rgba(255,255,255,.035);
-
-    border:1px solid rgba(255,255,255,.08);
-}
-
-.stat strong{
-    display:block;
-
-    font-size:21px;
-}
-
-.stat span{
-    color:var(--muted);
-
-    font-size:11px;
-}
-
-/* =========================
-   AVATAR AREA
-========================= */
-
-.avatar-section{
-    position:relative;
-
-    height:560px;
-
-    overflow:hidden;
-
-    border-radius:34px;
-
-    border:1px solid rgba(255,255,255,.10);
-
-    background:
-        radial-gradient(
-            circle at 50% 25%,
-            rgba(53,217,255,.11),
-            transparent 34%
-        ),
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,.04),
-            rgba(255,255,255,.01)
-        );
-
-    box-shadow:var(--shadow);
-}
-
-/*
-=========================================================
-REAL HUMANOID AVATAR CONTAINER
-=========================================================
-
-Your real Anam/video avatar should be mounted here.
-
-IMPORTANT:
-
-The video should have:
-
-    background: transparent;
-
-The avatar should be framed approximately:
-
-    HEAD → CHEST → BELLY/WAIST
-
-NOT full body.
-
-Example:
-
-<video id="realAvatarVideo"
-       autoplay
-       playsinline
-       muted>
-</video>
-
-or mount your Anam SDK inside:
-
-<div id="anam-container"></div>
-*/
-
-#anam-container{
-    position:absolute;
-
-    left:50%;
-
-    bottom:40px;
-
-    width:430px;
-
-    height:480px;
-
-    transform:
-        translateX(-50%);
-
-    background:transparent;
-
-    z-index:4;
-
-    pointer-events:none;
-}
-
-/*
-Temporary image/video container.
-
-Replace this with your real human-avatar stream.
-*/
-
-#real-avatar{
-    position:absolute;
-
-    left:50%;
-
-    bottom:28px;
-
-    width:390px;
-
-    height:470px;
-
-    transform:
-        translateX(-50%);
-
-    object-fit:contain;
-
-    background:transparent;
-
+.btn{
     border:0;
-
-    z-index:4;
-
-    pointer-events:none;
+    padding:15px 24px;
+    border-radius:14px;
+    color:white;
+    cursor:pointer;
+    font-weight:700;
+    font-size:15px;
 }
 
-/* =========================
-   FALLBACK HUMAN PLACEHOLDER
-=========================
+.primary{
+    background:linear-gradient(135deg,var(--blue),var(--blue2));
+    box-shadow:0 10px 35px rgba(0,130,255,.28);
+}
 
-This is ONLY a placeholder.
+.secondary{
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--border);
+}
 
-For production, remove this and
-use Anam/HeyGen/Synthesia/D-ID/etc.
+/* -------------------------------------------------
+   AVATAR STAGE
+------------------------------------------------- */
+
+#avatarStage{
+    position:fixed;
+    left:0;
+    bottom:0;
+    width:100%;
+    height:430px;
+    pointer-events:none;
+    z-index:20;
+}
+
+/*
+   IMPORTANT:
+
+   This container expects a REAL HUMAN VIDEO.
+
+   Recommended:
+   transparent WebM/VP9 with alpha
+   OR a real-time avatar canvas/video from Anam,
+   Tavus, HeyGen, D-ID, etc.
+
+   There is intentionally NO cartoon/CSS person here.
 */
 
-.demo-human{
+.avatar{
     position:absolute;
-
+    bottom:0;
     left:50%;
-
-    bottom:-20px;
-
-    width:250px;
-
+    width:390px;
     height:430px;
 
-    transform:
-        translateX(-50%);
+    transform:translateX(-50%);
 
-    z-index:3;
+    pointer-events:auto;
 
-    background:
-        linear-gradient(
-            180deg,
-            #f6eee8 0%,
-            #f6eee8 42%,
-            #ffffff 43%,
-            #e9eef4 100%
-        );
-
-    border-radius:
-        50%
-        50%
-        12%
-        12%;
-
-    filter:
-        drop-shadow(
-            0 25px 30px
-            rgba(0,0,0,.28)
-        );
-
-    opacity:.30;
+    transition:
+        left 5s cubic-bezier(.45,.05,.55,.95),
+        transform .5s ease,
+        opacity .5s ease;
 }
 
-.demo-human::before{
-    content:"";
+/*
+   Transparent video:
+   Your actual human avatar should occupy the video.
 
+   Example:
+   <video src="avatar.webm" ...>
+*/
+
+.avatar video{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    object-position:center bottom;
+
+    /*
+       Makes the video visually disappear into page.
+       This only works correctly if the source itself has
+       transparent alpha.
+    */
+    background:transparent;
+
+    filter:
+        drop-shadow(0 20px 40px rgba(0,0,0,.25));
+}
+
+/* -------------------------------------------------
+   POPUP
+------------------------------------------------- */
+
+.assistantPanel{
     position:absolute;
-
-    left:50%;
-    top:18px;
-
-    transform:
-        translateX(-50%);
-
-    width:140px;
-    height:170px;
-
-    border-radius:48%;
+    right:34px;
+    bottom:210px;
+    width:320px;
 
     background:
         linear-gradient(
             145deg,
-            #f0c7af,
-            #d99c84
+            rgba(14,31,52,.94),
+            rgba(5,16,30,.91)
         );
+
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:24px;
 
     box-shadow:
-        inset 0 42px 0
-        rgba(38,27,31,.72);
-}
+        0 30px 80px rgba(0,0,0,.35),
+        0 0 40px rgba(0,145,255,.08);
 
-/*
-Belly-level framing.
-Anything below the belly is intentionally hidden.
-*/
+    backdrop-filter:blur(24px);
 
-.avatar-crop{
-    position:absolute;
-
-    left:0;
-    right:0;
-
-    bottom:0;
-
-    height:28%;
-
-    background:
-        linear-gradient(
-            to bottom,
-            transparent,
-            #071321
-        );
-
-    z-index:8;
-
-    pointer-events:none;
-}
-
-/* =========================
-   MOVEMENT
-========================= */
-
-.avatar-motion{
-    position:absolute;
-
-    left:50%;
-
-    bottom:0;
-
-    width:100%;
-
-    height:100%;
-
-    transform:
-        translateX(-50%);
-
-    transition:
-        transform
-        2.7s
-        cubic-bezier(
-            .55,
-            0,
-            .24,
-            1
-        );
-
-    will-change:transform;
-
-    z-index:5;
-}
-
-.avatar-motion.walk-left{
-    transform:
-        translateX(
-            calc(-50% - 310px)
-        );
-}
-
-.avatar-motion.walk-right{
-    transform:
-        translateX(
-            calc(-50% + 310px)
-        );
-}
-
-.avatar-motion.stop{
-    transform:
-        translateX(-50%);
-}
-
-/*
-Mirror orientation while walking back.
-*/
-
-.avatar-motion.face-left{
-    /* Provider-specific facial/body flip goes here */
-}
-
-.avatar-motion.face-right{
-    /* Provider-specific facial/body flip goes here */
-}
-
-/* =========================
-   AVATAR STATUS
-========================= */
-
-.avatar-status{
-    position:absolute;
-
-    top:15px;
-    left:15px;
-    right:15px;
-
-    z-index:20;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    padding:10px 12px;
-
-    border-radius:15px;
-
-    background:
-        rgba(4,12,22,.72);
-
-    backdrop-filter:
-        blur(12px);
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-}
-
-.status-left{
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    font-size:11px;
-}
-
-.online-dot{
-    width:8px;
-    height:8px;
-
-    border-radius:50%;
-
-    background:var(--green);
-
-    box-shadow:
-        0 0 12px
-        var(--green);
-}
-
-.waveform{
-    display:flex;
-
-    align-items:center;
-
-    gap:3px;
-
-    height:20px;
-}
-
-.waveform i{
-    width:3px;
-
-    height:6px;
-
-    border-radius:4px;
-
-    background:#8beaff;
-
-    animation:
-        voiceWave
-        .55s
-        infinite
-        ease-in-out;
-}
-
-.waveform i:nth-child(2){
-    animation-delay:.08s;
-}
-
-.waveform i:nth-child(3){
-    animation-delay:.16s;
-}
-
-.waveform i:nth-child(4){
-    animation-delay:.24s;
-}
-
-.waveform i:nth-child(5){
-    animation-delay:.32s;
-}
-
-@keyframes voiceWave{
-
-    50%{
-        height:18px;
-    }
-
-}
-
-/* =========================
-   MOTION BUTTONS
-========================= */
-
-.motion-controls{
-
-    position:absolute;
-
-    left:15px;
-    right:15px;
-    bottom:15px;
-
-    z-index:30;
-
-    display:flex;
-
-    justify-content:center;
-
-    flex-wrap:wrap;
-
-    gap:7px;
-
-}
-
-.motion-controls button{
-
-    padding:8px 11px;
-
-    border-radius:999px;
-
-    color:#d9e7f7;
-
-    background:
-        rgba(5,13,23,.76);
-
-    border:
-        1px solid
-        rgba(255,255,255,.10);
-
-    font-size:11px;
-}
-
-.motion-controls button:hover{
-    background:
-        rgba(255,255,255,.08);
-}
-
-/* =========================
-   CONTENT CARDS
-========================= */
-
-.cards{
-
-    width:min(
-        1200px,
-        calc(100% - 40px)
-    );
-
-    margin:35px auto 90px;
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    gap:16px;
-}
-
-.card{
-
-    padding:25px;
-
-    border-radius:22px;
-
-    background:
-        rgba(255,255,255,.03);
-
-    border:
-        1px solid
-        var(--line);
-
-}
-
-.card h3{
-    margin-top:0;
-}
-
-.card p{
-
-    color:var(--muted);
-
-    line-height:1.65;
-
-    font-size:13px;
-
-}
-
-/* =========================
-   AI POPUP
-========================= */
-
-.overlay{
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:1000;
-
-    background:
-        rgba(0,0,0,.66);
-
-    backdrop-filter:
-        blur(9px);
-
-    display:flex;
-
-    align-items:flex-end;
-
-    justify-content:flex-end;
-
-    padding:20px;
-
-    opacity:0;
-
-    visibility:hidden;
-
-    pointer-events:none;
-
-    transition:.25s ease;
-
-}
-
-.overlay.open{
-
-    opacity:1;
-
-    visibility:visible;
+    overflow:hidden;
 
     pointer-events:auto;
 
+    opacity:0;
+    transform:
+        translateY(30px)
+        scale(.96);
+
+    transition:.5s ease;
 }
 
-.assistant{
+.assistantPanel.visible{
+    opacity:1;
+    transform:translateY(0) scale(1);
+}
 
-    width:
-        min(
-            450px,
-            calc(100vw - 20px)
-        );
+.panelHeader{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:17px 18px;
 
-    border-radius:27px;
+    border-bottom:1px solid rgba(255,255,255,.09);
+}
 
+.agentInfo{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.agentPhoto{
+    width:43px;
+    height:43px;
+    border-radius:50%;
     overflow:hidden;
 
+    /*
+       Use the SAME photorealistic human's face
+       as the avatar here.
+    */
     background:
-        linear-gradient(
-            180deg,
-            rgba(12,25,43,.98),
-            rgba(5,13,23,.99)
-        );
-
-    border:
-        1px solid
-        rgba(255,255,255,.12);
-
-    box-shadow:var(--shadow);
-
-    transform:
-        translateY(25px);
-
-    transition:.35s;
-
-}
-
-.overlay.open .assistant{
-    transform:translateY(0);
-}
-
-/* popup heading */
-
-.assistant-top{
+        linear-gradient(135deg,#178dff,#00c8ff);
 
     display:flex;
-
-    justify-content:space-between;
-
     align-items:center;
+    justify-content:center;
 
-    padding:15px;
-
-    border-bottom:
-        1px solid
-        rgba(255,255,255,.07);
-
+    font-weight:800;
 }
 
-.assistant-title strong{
-    display:block;
-
-    font-size:14px;
+.agentName{
+    font-weight:800;
 }
 
-.assistant-title span{
-
-    color:var(--muted);
-
-    font-size:10px;
-
+.status{
+    font-size:12px;
+    color:#8fa4bc;
+    margin-top:3px;
 }
 
-.close-button{
-
-    width:35px;
-    height:35px;
-
-    border-radius:11px;
-
-    border:
-        1px solid
-        var(--line);
-
-    background:
-        rgba(255,255,255,.04);
-
-    color:#fff;
-
-    font-size:21px;
-
+.statusDot{
+    display:inline-block;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#31e981;
+    box-shadow:0 0 10px #31e981;
+    margin-right:5px;
 }
 
-/* popup avatar */
-
-.popup-avatar{
-
-    position:relative;
-
-    height:300px;
-
-    margin:14px;
-
-    overflow:hidden;
-
-    border-radius:21px;
-
-    background:transparent;
-
-    border:
-        1px solid
-        rgba(255,255,255,.07);
-
+.close{
+    width:30px;
+    height:30px;
+    border:0;
+    border-radius:50%;
+    color:white;
+    background:rgba(255,255,255,.07);
+    cursor:pointer;
 }
 
-/*
-The real human avatar goes here.
-*/
-
-#popup-anam-container{
-
-    position:absolute;
-
-    inset:0;
-
-    background:transparent;
-
-}
-
-/* chat */
-
-.chat{
-
-    height:105px;
-
-    overflow-y:auto;
-
-    padding:2px 15px;
-
+.conversation{
+    padding:20px;
+    min-height:145px;
 }
 
 .message{
+    background:linear-gradient(
+        135deg,
+        rgba(19,132,255,.20),
+        rgba(0,196,255,.07)
+    );
 
-    max-width:82%;
+    border:1px solid rgba(0,172,255,.22);
+    padding:15px;
+    border-radius:18px 18px 18px 5px;
 
-    padding:9px 11px;
-
-    border-radius:14px;
-
-    margin:7px 0;
-
-    font-size:11px;
-
+    color:#dcecff;
     line-height:1.5;
-
+    font-size:14px;
 }
 
-.bot-message{
+.subtitle{
+    position:absolute;
+    left:50%;
+    bottom:15px;
 
-    background:
-        rgba(36,124,255,.11);
+    transform:translateX(-50%);
 
-    border:
-        1px solid
-        rgba(36,124,255,.20);
+    width:min(680px,80vw);
 
-}
+    padding:12px 18px;
 
-.user-message{
+    background:rgba(0,0,0,.70);
+    backdrop-filter:blur(15px);
 
-    margin-left:auto;
-
-    background:
-        rgba(255,255,255,.045);
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-
-}
-
-/* controls */
-
-.input-row{
-
-    display:grid;
-
-    grid-template-columns:
-        1fr
-        48px;
-
-    gap:9px;
-
-    padding:0 15px 15px;
-
-}
-
-.message-input{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    border:
-        1px solid
-        var(--line);
-
-    border-radius:15px;
-
-    padding:
-        8px 10px;
-
-    background:
-        rgba(255,255,255,.035);
-
-}
-
-.message-input input{
-
-    width:100%;
-
-    border:0;
-
-    outline:none;
-
-    background:transparent;
-
-    color:#fff;
-
-    font-size:12px;
-
-}
-
-.mic-button{
-
-    width:48px;
-    height:48px;
-
-    border:0;
-
-    border-radius:15px;
-
-    color:#fff;
-
-    font-size:19px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #237cff,
-            #44caff
-        );
-
-}
-
-.mic-button.listening{
-
-    background:
-        linear-gradient(
-            135deg,
-            #ff526c,
-            #ff936d
-        );
-
-    animation:
-        microphonePulse
-        1s
-        infinite;
-
-}
-
-@keyframes microphonePulse{
-
-    50%{
-        box-shadow:
-            0 0 0 9px
-            rgba(255,82,108,.12);
-    }
-
-}
-
-.disclaimer{
-
-    padding:
-        0
-        15px
-        15px;
-
-    color:#76869a;
-
-    font-size:9px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:14px;
 
     text-align:center;
 
+    font-size:15px;
+    line-height:1.4;
+
+    opacity:0;
+    transition:.25s ease;
 }
 
-/* =========================
-   MOBILE
-========================= */
+.subtitle.show{
+    opacity:1;
+}
 
-@media(max-width:900px){
+/* -------------------------------------------------
+   WAVEFORM
+------------------------------------------------- */
 
-    nav{
+.wave{
+    height:45px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    margin-bottom:10px;
+}
+
+.bar{
+    width:3px;
+    height:10px;
+    border-radius:10px;
+    background:#18bfff;
+
+    transition:
+        height .12s ease;
+}
+
+.listening .bar{
+    animation:wave 1s infinite ease-in-out;
+}
+
+.bar:nth-child(2){animation-delay:.1s}
+.bar:nth-child(3){animation-delay:.2s}
+.bar:nth-child(4){animation-delay:.3s}
+.bar:nth-child(5){animation-delay:.4s}
+.bar:nth-child(6){animation-delay:.5s}
+.bar:nth-child(7){animation-delay:.6s}
+.bar:nth-child(8){animation-delay:.7s}
+
+@keyframes wave{
+    0%,100%{height:8px}
+    50%{height:34px}
+}
+
+/* -------------------------------------------------
+   CONTROLS
+------------------------------------------------- */
+
+.controls{
+    display:flex;
+    gap:8px;
+    padding:0 20px 20px;
+}
+
+.control{
+    flex:1;
+    height:45px;
+    border:1px solid rgba(255,255,255,.11);
+    border-radius:13px;
+
+    color:white;
+    background:rgba(255,255,255,.06);
+
+    cursor:pointer;
+}
+
+.talk{
+    background:linear-gradient(135deg,#078fff,#00c8ff);
+    border:0;
+    font-weight:800;
+}
+
+/* -------------------------------------------------
+   AVATAR STATUS
+------------------------------------------------- */
+
+.avatarStatus{
+    position:absolute;
+    left:30px;
+    bottom:35px;
+
+    padding:10px 15px;
+
+    border-radius:30px;
+
+    background:rgba(4,16,30,.82);
+    border:1px solid rgba(255,255,255,.1);
+
+    font-size:12px;
+    color:#b9c9da;
+
+    backdrop-filter:blur(15px);
+}
+
+.avatarStatus span{
+    display:inline-block;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#28eb83;
+    margin-right:7px;
+}
+
+/* -------------------------------------------------
+   WALKING
+------------------------------------------------- */
+
+.walking{
+    animation:
+        bodyWalk .7s infinite alternate ease-in-out;
+}
+
+@keyframes bodyWalk{
+    from{
+        transform:
+            translateX(-50%)
+            translateY(0);
+    }
+
+    to{
+        transform:
+            translateX(-50%)
+            translateY(-3px);
+    }
+}
+
+/* -------------------------------------------------
+   MINIMIZED
+------------------------------------------------- */
+
+.minimized .conversation,
+.minimized .controls,
+.minimized .wave{
+    display:none;
+}
+
+.minimized{
+    width:270px;
+}
+
+@media(max-width:800px){
+
+    .navLinks{
         display:none;
     }
 
     .hero{
-        grid-template-columns:1fr;
-
-        padding-top:40px;
-    }
-
-    .avatar-section{
-        height:500px;
-    }
-
-    .cards{
-        grid-template-columns:1fr;
-    }
-
-}
-
-@media(max-width:560px){
-
-    header{
-        padding:0 15px;
-    }
-
-    .hero{
-        width:
-            calc(100% - 28px);
+        padding:50px 6%;
     }
 
     h1{
         letter-spacing:-2px;
     }
 
-    .stats{
-        grid-template-columns:1fr;
+    .assistantPanel{
+        right:15px;
+        bottom:185px;
+        width:290px;
     }
 
-    .overlay{
-        padding:10px;
+    .avatar{
+        width:310px;
+        height:350px;
     }
 
+    #avatarStage{
+        height:370px;
+    }
+
+    .avatarStatus{
+        left:15px;
+        bottom:15px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<!-- =========================
-     HEADER
-========================= -->
+<!-- =================================================
+     WEBSITE
+================================================= -->
 
-<header>
+<header class="navbar">
 
-    <a class="logo" href="#">
-
-        <span class="logo-icon"></span>
-
+    <div class="logo">
+        <div class="logoMark"></div>
         EnableX
+    </div>
 
-    </a>
-
-    <nav>
-
+    <nav class="navLinks">
         <a href="#">Home</a>
         <a href="#">Dashboard</a>
         <a href="#">Knowledge Hub</a>
         <a href="#">AI Assistant</a>
-        <a href="#">Analytics</a>
-        <a href="#">Settings</a>
-
     </nav>
 
-    <button
-        class="header-button"
-        id="openAssistant"
-    >
-        Talk to AI
+    <button class="btn primary">
+        Get Started
     </button>
 
 </header>
 
 
-<main>
+<main class="hero">
 
-<!-- =========================
-     HERO
-========================= -->
+    <div class="heroContent">
 
-<section class="hero">
-
-    <div>
-
-        <span class="badge">
-            AI-powered enterprise platform
-        </span>
+        <div class="badge">
+            ✦ AI-powered Digital Enablement
+        </div>
 
         <h1>
-
-            Empower People.
-            <br>
-
-            <span>
-                Enable Performance.
+            Smarter Knowledge.<br>
+            <span class="gradient">
+                Better Assistance.
             </span>
-
         </h1>
 
-        <p class="hero-description">
-
-            Meet your human AI assistant.
-            It can appear naturally on the page,
-            walk casually from side to side,
-            stop when interaction is needed,
-            speak with natural voice,
-            and resume walking afterwards.
-
+        <p>
+            Meet your AI human assistant. Ask questions naturally,
+            speak with the assistant, search your knowledge,
+            and receive real-time guidance.
         </p>
 
         <div class="buttons">
 
             <button
-                class="primary-button"
-                id="startConversation"
-            >
-                🎙 Start Conversation
+                class="btn primary"
+                onclick="openAssistant()">
+                Talk to AI
             </button>
 
             <button
-                class="secondary-button"
-                id="watchMotion"
-            >
-                Watch Avatar Move
-            </button>
-
-        </div>
-
-        <div class="stats">
-
-            <div class="stat">
-
-                <strong>10K+</strong>
-
-                <span>
-                    Active Users
-                </span>
-
-            </div>
-
-            <div class="stat">
-
-                <strong>95%</strong>
-
-                <span>
-                    Adoption Rate
-                </span>
-
-            </div>
-
-            <div class="stat">
-
-                <strong>50+</strong>
-
-                <span>
-                    Integrations
-                </span>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================
-         AVATAR
-    ========================= -->
-
-    <div class="avatar-section">
-
-        <div class="avatar-status">
-
-            <div class="status-left">
-
-                <span class="online-dot"></span>
-
-                <span id="statusText">
-                    Human AI Assistant • Online
-                </span>
-
-            </div>
-
-            <div class="waveform">
-
-                <i></i>
-                <i></i>
-                <i></i>
-                <i></i>
-                <i></i>
-
-            </div>
-
-        </div>
-
-
-        <!--
-        ========================================================
-        REAL HUMAN AVATAR
-        ========================================================
-
-        YOUR ANAM VIDEO GOES HERE.
-
-        It should be:
-
-        ✔ photorealistic
-        ✔ human
-        ✔ transparent background
-        ✔ head-to-belly framing
-        ✔ talking animation
-        ✔ blinking
-        ✔ facial expressions
-        ✔ lip sync
-        ✔ idle animation
-        ✔ walking animation
-        -->
-
-        <div
-            class="avatar-motion"
-            id="avatarMotion"
-        >
-
-            <div
-                id="anam-container"
-            >
-
-                <!--
-
-                Example:
-
-                <video
-                    id="realAvatarVideo"
-                    autoplay
-                    playsinline
-                    src="YOUR_ANAM_STREAM"
-                ></video>
-
-                OR:
-
-                Initialize your Anam SDK here.
-
-                -->
-
-            </div>
-
-
-            <!--
-
-            DEVELOPMENT PLACEHOLDER ONLY.
-
-            Remove this once your real
-            Anam avatar is mounted.
-
-            -->
-
-            <div
-                class="demo-human"
-                id="demoHuman"
-            ></div>
-
-        </div>
-
-
-        <!-- Keeps frame at belly level -->
-
-        <div class="avatar-crop"></div>
-
-
-        <!-- movement controls -->
-
-        <div class="motion-controls">
-
-            <button data-motion="left">
-                ← Walk Left
-            </button>
-
-            <button data-motion="stop">
-                ● Stop & Talk
-            </button>
-
-            <button data-motion="gesture">
-                ✦ Gesture
-            </button>
-
-            <button data-motion="right">
-                Walk Right →
-            </button>
-
-            <button data-motion="auto">
-                Auto Mode
+                class="btn secondary"
+                onclick="openAssistant()">
+                Explore Platform
             </button>
 
         </div>
 
     </div>
-
-</section>
-
-
-<!-- =========================
-     FEATURE CARDS
-========================= -->
-
-<section class="cards">
-
-    <article class="card">
-
-        <h3>
-            Real Human Avatar
-        </h3>
-
-        <p>
-            Replace the placeholder with an actual
-            photorealistic Anam avatar stream.
-            No cartoon character is required.
-        </p>
-
-    </article>
-
-
-    <article class="card">
-
-        <h3>
-            Natural Walking
-        </h3>
-
-        <p>
-            The avatar can move right-to-left,
-            pause naturally, turn, speak,
-            gesture and continue walking.
-        </p>
-
-    </article>
-
-
-    <article class="card">
-
-        <h3>
-            Real Lip Sync
-        </h3>
-
-        <p>
-            ElevenLabs provides voice while
-            your avatar platform handles facial
-            animation and lip synchronization.
-        </p>
-
-    </article>
-
-</section>
 
 </main>
 
 
-<!-- ======================================================
-     VOICE ASSISTANT POPUP
-====================================================== -->
+<!-- =================================================
+     AVATAR SYSTEM
+================================================= -->
 
-<div
-    class="overlay open"
-    id="assistantOverlay"
->
+<div id="avatarStage">
 
-    <section class="assistant">
 
-        <div class="assistant-top">
+    <!-- =================================================
+         PHOTOREALISTIC HUMAN AVATAR
+         
+         REPLACE avatar.webm WITH YOUR REAL HUMAN AVATAR.
 
-            <div class="assistant-title">
+         IMPORTANT:
+         The video should be:
+         - photorealistic
+         - transparent background
+         - preferably WebM VP9 alpha
+         - belly-up framing
+         - front-facing / slight 3/4 camera
+         - animated naturally
+    ================================================= -->
 
-                <strong>
-                    EnableX AI Assistant
-                </strong>
+    <div
+        id="avatar"
+        class="avatar">
 
-                <span id="assistantStatus">
-                    Online • Ready
-                </span>
+        <video
+            id="avatarVideo"
+            autoplay
+            muted
+            loop
+            playsinline>
+
+            <source
+                src="avatar.webm"
+                type="video/webm">
+
+        </video>
+
+    </div>
+
+
+    <!-- STATUS -->
+
+    <div class="avatarStatus">
+        <span></span>
+        AI Human Assistant · Online
+    </div>
+
+
+    <!-- =================================================
+         ASSISTANT PANEL
+    ================================================= -->
+
+    <div
+        id="assistantPanel"
+        class="assistantPanel">
+
+        <div class="panelHeader">
+
+            <div class="agentInfo">
+
+                <div class="agentPhoto">
+                    AI
+                </div>
+
+                <div>
+
+                    <div class="agentName">
+                        EnableX Assistant
+                    </div>
+
+                    <div class="status">
+                        <span class="statusDot"></span>
+                        Online · Ready to help
+                    </div>
+
+                </div>
 
             </div>
 
             <button
-                class="close-button"
-                id="closeAssistant"
-            >
+                class="close"
+                onclick="closeAssistant()">
                 ×
             </button>
 
         </div>
 
 
-        <div class="popup-avatar">
-
-            <!-- REAL ANAM AVATAR -->
+        <div class="conversation">
 
             <div
-                id="popup-anam-container"
-            ></div>
+                id="message"
+                class="message">
 
-        </div>
-
-
-        <div
-            class="chat"
-            id="chat"
-        >
-
-            <div class="message bot-message">
-
-                Hi! I'm your AI assistant.
+                Hi 👋 I'm your AI assistant.
                 How can I help you today?
 
             </div>
@@ -1577,1093 +723,642 @@ The real human avatar goes here.
         </div>
 
 
-        <div class="input-row">
+        <div
+            id="wave"
+            class="wave">
 
-            <div class="message-input">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
 
-                💬
+        </div>
 
-                <input
-                    id="messageInput"
-                    placeholder="Ask me anything..."
-                >
 
-            </div>
-
+        <div class="controls">
 
             <button
-                class="mic-button"
-                id="micButton"
-            >
-                🎙
+                class="control talk"
+                id="talkButton"
+                onclick="toggleVoice()">
+
+                🎙 Talk to me
+
+            </button>
+
+            <button
+                class="control"
+                onclick="toggleWalking()">
+
+                🚶 Walk
+
             </button>
 
         </div>
 
+    </div>
 
-        <div class="disclaimer">
 
-            AI responses can make mistakes.
-            Verify important information.
+    <!-- SUBTITLE -->
 
-        </div>
-
-    </section>
+    <div
+        id="subtitle"
+        class="subtitle">
+    </div>
 
 </div>
 
 
 <script>
 
-/*
-===========================================================
-GLOBAL ELEMENTS
-===========================================================
-*/
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
-const overlay =
-    document.getElementById(
-        "assistantOverlay"
-    );
+const avatar =
+    document.getElementById("avatar");
 
-const openAssistant =
-    document.getElementById(
-        "openAssistant"
-    );
+const avatarVideo =
+    document.getElementById("avatarVideo");
 
-const closeAssistant =
-    document.getElementById(
-        "closeAssistant"
-    );
+const assistantPanel =
+    document.getElementById("assistantPanel");
 
-const startConversation =
-    document.getElementById(
-        "startConversation"
-    );
+const subtitle =
+    document.getElementById("subtitle");
 
-const watchMotion =
-    document.getElementById(
-        "watchMotion"
-    );
+const message =
+    document.getElementById("message");
 
-const avatarMotion =
-    document.getElementById(
-        "avatarMotion"
-    );
+const wave =
+    document.getElementById("wave");
 
-const statusText =
-    document.getElementById(
-        "statusText"
-    );
-
-const assistantStatus =
-    document.getElementById(
-        "assistantStatus"
-    );
-
-const messageInput =
-    document.getElementById(
-        "messageInput"
-    );
-
-const chat =
-    document.getElementById(
-        "chat"
-    );
-
-const micButton =
-    document.getElementById(
-        "micButton"
-    );
+const talkButton =
+    document.getElementById("talkButton");
 
 
-/*
-===========================================================
-POPUP
-===========================================================
-*/
+/* =====================================================
+   CONFIGURATION
+===================================================== */
 
-function openAI(){
+let walking = false;
 
-    overlay.classList.add(
-        "open"
-    );
+let walkingDirection = 1;
 
-}
+let speaking = false;
 
-function closeAI(){
+let recognition = null;
 
-    overlay.classList.remove(
-        "open"
-    );
-
-}
-
-openAssistant.onclick =
-    openAI;
-
-startConversation.onclick =
-    openAI;
-
-closeAssistant.onclick =
-    closeAI;
-
-overlay.addEventListener(
-    "click",
-    function(event){
-
-        if(
-            event.target ===
-            overlay
-        ){
-            closeAI();
-        }
-
-    }
-);
-
-document.addEventListener(
-    "keydown",
-    function(event){
-
-        if(
-            event.key === "Escape"
-        ){
-            closeAI();
-        }
-
-    }
-);
+let autoWalkingTimer;
 
 
-/*
-===========================================================
-AVATAR MOTION STATE
-===========================================================
-*/
+/* =====================================================
+   OPEN ASSISTANT
+===================================================== */
 
-let direction =
-    1;
+function openAssistant(){
 
-let autoMode =
-    true;
+    assistantPanel.classList.add("visible");
 
-let isSpeaking =
-    false;
-
-let isPaused =
-    false;
-
-let motionTimer;
-
-
-function setMotion(
-    state
-){
-
-    avatarMotion.classList.remove(
-        "walk-left",
-        "walk-right",
-        "stop"
-    );
-
-    if(
-        state === "left"
-    ){
-
-        avatarMotion.classList.add(
-            "walk-left"
-        );
-
-    }
-
-    if(
-        state === "right"
-    ){
-
-        avatarMotion.classList.add(
-            "walk-right"
-        );
-
-    }
-
-    if(
-        state === "stop"
-    ){
-
-        avatarMotion.classList.add(
-            "stop"
-        );
-
-    }
+    startAvatar();
 
 }
 
 
-/*
-===========================================================
-WALKING ENGINE
-===========================================================
+/* =====================================================
+   CLOSE
+===================================================== */
 
-The avatar:
+function closeAssistant(){
 
-1. walks
-2. reaches an area
-3. stops
-4. observes
-5. optionally speaks
-6. resumes
-7. changes direction
+    assistantPanel.classList.remove("visible");
 
-This is deliberately NOT an endless rigid animation loop.
-===========================================================
-*/
+}
 
-function startWalking(){
+
+/* =====================================================
+   START AVATAR
+===================================================== */
+
+function startAvatar(){
+
+    avatarVideo.play().catch(()=>{});
+
+}
+
+
+/* =====================================================
+   INITIAL POPUP
+===================================================== */
+
+window.addEventListener("load",()=>{
+
+    setTimeout(()=>{
+
+        openAssistant();
+
+        speak(
+            "Hi there. Welcome to EnableX. How can I help you today?"
+        );
+
+    },800);
+
+});
+
+
+/* =====================================================
+   SUBTITLE
+===================================================== */
+
+function showSubtitle(text){
+
+    subtitle.textContent = text;
+
+    subtitle.classList.add("show");
 
     clearTimeout(
-        motionTimer
+        showSubtitle.timer
     );
 
-    if(
-        !autoMode ||
-        isSpeaking ||
-        isPaused
-    ){
+    showSubtitle.timer =
+        setTimeout(()=>{
+
+            subtitle.classList.remove("show");
+
+        },4500);
+
+}
+
+
+/* =====================================================
+   TEXT TO SPEECH
+===================================================== */
+
+function speak(text){
+
+    if(!("speechSynthesis" in window)){
         return;
     }
 
-    const side =
-        direction === 1
-        ? "right"
-        : "left";
+    speaking = true;
 
-    setMotion(
-        side
+    message.textContent = text;
+
+    showSubtitle(text);
+
+    wave.classList.add("listening");
+
+    avatarVideo.play().catch(()=>{});
+
+    const utterance =
+        new SpeechSynthesisUtterance(text);
+
+    utterance.rate = .98;
+    utterance.pitch = 1;
+
+    utterance.onend = ()=>{
+
+        speaking = false;
+
+        wave.classList.remove("listening");
+
+    };
+
+    speechSynthesis.cancel();
+
+    speechSynthesis.speak(
+        utterance
     );
 
-    statusText.textContent =
-        "Human AI Assistant • Walking";
-
-    assistantStatus.textContent =
-        "Walking • Online";
+}
 
 
-    /*
-    Walk for a random amount
-    so behaviour feels less robotic.
-    */
+/* =====================================================
+   VOICE RECOGNITION
+===================================================== */
 
-    const walkDuration =
-        2800 +
-        Math.random() *
-        2400;
+function setupRecognition(){
 
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
 
-    motionTimer =
-        setTimeout(
+    if(!SpeechRecognition){
 
-            function(){
+        message.textContent =
+            "Voice recognition is not supported in this browser.";
 
-                if(
-                    !autoMode ||
-                    isSpeaking
-                ){
-                    return;
-                }
+        return null;
+    }
 
+    const r =
+        new SpeechRecognition();
 
-                /*
-                STOP
-                */
+    r.continuous = false;
 
-                setMotion(
-                    "stop"
-                );
+    r.interimResults = false;
 
-                isPaused =
-                    true;
+    r.lang = "en-US";
 
 
-                statusText.textContent =
-                    "Human AI Assistant • Paused";
+    r.onstart = ()=>{
 
-                assistantStatus.textContent =
-                    "Paused • Looking around";
+        wave.classList.add("listening");
 
+        talkButton.textContent =
+            "🔴 Listening...";
 
-                /*
-                Casual pause.
-                */
+        message.textContent =
+            "I'm listening...";
 
-                const pauseDuration =
-                    1800 +
-                    Math.random() *
-                    4000;
+    };
 
 
-                motionTimer =
-                    setTimeout(
+    r.onresult = event =>{
 
-                        function(){
+        const text =
+            event.results[0][0].transcript;
 
-                            direction *= -1;
+        message.textContent =
+            "You: " + text;
 
-                            isPaused =
-                                false;
-
-                            startWalking();
-
-                        },
-
-                        pauseDuration
-
-                    );
-
-            },
-
-            walkDuration
-
+        showSubtitle(
+            "You: " + text
         );
 
+        processUserMessage(text);
+
+    };
+
+
+    r.onerror = ()=>{
+
+        wave.classList.remove(
+            "listening"
+        );
+
+        talkButton.textContent =
+            "🎙 Talk to me";
+
+    };
+
+
+    r.onend = ()=>{
+
+        wave.classList.remove(
+            "listening"
+        );
+
+        talkButton.textContent =
+            "🎙 Talk to me";
+
+    };
+
+
+    return r;
+
 }
 
-
-/*
-===========================================================
-STOP WHEN APPROPRIATE
-===========================================================
-*/
-
-function stopForConversation(){
-
-    clearTimeout(
-        motionTimer
-    );
-
-    isPaused =
-        true;
-
-    setMotion(
-        "stop"
-    );
-
-    statusText.textContent =
-        "Human AI Assistant • Speaking";
-
-    assistantStatus.textContent =
-        "Speaking • Online";
-
-}
+recognition =
+    setupRecognition();
 
 
-/*
-===========================================================
-RESUME AFTER CONVERSATION
-===========================================================
-*/
+/* =====================================================
+   VOICE BUTTON
+===================================================== */
 
-function resumeWalking(){
+function toggleVoice(){
 
-    if(
-        !autoMode
-    ){
+    if(!recognition){
+
+        speak(
+            "Voice recognition is unavailable in this browser."
+        );
+
         return;
+
     }
 
-    isPaused =
-        false;
+    try{
 
-    isSpeaking =
-        false;
+        recognition.start();
 
-    statusText.textContent =
-        "Human AI Assistant • Online";
+    }catch(e){
 
-    assistantStatus.textContent =
-        "Online • Walking";
+        recognition.stop();
 
-    startWalking();
+    }
 
 }
 
 
-/*
-===========================================================
-TALKING STATE
+/* =====================================================
+   SIMPLE AI RESPONSE
+   REPLACE THIS WITH YOUR BACKEND / ELEVENLABS
+===================================================== */
 
-CALL THIS FROM ELEVENLABS
-===========================================================
-*/
+function processUserMessage(text){
 
-function setTalking(
-    talking
-){
+    const q =
+        text.toLowerCase();
 
-    isSpeaking =
-        talking;
+
+    let response =
+        "I understand. Let me help you with that.";
+
 
     if(
-        talking
+        q.includes("hello") ||
+        q.includes("hi")
     ){
 
-        /*
-        Human avatar stops
-        when speech starts.
-        */
-
-        stopForConversation();
-
-        /*
-        Tell your Anam avatar
-        to play speaking state.
-        */
-
-        if(
-            window.anamSpeak
-        ){
-
-            window.anamSpeak(
-                true
-            );
-
-        }
+        response =
+            "Hello! It's great to meet you. What would you like to know?";
 
     }
-    else{
 
-        if(
-            window.anamSpeak
-        ){
+    else if(
+        q.includes("knowledge")
+    ){
 
-            window.anamSpeak(
-                false
-            );
-
-        }
-
-        /*
-        Give avatar a small
-        human-like pause.
-        */
-
-        setTimeout(
-
-            resumeWalking,
-
-            1200
-
-        );
+        response =
+            "I can help you find information across your organisation's knowledge base.";
 
     }
+
+    else if(
+        q.includes("help")
+    ){
+
+        response =
+            "Absolutely. Tell me what you're trying to accomplish and I'll guide you.";
+
+    }
+
+    else if(
+        q.includes("who are you")
+    ){
+
+        response =
+            "I'm your EnableX AI human assistant. You can talk to me naturally.";
+
+    }
+
+
+    setTimeout(()=>{
+
+        speak(response);
+
+    },500);
 
 }
 
 
-/*
-===========================================================
-MANUAL MOTION BUTTONS
-===========================================================
-*/
-
-document
-    .querySelectorAll(
-        "[data-motion]"
-    )
-    .forEach(
-
-        function(button){
-
-            button.addEventListener(
-                "click",
-                function(){
-
-                    const motion =
-                        button.dataset.motion;
-
-
-                    if(
-                        motion ===
-                        "auto"
-                    ){
-
-                        autoMode =
-                            true;
-
-                        startWalking();
-
-                        return;
-
-                    }
-
-
-                    autoMode =
-                        false;
-
-
-                    if(
-                        motion ===
-                        "left"
-                    ){
-
-                        setMotion(
-                            "left"
-                        );
-
-                    }
-
-
-                    if(
-                        motion ===
-                        "right"
-                    ){
-
-                        setMotion(
-                            "right"
-                        );
-
-                    }
-
-
-                    if(
-                        motion ===
-                        "stop"
-                    ){
-
-                        stopForConversation();
-
-                    }
-
-
-                    if(
-                        motion ===
-                        "gesture"
-                    ){
-
-                        stopForConversation();
-
-
-                        /*
-                        Tell Anam to
-                        trigger gesture.
-                        */
-
-                        if(
-                            window.anamGesture
-                        ){
-
-                            window.anamGesture();
-
-                        }
-
-                    }
-
-                }
-            );
-
-        }
-
-    );
-
+/* =====================================================
+   WALKING SYSTEM
+===================================================== */
 
 /*
-===========================================================
-WATCH MOTION
-===========================================================
+    The human avatar moves across the browser.
+
+    It does NOT use a CSS-generated person.
+
+    Your transparent human video is simply carried
+    across the stage.
 */
 
-watchMotion.onclick =
-    function(){
+function toggleWalking(){
 
-        autoMode =
-            true;
+    if(walking){
+
+        stopWalking();
+
+    }else{
 
         startWalking();
 
-    };
-
-
-/*
-===========================================================
-CHAT
-===========================================================
-*/
-
-function addMessage(
-    text,
-    type
-){
-
-    const message =
-        document.createElement(
-            "div"
-        );
-
-    message.className =
-        "message " +
-        (
-            type === "user"
-            ? "user-message"
-            : "bot-message"
-        );
-
-    message.textContent =
-        text;
-
-    chat.appendChild(
-        message
-    );
-
-    chat.scrollTop =
-        chat.scrollHeight;
+    }
 
 }
 
 
-/*
-===========================================================
-TEXT CHAT
+function startWalking(){
 
-Replace this demo function with your
-ElevenLabs agent / backend request.
-===========================================================
-*/
+    walking = true;
 
-function sendMessage(){
+    avatar.classList.add(
+        "walking"
+    );
 
-    const text =
-        messageInput.value.trim();
+    walkToRandomSide();
 
-    if(
-        !text
-    ){
+}
+
+
+function stopWalking(){
+
+    walking = false;
+
+    avatar.classList.remove(
+        "walking"
+    );
+
+    avatar.style.transition =
+        "left .8s ease";
+
+}
+
+
+function walkToRandomSide(){
+
+    if(!walking) return;
+
+
+    walkingDirection *= -1;
+
+
+    const target =
+        walkingDirection === 1
+        ? "82%"
+        : "18%";
+
+
+    avatar.style.transition =
+        "left 7s cubic-bezier(.45,.05,.55,.95)";
+
+
+    avatar.style.left =
+        target;
+
+
+    /*
+       Random natural stopping.
+
+       The assistant can stop while:
+       - speaking
+       - listening
+       - after reaching a side
+       - randomly during idle movement
+    */
+
+    const walkingDuration =
+        7000 +
+        Math.random()*5000;
+
+
+    autoWalkingTimer =
+        setTimeout(()=>{
+
+            naturalStop();
+
+        },walkingDuration);
+
+}
+
+
+/* =====================================================
+   NATURAL STOP
+===================================================== */
+
+function naturalStop(){
+
+    if(!walking)
         return;
+
+
+    avatar.classList.remove(
+        "walking"
+    );
+
+
+    /*
+       Decide whether the human should talk
+       while stopped.
+    */
+
+    const shouldTalk =
+        Math.random() < .35;
+
+
+    if(shouldTalk){
+
+        const greetings = [
+
+            "Is there anything I can help you with?",
+
+            "I'm here whenever you need me.",
+
+            "Feel free to ask me anything.",
+
+            "Would you like me to find something for you?"
+
+        ];
+
+
+        const text =
+            greetings[
+                Math.floor(
+                    Math.random() *
+                    greetings.length
+                )
+            ];
+
+
+        speak(text);
+
     }
 
 
-    addMessage(
-        text,
-        "user"
+    const pause =
+        3500 +
+        Math.random()*7000;
+
+
+    clearTimeout(
+        autoWalkingTimer
     );
 
-    messageInput.value =
-        "";
+
+    autoWalkingTimer =
+        setTimeout(()=>{
+
+            if(walking){
+
+                avatar.classList.add(
+                    "walking"
+                );
+
+                walkToRandomSide();
+
+            }
+
+        },pause);
+
+}
 
 
-    /*
-    Stop walking while answering.
-    */
+/* =====================================================
+   AUTOMATIC CASUAL WALKING
+===================================================== */
 
-    stopForConversation();
+/*
+   Start the casual movement after page load.
+*/
 
+setTimeout(()=>{
 
-    /*
-    Demo response.
-    */
+    startWalking();
 
-    setTimeout(
-
-        function(){
-
-            const reply =
-                "Absolutely. I'm ready to help you. I can answer questions, search your knowledge base, and guide you through EnableX.";
-
-            addMessage(
-                reply,
-                "bot"
-            );
+},5000);
 
 
-            /*
-            Demo browser speech.
+/* =====================================================
+   STOP WALKING WHILE SPEAKING
+===================================================== */
 
-            Replace this with ElevenLabs.
-            */
+const originalSpeak =
+    speak;
 
-            speakDemo(
-                reply
-            );
 
-        },
+/*
+   Keep walking behaviour natural.
+*/
 
-        500
+function avatarTalkMode(){
 
+    avatar.classList.remove(
+        "walking"
     );
 
 }
 
-messageInput.addEventListener(
+
+/* =====================================================
+   KEYBOARD SHORTCUT
+===================================================== */
+
+document.addEventListener(
     "keydown",
-    function(event){
+    e => {
 
-        if(
-            event.key ===
-            "Enter"
-        ){
+        if(e.key === " "){
 
-            sendMessage();
+            if(
+                document.activeElement.tagName !==
+                "INPUT"
+            ){
+
+                e.preventDefault();
+
+                toggleVoice();
+
+            }
 
         }
-
-    }
-);
-
-
-/*
-===========================================================
-DEMO BROWSER VOICE
-
-Production:
-replace with ElevenLabs.
-===========================================================
-*/
-
-function speakDemo(
-    text
-){
-
-    if(
-        !window.speechSynthesis
-    ){
-
-        resumeWalking();
-
-        return;
-
-    }
-
-
-    const utterance =
-        new SpeechSynthesisUtterance(
-            text
-        );
-
-
-    utterance.rate =
-        .96;
-
-    utterance.pitch =
-        1;
-
-    utterance.volume =
-        1;
-
-
-    utterance.onstart =
-        function(){
-
-            setTalking(
-                true
-            );
-
-        };
-
-
-    utterance.onend =
-        function(){
-
-            setTalking(
-                false
-            );
-
-        };
-
-
-    utterance.onerror =
-        function(){
-
-            setTalking(
-                false
-            );
-
-        };
-
-
-    window
-        .speechSynthesis
-        .cancel();
-
-
-    window
-        .speechSynthesis
-        .speak(
-            utterance
-        );
-
-}
-
-
-/*
-===========================================================
-MICROPHONE
-
-Browser fallback.
-===========================================================
-*/
-
-const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
-
-
-if(
-    SpeechRecognition
-){
-
-    const recognition =
-        new SpeechRecognition();
-
-    recognition.lang =
-        "en-US";
-
-    recognition.interimResults =
-        false;
-
-    recognition.continuous =
-        false;
-
-
-    recognition.onstart =
-        function(){
-
-            micButton.classList.add(
-                "listening"
-            );
-
-            assistantStatus.textContent =
-                "Listening…";
-
-            stopForConversation();
-
-        };
-
-
-    recognition.onend =
-        function(){
-
-            micButton.classList.remove(
-                "listening"
-            );
-
-        };
-
-
-    recognition.onresult =
-        function(event){
-
-            const transcript =
-                event
-                    .results[0][0]
-                    .transcript;
-
-            messageInput.value =
-                transcript;
-
-            sendMessage();
-
-        };
-
-
-    recognition.onerror =
-        function(){
-
-            micButton.classList.remove(
-                "listening"
-            );
-
-            resumeWalking();
-
-        };
-
-
-    micButton.onclick =
-        function(){
-
-            recognition.start();
-
-        };
-
-}
-else{
-
-    micButton.onclick =
-        function(){
-
-            alert(
-                "Voice recognition is not available in this browser. Connect your ElevenLabs voice agent for production voice input."
-            );
-
-        };
-
-}
-
-
-/*
-===========================================================
-ANAM INTEGRATION
-===========================================================
-
-PUT YOUR REAL PHOTOREALISTIC HUMANOID AVATAR HERE.
-
-Example structure:
-
-const anam = new AnamClient(...);
-
-anam.mount(
-    document.getElementById(
-        "anam-container"
-    )
-);
-
-The same principle can be used for:
-
-#popup-anam-container
-
-
-Important:
-
-The Anam/video avatar should be configured as:
-
-- realistic human
-- transparent background
-- head → belly framing
-- idle animation
-- walking animation
-- speaking animation
-- lip synchronization
-- blinking
-- natural gestures
-
-===========================================================
-*/
-
-
-/*
-Example hooks used by the motion engine.
-
-Connect these functions to your real avatar SDK.
-*/
-
-window.anamSpeak =
-    function(isSpeaking){
-
-        /*
-        Example:
-
-        if(isSpeaking){
-            anam.setState("talking");
-        }else{
-            anam.setState("idle");
-        }
-
-        */
-
-    };
-
-
-window.anamGesture =
-    function(){
-
-        /*
-        Example:
-
-        anam.setState(
-            "gesture"
-        );
-
-        */
-
-    };
-
-
-/*
-===========================================================
-ANAM WALKING STATES
-===========================================================
-
-When moving LEFT:
-
-anam.setState("walkLeft");
-
-When moving RIGHT:
-
-anam.setState("walkRight");
-
-When stopping:
-
-anam.setState("idle");
-
-When answering:
-
-anam.setState("talking");
-
-When pointing:
-
-anam.setState("gesture");
-
-That produces:
-
-Walk
- ↓
-Stop
- ↓
-Talk
- ↓
-Gesture
- ↓
-Idle
- ↓
-Resume walking
-===========================================================
-*/
-
-
-/*
-===========================================================
-AUTO OPEN
-===========================================================
-*/
-
-window.addEventListener(
-    "load",
-    function(){
-
-        /*
-        Open assistant shortly
-        after page loads.
-        */
-
-        setTimeout(
-
-            function(){
-
-                openAI();
-
-            },
-
-            700
-
-        );
-
-
-        /*
-        Start avatar movement.
-        */
-
-        setTimeout(
-
-            function(){
-
-                autoMode =
-                    true;
-
-                startWalking();
-
-            },
-
-            1200
-
-        );
 
     }
 );
