@@ -709,12 +709,17 @@
             overflow-y: auto;
 
             padding: 20px;
+
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
 
-        .welcomeMessage {
+        .welcomeMessage,
+        .chatMessage {
 
-            padding: 15px;
+            padding: 12px 15px;
 
             border-radius:
                 18px 18px 18px 5px;
@@ -736,6 +741,13 @@
             font-size: 14px;
 
             line-height: 1.5;
+        }
+
+        .chatMessage.user {
+            align-self: flex-end;
+            border-radius: 18px 18px 5px 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
 
@@ -1714,717 +1726,119 @@
                     "div"
                 );
 
+            item.className =
+                `chatMessage ${role}`;
 
-            item.style.marginBottom =
-                "10px";
+            item.textContent = text;
 
-
-            item.style.padding =
-                "10px 12px";
-
-
-            item.style.borderRadius =
-                "12px";
-
-
-            item.style.fontSize =
-                "12px";
-
-
-            item.style.lineHeight =
-                "1.5";
-
-
-            if (
-                role === "persona" ||
-                role === "assistant"
-            ) {
-
-                item.style.background =
-                    "rgba(15,140,255,.12)";
-
-            } else {
-
-                item.style.background =
-                    "rgba(255,255,255,.06)";
-
-            }
-
-
-            item.textContent =
-                text;
-
-
-            conversation.appendChild(
-                item
-            );
-
-
-            conversation.scrollTop =
-                conversation.scrollHeight;
-
-
-            showSubtitle(
-                text
-            );
+            conversation.appendChild(item);
+            conversation.scrollTop = conversation.scrollHeight;
 
         }
 
 
         /* =====================================================
-           START ANAM + ELEVENLABS
+           WALKING ANIMATION
         ===================================================== */
 
-        window.startAvatar =
-            async function() {
-
-                openAssistant();
-
-
-                if (connected) {
-
-                    setStatus(
-                        "Conversation active",
-                        true
-                    );
-
-                    return;
-
-                }
-
-
-                if (started) {
-                    return;
-                }
-
-
-                started = true;
-
-
-                loading.classList.add(
-                    "visible"
-                );
-
-
-                setStatus(
-                    "Connecting..."
-                );
-
-
-                talkButton.disabled =
-                    true;
-
-
-                try {
-
-                    /*
-                     * Ask your Supabase Edge Function
-                     * for a short-lived Anam session token.
-                     */
-
-                    const response =
-                        await fetch(
-                            SESSION_ENDPOINT,
-                            {
-                                method: "POST",
-
-                                headers: {
-                                    "Content-Type":
-                                        "application/json"
-                                },
-
-                                body:
-                                    JSON.stringify({
-
-                                        avatarId:
-                                            ANAM_AVATAR_ID,
-
-                                        agentId:
-                                            ELEVENLABS_AGENT_ID
-
-                                    })
-                            }
-                        );
-
-
-                    if (!response.ok) {
-
-                        const errorText =
-                            await response.text();
-
-                        throw new Error(
-                            errorText ||
-                            "Unable to create Anam session"
-                        );
-
+        window.toggleWalking = function() {
+            walking = !walking;
+            if (walking) {
+                avatarMover.classList.add("walking");
+                walkingTimer = setInterval(() => {
+                    const currentLeft = parseFloat(avatarMover.style.left || "18");
+                    let newLeft = currentLeft + (5 * walkingDirection);
+                    if (newLeft > 60 || newLeft < 10) {
+                        walkingDirection *= -1;
+                        newLeft = currentLeft + (5 * walkingDirection);
                     }
-
-
-                    const data =
-                        await response.json();
-
-
-                    if (!data.sessionToken) {
-
-                        throw new Error(
-                            "No sessionToken returned by server"
-                        );
-
-                    }
-
-
-                    /*
-                     * Create the real Anam client.
-                     */
-
-                    anamClient =
-                        createClient(
-                            data.sessionToken
-                        );
-
-
-                    /* =================================================
-                       CONNECTION EVENTS
-                    ================================================= */
-
-                    anamClient.addListener(
-                        AnamEvent.CONNECTION_ESTABLISHED,
-                        () => {
-
-                            connected =
-                                true;
-
-                            setStatus(
-                                "Online · Listening",
-                                true
-                            );
-
-                            loading.classList.remove(
-                                "visible"
-                            );
-
-                            talkButton.textContent =
-                                "🔴 End Conversation";
-
-                            talkButton.disabled =
-                                false;
-
-                        }
-                    );
-
-
-                    anamClient.addListener(
-                        AnamEvent.CONNECTION_CLOSED,
-                        () => {
-
-                            connected =
-                                false;
-
-                            started =
-                                false;
-
-                            setStatus(
-                                "Disconnected"
-                            );
-
-                            talkButton.textContent =
-                                "🎙 Start Conversation";
-
-                            talkButton.disabled =
-                                false;
-
-                            wave.classList.remove(
-                                "active"
-                            );
-
-                        }
-                    );
-
-
-                    /*
-                     * Transcript events.
-                     *
-                     * These come from the ElevenLabs agent
-                     * through Anam's server-side integration.
-                     */
-
-                    anamClient.addListener(
-                        AnamEvent.MESSAGE_STREAM_EVENT_RECEIVED,
-                        (event) => {
-
-                            if (!event) {
-                                return;
-                            }
-
-
-                            const text =
-                                event.content || "";
-
-
-                            if (!text) {
-                                return;
-                            }
-
-
-                            addMessage(
-                                event.role,
-                                text
-                            );
-
-
-                            /*
-                             * Stop walking while
-                             * the assistant is actively
-                             * communicating.
-                             */
-
-                            if (
-                                event.role ===
-                                "persona"
-                            ) {
-
-                                pauseWalkingForConversation();
-
-                            }
-
-                        }
-                    );
-
-
-                    /*
-                     * Start the actual photorealistic
-                     * Anam video stream.
-                     */
-
-                    await anamClient
-                        .streamToVideoElement(
-                            "avatarVideo"
-                        );
-
-
-                    connected =
-                        true;
-
-
-                    setStatus(
-                        "Online · Ready",
-                        true
-                    );
-
-
-                    loading.classList.remove(
-                        "visible"
-                    );
-
-
-                    talkButton.textContent =
-                        "🔴 End Conversation";
-
-
-                    talkButton.disabled =
-                        false;
-
-
-                    /*
-                     * Start casual movement.
-                     */
-
-                    if (!walking) {
-
-                        startWalking();
-
-                    }
-
-                } catch (error) {
-
-                    console.error(
-                        "Anam error:",
-                        error
-                    );
-
-
-                    loading.classList.remove(
-                        "visible"
-                    );
-
-
-                    started =
-                        false;
-
-
-                    connected =
-                        false;
-
-
-                    setStatus(
-                        "Connection failed"
-                    );
-
-
-                    talkButton.disabled =
-                        false;
-
-
-                    talkButton.textContent =
-                        "🎙 Try Again";
-
-
-                    addMessage(
-                        "assistant",
-                        "I couldn't connect to the human assistant. Please check your Anam session endpoint."
-                    );
-
-                }
-
-            };
+                    avatarMover.style.left = `${newLeft}%`;
+                }, 7000);
+            } else {
+                avatarMover.classList.remove("walking");
+                clearInterval(walkingTimer);
+            }
+        };
 
 
         /* =====================================================
-           STOP CONVERSATION
+           START AVATAR
         ===================================================== */
 
-        async function stopConversation() {
+        window.startAvatar = async function() {
 
-            if (!anamClient) {
+            if (connected) {
+                if (anamClient) {
+                    await anamClient.stop();
+                }
                 return;
             }
 
+            openAssistant();
+
+            loading.classList.add("visible");
+            setStatus("Connecting...");
 
             try {
 
-                await anamClient
-                    .stopStreaming();
+                const response = await fetch(SESSION_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        avatarId: ANAM_AVATAR_ID,
+                        agentId: ELEVENLABS_AGENT_ID
+                    })
+                });
 
-            } catch (error) {
-
-                console.error(
-                    error
-                );
-
-            }
-
-
-            anamClient =
-                null;
-
-
-            connected =
-                false;
-
-
-            started =
-                false;
-
-
-            video.srcObject =
-                null;
-
-
-            wave.classList.remove(
-                "active"
-            );
-
-
-            talkButton.textContent =
-                "🎙 Start Conversation";
-
-
-            setStatus(
-                "Human assistant ready"
-            );
-
-
-            resumeWalking();
-
-        }
-
-
-        talkButton.addEventListener(
-            "click",
-            async () => {
-
-                if (connected) {
-
-                    await stopConversation();
-
-                } else {
-
-                    await window.startAvatar();
-
+                if (!response.ok) {
+                    throw new Error("Failed to retrieve session token");
                 }
 
-            }
-        );
+                const data = await response.json();
+                const sessionToken = data.sessionToken;
 
+                anamClient = createClient(sessionToken, {
+                    personaId: ANAM_AVATAR_ID
+                });
 
-        /* =====================================================
-           WALKING
-        ===================================================== */
+                anamClient.addListener(AnamEvent.CONNECTION_ESTABLISHED, () => {
+                    loading.classList.remove("visible");
+                    connected = true;
+                    setStatus("Connected & Ready", true);
+                    talkButton.textContent = "⏹ End Conversation";
+                });
 
-        window.toggleWalking =
-            function() {
+                anamClient.addListener(AnamEvent.CONNECTION_CLOSED, () => {
+                    connected = false;
+                    setStatus("Human assistant ready", false);
+                    talkButton.textContent = "🎙 Start Conversation";
+                    wave.classList.remove("active");
+                });
 
-                if (walking) {
+                anamClient.addListener(AnamEvent.MESSAGE_RECEIVED, (evt) => {
+                    if (evt.content) {
+                        showSubtitle(evt.content);
+                        addMessage("assistant", evt.content);
+                    }
+                });
 
-                    stopWalking();
+                anamClient.addListener(AnamEvent.SPEECH_STARTED, () => {
+                    wave.classList.add("active");
+                });
 
-                } else {
+                anamClient.addListener(AnamEvent.SPEECH_ENDED, () => {
+                    wave.classList.remove("active");
+                });
 
-                    startWalking();
+                await anamClient.streamToVideoElement(video.id);
 
-                }
-
-            };
-
-
-        function startWalking() {
-
-            walking =
-                true;
-
-
-            avatarMover.classList.add(
-                "walking"
-            );
-
-
-            moveAvatar();
-
-        }
-
-
-        function stopWalking() {
-
-            walking =
-                false;
-
-
-            avatarMover.classList.remove(
-                "walking"
-            );
-
-
-            clearTimeout(
-                walkingTimer
-            );
-
-
-            clearTimeout(
-                stopTimer
-            );
-
-        }
-
-
-        function moveAvatar() {
-
-            if (!walking) {
-                return;
+            } catch (err) {
+                console.error(err);
+                loading.classList.remove("visible");
+                setStatus("Connection failed");
             }
 
-
-            /*
-             * Alternate direction.
-             */
-
-            walkingDirection *=
-                -1;
-
-
-            const destination =
-                walkingDirection === 1
-                    ? "78%"
-                    : "18%";
-
-
-            avatarMover.style.left =
-                destination;
-
-
-            /*
-             * Human walks for
-             * a natural random period.
-             */
-
-            const travelTime =
-                7000 +
-                Math.random() * 6000;
-
-
-            walkingTimer =
-                setTimeout(
-                    () => {
-
-                        naturalStop();
-
-                    },
-                    travelTime
-                );
-
-        }
-
-
-        /* =====================================================
-           NATURAL STOP
-        ===================================================== */
-
-        function naturalStop() {
-
-            if (!walking) {
-                return;
-            }
-
-
-            avatarMover.classList.remove(
-                "walking"
-            );
-
-
-            /*
-             * Pause at the current location.
-             */
-
-            const pauseTime =
-                3500 +
-                Math.random() * 7500;
-
-
-            stopTimer =
-                setTimeout(
-                    () => {
-
-                        if (!walking) {
-                            return;
-                        }
-
-
-                        avatarMover.classList.add(
-                            "walking"
-                        );
-
-
-                        moveAvatar();
-
-                    },
-                    pauseTime
-                );
-
-        }
-
-
-        /* =====================================================
-           PAUSE DURING CONVERSATION
-        ===================================================== */
-
-        function pauseWalkingForConversation() {
-
-            if (!walking) {
-                return;
-            }
-
-
-            avatarMover.classList.remove(
-                "walking"
-            );
-
-
-            clearTimeout(
-                walkingTimer
-            );
-
-
-            clearTimeout(
-                stopTimer
-            );
-
-        }
-
-
-        /* =====================================================
-           RESUME AFTER CONVERSATION
-        ===================================================== */
-
-        function resumeWalking() {
-
-            if (!walking) {
-                return;
-            }
-
-
-            avatarMover.classList.add(
-                "walking"
-            );
-
-
-            const delay =
-                2500 +
-                Math.random() * 4000;
-
-
-            stopTimer =
-                setTimeout(
-                    () => {
-
-                        if (walking) {
-                            moveAvatar();
-                        }
-
-                    },
-                    delay
-                );
-
-        }
-
-
-        /* =====================================================
-           AUTO OPEN
-        ===================================================== */
-
-        window.addEventListener(
-            "load",
-            () => {
-
-                /*
-                 * Popup appears automatically.
-                 *
-                 * We DO NOT automatically request microphone
-                 * permission because modern browsers require
-                 * user interaction for this in many cases.
-                 */
-
-                setTimeout(
-                    () => {
-
-                        openAssistant();
-
-                    },
-                    700
-                );
-
-
-                /*
-                 * Avatar can visually appear/connect
-                 * after the user clicks Talk to AI.
-                 */
-
-            }
-        );
-
-
-        /* =====================================================
-           KEEP AVATAR WALKING CASUALLY
-        ===================================================== */
-
-        setTimeout(
-            () => {
-
-                if (!walking) {
-                    startWalking();
-                }
-
-            },
-            8000
-        );
+        };
 
     </script>
 
