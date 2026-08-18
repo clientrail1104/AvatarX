@@ -169,7 +169,7 @@
     }
 
     /* =========================
-       ASSISTANT CARD (FLEX STREAM)
+       ASSISTANT CARD & STAGE
     ========================== */
 
     .assistant-shell {
@@ -215,10 +215,72 @@
       opacity: 0;
       transition: opacity 0.5s ease, transform 0.5s ease;
       transform: scale(1.01);
+      z-index: 1;
     }
 
     #avatar-video.active {
       opacity: 1;
+    }
+
+    /* GESTURE OVERLAY VIDEO */
+    .gesture-overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s ease-in-out;
+      z-index: 5;
+    }
+
+    .gesture-overlay.active {
+      opacity: 1;
+    }
+
+    /* QUICK ACTION / MOTION MENU */
+    .gesture-bar {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 25;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .gesture-bar.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .gesture-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      font-size: 11px;
+      font-weight: 650;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .gesture-chip:hover {
+      background: #ffffff;
+      transform: translateX(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
     }
 
     /* IDLE STATE */
@@ -232,6 +294,7 @@
       padding: 20px;
       text-align: center;
       transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 2;
     }
 
     .idle-state.hidden {
@@ -518,6 +581,13 @@
         display: none !important;
       }
 
+      .gesture-bar {
+        top: 12px;
+        right: 12px;
+        transform: none;
+        flex-direction: row;
+      }
+
       .info-grid {
         grid-template-columns: 1fr;
         gap: 6px;
@@ -572,8 +642,19 @@
       <div class="assistant">
         <div class="avatar-stage">
 
-          <!-- ANAM VIDEO -->
+          <!-- ANAM WEBRTC STREAMING VIDEO -->
           <video id="avatar-video" autoplay playsinline muted="false"></video>
+
+          <!-- PRE-RENDERED GESTURE OVERLAY VIDEO -->
+          <video id="gesture-overlay" autoplay playsinline muted class="gesture-overlay"></video>
+
+          <!-- INTERACTIVE MOTION/GESTURE MENU -->
+          <div id="gestureMenu" class="gesture-bar">
+            <button type="button" class="gesture-chip" data-gesture="wave">👋 Wave</button>
+            <button type="button" class="gesture-chip" data-gesture="point">👉 Point</button>
+            <button type="button" class="gesture-chip" data-gesture="think">🤔 Think</button>
+            <button type="button" class="gesture-chip" data-gesture="walk">🚶 Walk In</button>
+          </div>
 
           <!-- IDLE STATE -->
           <div id="idleState" class="idle-state">
@@ -650,11 +731,23 @@
     const AVATAR_ID = "0caf57ab-3da9-4d27-b356-53837508aaf6";
     const AGENT_ID = "agent_0301ky516eb3emwsy22td2f8z96g";
 
+    // GESTURE/MOTION OVERLAY ASSETS
+    const MOTION_ASSETS = {
+      wave: "assets/avatar_wave.webm",
+      point: "assets/avatar_point_right.webm",
+      think: "assets/avatar_think.webm",
+      walk: "assets/avatar_walk.webm"
+    };
+
     let anamClient = null;
     let isStarting = false;
     let isConnected = false;
 
     const video = document.getElementById("avatar-video");
+    const gestureOverlay = document.getElementById("gesture-overlay");
+    const gestureMenu = document.getElementById("gestureMenu");
+    const gestureChips = document.querySelectorAll(".gesture-chip");
+
     const startButton = document.getElementById("startButton");
     const stopButton = document.getElementById("stopButton");
     const idleState = document.getElementById("idleState");
@@ -691,7 +784,9 @@
       idleState.classList.remove("hidden");
       connectingState.classList.remove("visible");
       micStatus.classList.remove("visible");
+      gestureMenu.classList.remove("visible");
       video.classList.remove("active");
+      gestureOverlay.classList.remove("active");
       setStatus("Ready", "idle");
     }
 
@@ -711,9 +806,43 @@
       connectingState.classList.remove("visible");
       video.classList.add("active");
       micStatus.classList.add("visible");
+      gestureMenu.classList.add("visible");
       setStatus("Connected", "connected");
     }
 
+    // ============================================================
+    // MOTION STATE SWITCHER (OVERLAY CONTROLLER)
+    // ============================================================
+    function setAvatarState(state) {
+      const src = MOTION_ASSETS[state];
+      if (!src) return;
+
+      gestureOverlay.src = src;
+      gestureOverlay.classList.add("active");
+
+      const playPromise = gestureOverlay.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.warn(`Gesture video skipped (${state}): Asset missing or playback blocked.`, err);
+          gestureOverlay.classList.remove("active");
+        });
+      }
+
+      gestureOverlay.onended = () => {
+        gestureOverlay.classList.remove("active");
+      };
+    }
+
+    gestureChips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        const gesture = chip.getAttribute("data-gesture");
+        setAvatarState(gesture);
+      });
+    });
+
+    // ============================================================
+    // SESSION CONNECTION MANAGEMENT
+    // ============================================================
     async function createSession() {
       const response = await fetch(SESSION_ENDPOINT, {
         method: "POST",
@@ -759,6 +888,7 @@
         isConnected = true;
         isStarting = false;
         setConnectedUI();
+        setAvatarState("wave"); // Trigger initial welcome wave
         console.log("AvatarX conversation started.");
       } catch (error) {
         console.error("Start conversation failed:", error);
