@@ -2,416 +2,585 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>AvatarX — Digital CX AI Assistant</title>
-  <meta name="description" content="AvatarX real-time AI voice assistant powered by Anam and ElevenLabs." />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+
+  <title>AvatarX — AI Assistant</title>
+
+  <meta
+    name="description"
+    content="AvatarX real-time AI voice assistant powered by Anam and ElevenLabs."
+  />
 
   <style>
-    * { box-sizing: border-box; }
+    /* =========================================================
+       AVATARX — PREMIUM BRAND THEME
+       Purple: #5A52A3
+       Red:    #C8222A
+       Slate:  #5B5B72
+    ========================================================= */
 
-    :root {
-      --ink: #111111;
-      --ink-2: #242424;
-      --white: #ffffff;
-      --paper: #f4f3ee;
-      --paper-2: #e9e8e1;
-      --lime: #d9ff39;
-      --lime-soft: #efffa4;
-      --muted: #77776f;
-      --line: rgba(17,17,17,.14);
-      --line-light: rgba(255,255,255,.18);
-      --success: #76c900;
-      --danger: #e34848;
-      --shadow: 0 24px 80px rgba(0,0,0,.16);
+    * {
+      box-sizing: border-box;
     }
 
-    html, body {
+    :root {
+      /* Brand */
+      --purple: #5A52A3;
+      --purple-dark: #464080;
+      --purple-soft: rgba(90, 82, 163, 0.12);
+      --purple-glow: rgba(90, 82, 163, 0.20);
+
+      --red: #C8222A;
+      --red-dark: #a91c23;
+      --red-soft: rgba(200, 34, 42, 0.10);
+
+      --slate: #5B5B72;
+      --slate-light: #77778a;
+
+      /* Neutral */
+      --bg: #f7f7fa;
+      --white: #ffffff;
+      --text: #19191f;
+      --muted: #707080;
+
+      --border: rgba(25, 25, 31, 0.075);
+
+      --shadow:
+        0 24px 70px rgba(39, 37, 72, 0.10);
+
+      --shadow-soft:
+        0 10px 30px rgba(39, 37, 72, 0.08);
+
+      --radius-xl: 26px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+
+      --success: #16834b;
+      --danger: #C8222A;
+    }
+
+    /* =========================================================
+       GLOBAL
+    ========================================================= */
+
+    html,
+    body {
       width: 100%;
-      min-height: 100%;
-      height: 100%;
+      height: 100vh;
       margin: 0;
+      padding: 0;
       overflow: hidden;
-      background: var(--paper);
-      color: var(--ink);
-      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Helvetica, Arial, sans-serif;
     }
 
     body {
-      position: relative;
-      isolation: isolate;
-    }
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
 
-    button { font: inherit; }
+      color: var(--text);
 
-    /* ---------- DAYTHREE-INSPIRED BACKDROP ---------- */
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -3;
-      pointer-events: none;
       background:
-        radial-gradient(circle at 83% 16%, rgba(217,255,57,.34), transparent 22%),
-        radial-gradient(circle at 8% 88%, rgba(0,0,0,.045), transparent 25%),
-        linear-gradient(135deg, #f7f6f1 0%, #eeede7 52%, #e5e4dc 100%);
+        radial-gradient(
+          circle at 15% 5%,
+          rgba(90, 82, 163, 0.10),
+          transparent 32%
+        ),
+        radial-gradient(
+          circle at 88% 10%,
+          rgba(200, 34, 42, 0.055),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 50% 100%,
+          rgba(90, 82, 163, 0.055),
+          transparent 35%
+        ),
+        var(--bg);
+
+      display: flex;
+      flex-direction: column;
     }
 
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      pointer-events: none;
-      opacity: .32;
-      background-image:
-        linear-gradient(rgba(17,17,17,.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(17,17,17,.035) 1px, transparent 1px);
-      background-size: 52px 52px;
-      mask-image: linear-gradient(to bottom, black, transparent 85%);
+    button {
+      font: inherit;
     }
 
-    /* ---------- TOP NAV ---------- */
+    /* =========================================================
+       TOP BAR
+    ========================================================= */
 
     .topbar {
-      height: 72px;
-      width: 100%;
-      padding: 0 clamp(20px, 4vw, 58px);
+      height: 58px;
+      flex-shrink: 0;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: relative;
+
+      padding: 0 26px;
+
       z-index: 100;
-      background: rgba(244,243,238,.72);
-      border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+
+      background:
+        rgba(255, 255, 255, 0.76);
+
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+
+      border-bottom:
+        1px solid rgba(90, 82, 163, 0.08);
+
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.9);
     }
+
+    /* =========================================================
+       BRAND
+    ========================================================= */
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .brand-mark {
-      width: 38px;
-      height: 38px;
+      position: relative;
+
+      width: 34px;
+      height: 34px;
+
       display: grid;
       place-items: center;
-      border-radius: 50%;
-      background: var(--ink);
-      color: var(--lime);
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: -.05em;
+
+      border-radius: 11px;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          145deg,
+          var(--purple),
+          #474080
+        );
+
+      font-size: 15px;
+      font-weight: 800;
+
+      box-shadow:
+        0 7px 18px rgba(90, 82, 163, 0.24);
+
+      overflow: hidden;
     }
 
-    .brand-copy {
-      display: flex;
-      flex-direction: column;
-      line-height: 1;
+    .brand-mark::after {
+      content: "";
+
+      position: absolute;
+
+      width: 18px;
+      height: 18px;
+
+      right: -7px;
+      bottom: -8px;
+
+      border-radius: 50%;
+
+      background:
+        rgba(200, 34, 42, 0.85);
+
+      filter: blur(4px);
+    }
+
+    .brand-mark span {
+      position: relative;
+      z-index: 2;
     }
 
     .brand-name {
-      font-size: 15px;
-      font-weight: 850;
-      letter-spacing: -.03em;
+      font-size: 16px;
+      font-weight: 750;
+
+      letter-spacing: -0.025em;
     }
 
-    .brand-sub {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: .14em;
-      text-transform: uppercase;
+    .brand-badge {
+      font-size: 10px;
+
+      color: var(--purple);
+
+      padding: 4px 9px;
+
+      border-radius: 999px;
+
+      background:
+        rgba(90, 82, 163, 0.075);
+
+      border:
+        1px solid rgba(90, 82, 163, 0.10);
+
+      font-weight: 650;
     }
 
-    .nav-center {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 26px;
-      color: #66665f;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .07em;
-      text-transform: uppercase;
-    }
-
-    .nav-center span { white-space: nowrap; }
+    /* =========================================================
+       STATUS
+    ========================================================= */
 
     .top-status {
       display: flex;
       align-items: center;
-      gap: 9px;
-      color: var(--ink);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-transform: uppercase;
+      gap: 8px;
+
+      color: var(--slate);
+
+      font-size: 12px;
+      font-weight: 550;
     }
 
     .status-dot {
       width: 8px;
       height: 8px;
+
       border-radius: 50%;
-      background: #a4a49d;
-      transition: .25s ease;
+
+      background: #b8b8c2;
+
+      transition:
+        0.25s ease;
     }
 
     .status-dot.connected {
       background: var(--success);
-      box-shadow: 0 0 0 5px rgba(118,201,0,.15);
+
+      box-shadow:
+        0 0 0 4px rgba(22, 131, 75, 0.11);
     }
 
     .status-dot.connecting {
-      background: #d29a00;
-      animation: pulse 1.2s infinite;
+      background: var(--purple);
+
+      animation:
+        pulse 1.2s infinite;
+
+      box-shadow:
+        0 0 0 4px rgba(90, 82, 163, 0.10);
     }
 
-    .status-dot.error { background: var(--danger); }
+    .status-dot.error {
+      background: var(--red);
+
+      box-shadow:
+        0 0 0 4px rgba(200, 34, 42, 0.10);
+    }
 
     @keyframes pulse {
-      0%,100% { opacity: 1; }
-      50% { opacity: .35; }
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.4;
+        transform: scale(0.82);
+      }
     }
 
-    /* ---------- MAIN ---------- */
+    /* =========================================================
+       MAIN
+    ========================================================= */
 
     .page {
-      width: min(1420px, calc(100% - 40px));
-      height: calc(100vh - 72px);
+      flex: 1;
+
+      width: 100%;
+      max-width: 1080px;
+
       margin: 0 auto;
-      padding: clamp(24px, 4vh, 48px) 0 18px;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr) auto;
-      gap: 20px;
+
+      padding:
+        13px 20px 16px;
+
+      display: flex;
+      flex-direction: column;
+
+      gap: 12px;
+
+      min-height: 0;
     }
+
+    /* =========================================================
+       HERO
+    ========================================================= */
 
     .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
-      gap: 40px;
-      align-items: end;
-    }
+      text-align: center;
 
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      margin-bottom: 10px;
-      color: #686860;
-      font-size: 10px;
-      font-weight: 850;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-    }
+      flex-shrink: 0;
 
-    .eyebrow::before {
-      content: "";
-      width: 28px;
-      height: 2px;
-      background: var(--ink);
+      padding-top: 1px;
     }
 
     .hero h1 {
-      max-width: 920px;
+      margin:
+        0 0 3px;
+
+      font-size:
+        clamp(23px, 3.3vw, 36px);
+
+      line-height: 1.1;
+
+      letter-spacing:
+        -0.045em;
+
+      font-weight: 760;
+
+      color: var(--text);
+    }
+
+    .hero h1 span {
+      color: var(--purple);
+    }
+
+    .hero p {
       margin: 0;
-      font-size: clamp(38px, 6.2vw, 86px);
-      line-height: .92;
-      letter-spacing: -.075em;
-      font-weight: 850;
-    }
 
-    .hero h1 em {
-      font-style: normal;
-      color: #7d7d74;
-    }
+      color: var(--slate);
 
-    .hero-side {
-      padding-bottom: 5px;
-      max-width: 390px;
-      justify-self: end;
-    }
-
-    .hero-side p {
-      margin: 0;
-      color: #66665f;
       font-size: 13px;
-      line-height: 1.65;
+
+      letter-spacing:
+        0.01em;
     }
 
-    .hero-side strong { color: var(--ink); }
-
-    /* ---------- ASSISTANT EXPERIENCE ---------- */
+    /* =========================================================
+       ASSISTANT OUTER SHELL
+    ========================================================= */
 
     .assistant-shell {
       position: relative;
+
+      flex: 1;
+
+      width: 100%;
+
       min-height: 0;
-      border-radius: 30px;
-      background: var(--ink);
-      padding: 1px;
-      box-shadow: var(--shadow);
+
+      padding: 6px;
+
+      border-radius:
+        var(--radius-xl);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(90, 82, 163, 0.28),
+          rgba(255, 255, 255, 0.88) 35%,
+          rgba(255, 255, 255, 0.88) 65%,
+          rgba(200, 34, 42, 0.18)
+        );
+
+      box-shadow:
+        var(--shadow);
+
+      display: flex;
+      flex-direction: column;
+
       overflow: hidden;
     }
+
+    /*
+      Fine brand line around the assistant.
+    */
+
+    .assistant-shell::before {
+      content: "";
+
+      position: absolute;
+
+      left: 14%;
+      right: 14%;
+      top: 0;
+
+      height: 2px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          var(--purple),
+          var(--red),
+          transparent
+        );
+
+      opacity: 0.75;
+
+      border-radius: 999px;
+
+      z-index: 5;
+    }
+
+    /* =========================================================
+       ASSISTANT
+    ========================================================= */
 
     .assistant {
       position: relative;
+
+      flex: 1;
+
       width: 100%;
-      height: 100%;
+
       min-height: 0;
+
       overflow: hidden;
-      border-radius: 29px;
+
+      border-radius:
+        20px;
+
       background:
-        radial-gradient(circle at 52% 20%, rgba(217,255,57,.13), transparent 25%),
-        linear-gradient(135deg, #202020, #0f0f0f 65%, #1b1b1b);
+        radial-gradient(
+          circle at 50% 20%,
+          #ffffff 0%,
+          #f4f3f8 46%,
+          #ececf2 100%
+        );
     }
 
+    /*
+      Very subtle ambient brand glow.
+    */
+
     .assistant::before {
-      content: "AVATARX";
+      content: "";
+
       position: absolute;
-      top: 20px;
-      left: 26px;
-      z-index: 4;
-      color: rgba(255,255,255,.22);
-      font-size: 10px;
-      font-weight: 850;
-      letter-spacing: .2em;
+
+      width: 420px;
+      height: 420px;
+
+      left: 50%;
+      top: 50%;
+
+      transform:
+        translate(-50%, -54%);
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(90, 82, 163, 0.075),
+          transparent 68%
+        );
+
+      pointer-events: none;
+
+      z-index: 1;
     }
 
     .assistant::after {
-      content: "HUMANISING TECHNOLOGY";
+      content: "";
+
       position: absolute;
-      right: 26px;
-      top: 20px;
-      z-index: 4;
-      color: rgba(255,255,255,.22);
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: .16em;
+
+      width: 300px;
+      height: 300px;
+
+      right: -120px;
+      bottom: -130px;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(200, 34, 42, 0.045),
+          transparent 68%
+        );
+
+      pointer-events: none;
+
+      z-index: 1;
     }
 
+    /* =========================================================
+       AVATAR STAGE
+    ========================================================= */
+
     .avatar-stage {
-      position: absolute;
-      inset: 0;
+      position: relative;
+
+      width: 100%;
+      height: 100%;
+
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-    }
 
-    /* Subtle editorial spotlight behind the avatar */
-    .avatar-stage::before {
-      content: "";
-      position: absolute;
-      width: min(62vw, 720px);
-      height: min(62vw, 720px);
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(217,255,57,.14), transparent 67%);
-      filter: blur(4px);
-      pointer-events: none;
-    }
-
-    .avatar-stage::after {
-      content: "";
-      position: absolute;
-      left: 7%;
-      right: 7%;
-      bottom: 14%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
-      pointer-events: none;
+      z-index: 2;
     }
 
     #avatar-video {
       position: absolute;
+
       inset: 0;
-      z-index: 2;
+
       width: 100%;
       height: 100%;
+
       object-fit: cover;
+
       background: transparent;
+
       opacity: 0;
-      transition: opacity .5s ease, transform .5s ease;
-      transform: scale(1.01);
-    }
 
-    #avatar-video.active { opacity: 1; }
+      transition:
+        opacity 0.6s ease,
+        transform 0.6s ease;
 
-    /* ---------- AVATAR MOTION ---------- */
+      transform:
+        scale(1.01);
 
-    #avatar-motion {
-      position: absolute;
-      inset: 0;
       z-index: 2;
-      pointer-events: none;
-      will-change: transform;
     }
 
-    #avatar-motion.idle-motion {
-      animation: avatarIdle 5.4s ease-in-out infinite;
+    #avatar-video.active {
+      opacity: 1;
     }
 
-    #avatar-motion.walking {
-      animation: avatarWalk 18s ease-in-out infinite;
-    }
-
-    #avatar-motion.talking-motion {
-      animation:
-        avatarWalkTalking 18s ease-in-out infinite,
-        avatarBreath 3.6s ease-in-out infinite;
-    }
-
-    @keyframes avatarIdle {
-      0%,100% { transform: translate3d(0,0,0) scale(1); }
-      25% { transform: translate3d(-.65%,-.2%,0) scale(1.004); }
-      50% { transform: translate3d(.7%,0,0) scale(1); }
-      75% { transform: translate3d(-.35%,-.1%,0) scale(1.003); }
-    }
-
-    @keyframes avatarWalk {
-      0% { transform: translate3d(-5%,0,0) scale(1); }
-      14% { transform: translate3d(-5%,0,0) scale(1); }
-      30% { transform: translate3d(0,-.35%,0) scale(1.008); }
-      46% { transform: translate3d(5%,0,0) scale(1); }
-      60% { transform: translate3d(5%,0,0) scale(1); }
-      76% { transform: translate3d(0,-.35%,0) scale(1.008); }
-      92% { transform: translate3d(-5%,0,0) scale(1); }
-      100% { transform: translate3d(-5%,0,0) scale(1); }
-    }
-
-    @keyframes avatarWalkTalking {
-      0% { transform: translate3d(-4%,0,0) scale(1); }
-      14% { transform: translate3d(-4%,0,0) scale(1); }
-      30% { transform: translate3d(0,-.25%,0) scale(1.008); }
-      46% { transform: translate3d(4%,0,0) scale(1); }
-      60% { transform: translate3d(4%,0,0) scale(1); }
-      76% { transform: translate3d(0,-.25%,0) scale(1.008); }
-      92% { transform: translate3d(-4%,0,0) scale(1); }
-      100% { transform: translate3d(-4%,0,0) scale(1); }
-    }
-
-    @keyframes avatarBreath {
-      0%,100% { filter: brightness(1); }
-      50% { filter: brightness(1.015); }
-    }
-
-    /* ---------- IDLE STATE ---------- */
+    /* =========================================================
+       IDLE STATE
+    ========================================================= */
 
     .idle-state {
       position: absolute;
+
       inset: 0;
-      z-index: 8;
+
       display: flex;
+
       align-items: center;
       justify-content: center;
-      padding: 30px;
+
+      padding: 20px;
+
       text-align: center;
-      transition: opacity .35s ease, visibility .35s ease;
+
+      transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+
+      z-index: 5;
     }
 
     .idle-state.hidden {
@@ -420,575 +589,962 @@
     }
 
     .idle-inner {
-      max-width: 520px;
-      color: white;
-    }
-
-    .idle-kicker {
-      margin-bottom: 14px;
-      color: var(--lime);
-      font-size: 10px;
-      font-weight: 850;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-    }
-
-    .idle-inner h2 {
-      margin: 0;
-      font-size: clamp(30px, 4vw, 54px);
-      line-height: .95;
-      letter-spacing: -.065em;
-      font-weight: 850;
-    }
-
-    .idle-inner p {
-      max-width: 430px;
-      margin: 16px auto 0;
-      color: rgba(255,255,255,.58);
-      font-size: 13px;
-      line-height: 1.65;
+      max-width: 380px;
     }
 
     .idle-icon {
+      position: relative;
+
       width: 58px;
       height: 58px;
-      margin: 0 auto 18px;
+
+      margin:
+        0 auto 13px;
+
       display: grid;
       place-items: center;
-      border-radius: 50%;
-      background: var(--lime);
-      color: var(--ink);
-      font-size: 21px;
-      font-weight: 900;
-      box-shadow: 0 0 0 12px rgba(217,255,57,.08);
+
+      border-radius: 18px;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          145deg,
+          var(--purple),
+          var(--purple-dark)
+        );
+
+      font-size: 23px;
+
+      box-shadow:
+        0 12px 28px
+        rgba(90, 82, 163, 0.22);
+
+      overflow: hidden;
     }
 
-    /* ---------- CONNECTING ---------- */
+    .idle-icon::after {
+      content: "";
+
+      position: absolute;
+
+      width: 22px;
+      height: 22px;
+
+      right: -6px;
+      bottom: -6px;
+
+      border-radius: 50%;
+
+      background:
+        var(--red);
+
+      opacity: 0.85;
+
+      filter: blur(3px);
+    }
+
+    .idle-inner h2 {
+      margin:
+        0 0 6px;
+
+      font-size: 20px;
+
+      letter-spacing:
+        -0.035em;
+    }
+
+    .idle-inner p {
+      margin: 0;
+
+      color: var(--slate);
+
+      line-height: 1.5;
+
+      font-size: 13px;
+    }
+
+    .idle-inner strong {
+      color: var(--purple);
+    }
+
+    /* =========================================================
+       CONNECTING
+    ========================================================= */
 
     .connecting-state {
       position: absolute;
+
       inset: 0;
-      z-index: 20;
+
       display: none;
+
       align-items: center;
       justify-content: center;
+
       text-align: center;
-      color: white;
-      background: rgba(15,15,15,.78);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+
+      z-index: 10;
+
+      background:
+        rgba(247, 247, 250, 0.84);
+
+      backdrop-filter:
+        blur(10px);
+
+      -webkit-backdrop-filter:
+        blur(10px);
     }
 
-    .connecting-state.visible { display: flex; }
+    .connecting-state.visible {
+      display: flex;
+    }
 
     .loader {
-      width: 46px;
-      height: 46px;
-      margin: 0 auto 16px;
+      width: 40px;
+      height: 40px;
+
+      margin:
+        0 auto 13px;
+
       border-radius: 50%;
-      border: 2px solid rgba(255,255,255,.14);
-      border-top-color: var(--lime);
-      animation: spin .85s linear infinite;
+
+      border:
+        3px solid
+        rgba(90, 82, 163, 0.12);
+
+      border-top-color:
+        var(--purple);
+
+      border-right-color:
+        var(--red);
+
+      animation:
+        spin 0.85s linear infinite;
     }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin {
+      to {
+        transform:
+          rotate(360deg);
+      }
+    }
 
     .connecting-title {
+      font-weight: 700;
+
       font-size: 15px;
-      font-weight: 800;
-      letter-spacing: -.02em;
+
+      color: var(--text);
     }
 
     .connecting-text {
-      margin-top: 6px;
-      color: rgba(255,255,255,.55);
-      font-size: 11px;
+      margin-top: 4px;
+
+      color: var(--slate);
+
+      font-size: 12px;
     }
 
-    /* ---------- EXPERIENCE LABELS ---------- */
-
-    .experience-chip {
-      position: absolute;
-      z-index: 15;
-      left: 24px;
-      bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      padding: 9px 12px;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 999px;
-      background: rgba(0,0,0,.35);
-      color: rgba(255,255,255,.75);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-
-    .experience-chip .tiny-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--lime);
-      box-shadow: 0 0 0 4px rgba(217,255,57,.1);
-    }
-
-    /* ---------- ERROR ---------- */
-
-    .error-box {
-      display: none;
-      position: absolute;
-      left: 50%;
-      top: 58px;
-      transform: translateX(-50%);
-      width: min(calc(100% - 40px), 620px);
-      z-index: 50;
-      padding: 11px 15px;
-      border-radius: 12px;
-      color: #ffb7b7;
-      background: rgba(76,16,16,.92);
-      border: 1px solid rgba(255,120,120,.18);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 12px 40px rgba(0,0,0,.25);
-      font-size: 11px;
-      line-height: 1.5;
-    }
-
-    .error-box.visible { display: block; }
-
-    /* ---------- CONTROLS ---------- */
+    /* =========================================================
+       CONTROL BAR
+    ========================================================= */
 
     .control-bar {
       position: absolute;
+
       left: 50%;
-      bottom: 24px;
-      transform: translateX(-50%);
-      z-index: 35;
+      bottom: 16px;
+
+      transform:
+        translateX(-50%);
+
+      z-index: 30;
+
       display: flex;
+
       align-items: center;
-      gap: 7px;
-      padding: 7px;
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 999px;
-      background: rgba(12,12,12,.82);
-      box-shadow: 0 18px 50px rgba(0,0,0,.34);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+
+      gap: 8px;
+
+      padding: 6px;
+
+      border-radius:
+        17px;
+
+      background:
+        rgba(255, 255, 255, 0.88);
+
+      backdrop-filter:
+        blur(22px);
+
+      -webkit-backdrop-filter:
+        blur(22px);
+
+      border:
+        1px solid
+        rgba(255, 255, 255, 0.95);
+
+      box-shadow:
+        0 14px 34px
+        rgba(37, 35, 64, 0.14);
     }
+
+    /* =========================================================
+       BUTTONS
+    ========================================================= */
 
     .btn {
-      height: 40px;
-      padding: 0 18px;
+      height: 39px;
+
+      padding:
+        0 17px;
+
       border: 0;
-      border-radius: 999px;
+
+      border-radius:
+        11px;
+
       cursor: pointer;
-      font-size: 11px;
-      font-weight: 850;
-      letter-spacing: .02em;
-      transition: transform .2s ease, opacity .2s ease, background .2s ease;
+
+      font-weight: 650;
+
+      font-size: 13px;
+
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
     }
 
-    .btn:hover { transform: translateY(-1px); }
-    .btn:active { transform: scale(.97); }
+    .btn:hover {
+      transform:
+        translateY(-1px);
+    }
+
+    .btn:active {
+      transform:
+        scale(0.97);
+    }
 
     .btn:disabled {
       cursor: not-allowed;
-      opacity: .42;
+
+      opacity: 0.45;
+
       transform: none;
     }
 
+    /*
+      Primary brand button
+    */
+
     .btn-start {
-      color: var(--ink);
-      background: var(--lime);
+      position: relative;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--purple),
+          #4e478e
+        );
+
+      box-shadow:
+        0 7px 18px
+        rgba(90, 82, 163, 0.24);
+
+      overflow: hidden;
+    }
+
+    .btn-start::before {
+      content: "";
+
+      position: absolute;
+
+      top: 0;
+      left: -100%;
+
+      width: 70%;
+      height: 100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.18),
+          transparent
+        );
+
+      transform:
+        skewX(-20deg);
+
+      transition:
+        left 0.5s ease;
+    }
+
+    .btn-start:hover::before {
+      left: 130%;
     }
 
     .btn-stop {
-      color: white;
-      background: rgba(255,255,255,.1);
+      background:
+        #f1f1f5;
+
+      color:
+        #3f3f4c;
+
+      border:
+        1px solid
+        rgba(91, 91, 114, 0.08);
     }
+
+    .btn-stop:hover {
+      background:
+        var(--red-soft);
+
+      color:
+        var(--red);
+    }
+
+    /* =========================================================
+       MICROPHONE
+    ========================================================= */
 
     .mic-status {
       display: none;
+
       align-items: center;
+
       gap: 7px;
-      padding: 0 11px;
-      color: rgba(255,255,255,.62);
-      font-size: 10px;
-      font-weight: 750;
-      text-transform: uppercase;
-      letter-spacing: .08em;
+
+      padding:
+        0 9px;
+
+      color:
+        var(--slate);
+
+      font-size: 12px;
+
+      font-weight: 600;
     }
 
-    .mic-status.visible { display: flex; }
+    .mic-status.visible {
+      display: flex;
+    }
 
     .mic-wave {
       display: flex;
+
       align-items: center;
+
       gap: 2px;
+
       height: 16px;
     }
 
     .mic-wave span {
-      width: 2px;
-      height: 5px;
-      border-radius: 3px;
-      background: var(--lime);
-      animation: wave .8s ease-in-out infinite;
+      width: 3px;
+      height: 6px;
+
+      border-radius: 4px;
+
+      background:
+        var(--red);
+
+      animation:
+        wave 0.8s ease-in-out infinite;
     }
 
-    .mic-wave span:nth-child(2) { animation-delay: .1s; }
-    .mic-wave span:nth-child(3) { animation-delay: .2s; }
-    .mic-wave span:nth-child(4) { animation-delay: .3s; }
+    .mic-wave span:nth-child(2) {
+      animation-delay:
+        0.1s;
+    }
+
+    .mic-wave span:nth-child(3) {
+      animation-delay:
+        0.2s;
+    }
+
+    .mic-wave span:nth-child(4) {
+      animation-delay:
+        0.3s;
+    }
 
     @keyframes wave {
-      0%,100% { height: 4px; }
-      50% { height: 14px; }
+      0%,
+      100% {
+        height: 4px;
+      }
+
+      50% {
+        height: 14px;
+      }
     }
 
-    /* ---------- BOTTOM INFORMATION ---------- */
+    /* =========================================================
+       ERROR
+    ========================================================= */
 
-    .bottom-area {
+    .error-box {
+      display: none;
+
+      position: absolute;
+
+      left: 50%;
+      top: 16px;
+
+      transform:
+        translateX(-50%);
+
+      width:
+        min(calc(100% - 32px), 540px);
+
+      z-index: 40;
+
+      padding:
+        10px 14px;
+
+      border-radius:
+        12px;
+
+      color:
+        #8e2424;
+
+      background:
+        rgba(255, 244, 244, 0.96);
+
+      border:
+        1px solid
+        rgba(200, 34, 42, 0.15);
+
+      box-shadow:
+        0 8px 24px
+        rgba(0, 0, 0, 0.08);
+
+      font-size: 12px;
+
+      line-height: 1.4;
+    }
+
+    .error-box.visible {
+      display: block;
+    }
+
+    /* =========================================================
+       INFORMATION GRID
+    ========================================================= */
+
+    .info-grid {
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 20px;
-      align-items: center;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 10px;
+
+      flex-shrink: 0;
     }
 
-    .principles {
-      display: flex;
-      gap: 28px;
-      flex-wrap: wrap;
-    }
+    .info-card {
+      position: relative;
 
-    .principle {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      color: #6e6e66;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .03em;
-    }
+      padding:
+        11px 13px;
 
-    .principle b {
-      color: var(--ink);
+      border-radius:
+        15px;
+
+      background:
+        rgba(255, 255, 255, 0.69);
+
+      border:
+        1px solid
+        var(--border);
+
+      color:
+        var(--slate);
+
       font-size: 11px;
+
+      line-height: 1.4;
+
+      overflow: hidden;
+
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
     }
 
-    .principle-mark {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--ink);
+    .info-card:hover {
+      transform:
+        translateY(-2px);
+
+      box-shadow:
+        var(--shadow-soft);
     }
 
-    .principle:nth-child(2) .principle-mark { background: var(--lime); }
-    .principle:nth-child(3) .principle-mark { background: #9a9a91; }
+    .info-card::before {
+      content: "";
+
+      position: absolute;
+
+      left: 0;
+      top: 0;
+
+      width: 3px;
+      height: 100%;
+
+      background:
+        linear-gradient(
+          180deg,
+          var(--purple),
+          var(--red)
+        );
+
+      opacity: 0.75;
+    }
+
+    .info-card strong {
+      display: block;
+
+      margin-bottom:
+        2px;
+
+      color:
+        #292934;
+
+      font-size:
+        12px;
+    }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
 
     footer {
-      color: #8a8a82;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      text-align: right;
+      flex-shrink: 0;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      color:
+        var(--slate-light);
+
+      font-size: 11px;
+
+      padding-top: 2px;
     }
 
     .secure {
-      display: inline-flex;
+      display: flex;
+
       align-items: center;
-      gap: 6px;
+
+      gap: 5px;
     }
 
     .secure-icon {
-      width: 15px;
-      height: 15px;
+      width: 14px;
+      height: 14px;
+
       display: grid;
       place-items: center;
-      border-radius: 50%;
-      background: var(--lime);
-      color: var(--ink);
-      font-size: 8px;
-      font-weight: 900;
+
+      border-radius: 4px;
+
+      background:
+        rgba(90, 82, 163, 0.10);
+
+      color:
+        var(--purple);
+
+      font-size: 9px;
     }
 
-    /* ---------- RESPONSIVE ---------- */
+    /* =========================================================
+       MOBILE
+    ========================================================= */
 
-    @media (max-width: 900px) {
-      .nav-center { display: none; }
-
-      .hero {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-
-      .hero-side {
-        justify-self: start;
-        max-width: 600px;
-      }
-
-      .page {
-        width: min(100% - 24px, 1420px);
-      }
-
-      .bottom-area {
-        grid-template-columns: 1fr;
-      }
-
-      footer { text-align: left; }
-    }
-
-    @media (max-width: 650px) {
-      html, body { overflow: hidden; }
+    @media (max-width: 700px) {
 
       .topbar {
-        height: 60px;
-        padding: 0 15px;
+        height: 50px;
+
+        padding:
+          0 16px;
       }
 
-      .brand-mark {
-        width: 34px;
-        height: 34px;
-      }
-
-      .brand-sub { display: none; }
-
-      .top-status {
-        font-size: 9px;
+      .brand-badge {
+        display: none;
       }
 
       .page {
-        width: calc(100% - 20px);
-        height: calc(100vh - 60px);
-        padding: 17px 0 12px;
-        gap: 12px;
+        padding:
+          10px 12px 12px;
+
+        gap: 8px;
       }
 
       .hero h1 {
-        font-size: clamp(34px, 12vw, 52px);
+        font-size:
+          clamp(21px, 7vw, 28px);
       }
-
-      .hero-side p {
-        font-size: 11px;
-        line-height: 1.5;
-      }
-
-      .assistant-shell {
-        border-radius: 22px;
-      }
-
-      .assistant {
-        border-radius: 21px;
-      }
-
-      .assistant::before,
-      .assistant::after {
-        top: 14px;
-        font-size: 7px;
-      }
-
-      .assistant::before { left: 16px; }
-      .assistant::after { right: 16px; }
 
       .control-bar {
-        width: calc(100% - 24px);
-        justify-content: center;
-        bottom: 13px;
+        width:
+          calc(100% - 24px);
+
+        justify-content:
+          center;
+
+        bottom: 12px;
       }
 
       .btn {
         flex: 1;
-        min-width: 0;
-        padding: 0 10px;
-        font-size: 10px;
+
+        padding:
+          0 8px;
       }
 
-      .mic-status { display: none !important; }
-
-      .experience-chip {
-        left: 13px;
-        bottom: 70px;
-        font-size: 7px;
-        padding: 7px 9px;
+      .mic-status {
+        display:
+          none !important;
       }
 
-      .principles {
-        gap: 11px 18px;
+      .info-grid {
+        grid-template-columns:
+          1fr;
+
+        gap: 6px;
       }
 
-      .principle {
-        font-size: 8px;
+      .info-card {
+        padding:
+          7px 10px;
       }
 
       footer {
-        font-size: 7px;
+        flex-direction: row;
+
+        justify-content:
+          space-between;
       }
     }
 
+    /* =========================================================
+       ACCESSIBILITY
+    ========================================================= */
+
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-        transition-duration: .01ms !important;
+
+      *,
+      *::before,
+      *::after {
+        animation-duration:
+          0.01ms !important;
+
+        animation-iteration-count:
+          1 !important;
+
+        scroll-behavior:
+          auto !important;
+
+        transition-duration:
+          0.01ms !important;
       }
     }
+
   </style>
 </head>
 
 <body>
 
-  <!-- TOP NAV -->
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark">A</div>
-      <div class="brand-copy">
-        <div class="brand-name">AvatarX</div>
-        <div class="brand-sub">Digital CX AI Experience</div>
-      </div>
-    </div>
+  <!-- =======================================================
+       TOP BAR
+  ======================================================== -->
 
-    <nav class="nav-center" aria-label="Experience">
-      <span>Human</span>
-      <span>Technology</span>
-      <span>Experience</span>
-    </nav>
+  <header class="topbar">
+
+    <div class="brand">
+
+      <div class="brand-mark">
+        <span>A</span>
+      </div>
+
+      <div class="brand-name">
+        AvatarX
+      </div>
+
+      <div class="brand-badge">
+        AI Assistant
+      </div>
+
+    </div>
 
     <div class="top-status">
-      <span id="statusDot" class="status-dot"></span>
-      <span id="statusText">Ready</span>
+
+      <span
+        id="statusDot"
+        class="status-dot">
+      </span>
+
+      <span id="statusText">
+        Ready
+      </span>
+
     </div>
+
   </header>
 
-  <!-- MAIN -->
+
+  <!-- =======================================================
+       MAIN
+  ======================================================== -->
+
   <main class="page">
 
     <!-- HERO -->
-    <section class="hero">
-      <div>
-        <div class="eyebrow">AI-powered customer experience</div>
-        <h1>Humanising<br><em>every conversation.</em></h1>
-      </div>
 
-      <div class="hero-side">
-        <p>
-          Meet <strong>AvatarX</strong> — a real-time conversational AI experience
-          designed to bring together human interaction, intelligent automation
-          and a natural digital presence.
-        </p>
-      </div>
+    <section class="hero">
+
+      <h1>
+        Hi there! How can I
+        <span>help you today?</span>
+      </h1>
+
+      <p>
+        Speak naturally with our AI assistant.
+      </p>
+
     </section>
 
-    <!-- ASSISTANT -->
+
+    <!-- =====================================================
+         ASSISTANT
+    ====================================================== -->
+
     <section class="assistant-shell">
+
       <div class="assistant">
 
         <div class="avatar-stage">
 
           <!-- ANAM VIDEO -->
-          <div id="avatar-motion" class="idle-motion">
-            <video id="avatar-video" autoplay playsinline muted="false"></video>
-          </div>
 
-          <!-- IDLE STATE -->
-          <div id="idleState" class="idle-state">
+          <video
+            id="avatar-video"
+            autoplay
+            playsinline
+            muted="false">
+          </video>
+
+
+          <!-- =================================================
+               IDLE
+          ================================================== -->
+
+          <div
+            id="idleState"
+            class="idle-state">
+
             <div class="idle-inner">
-              <div class="idle-icon">✦</div>
-              <div class="idle-kicker">AvatarX / Live AI</div>
-              <h2>Technology with a human touch.</h2>
+
+              <div class="idle-icon">
+                ✦
+              </div>
+
+              <h2>
+                Your assistant is ready
+              </h2>
+
               <p>
-                Start a conversation and speak naturally with your AI assistant.
-                Your browser will request microphone access.
+                Click
+                <strong>Start Conversation</strong>
+                and allow microphone access when requested.
               </p>
+
             </div>
+
           </div>
 
-          <!-- CONNECTING -->
-          <div id="connectingState" class="connecting-state">
+
+          <!-- =================================================
+               CONNECTING
+          ================================================== -->
+
+          <div
+            id="connectingState"
+            class="connecting-state">
+
             <div>
+
               <div class="loader"></div>
-              <div class="connecting-title">Connecting your AI experience</div>
-              <div id="connectingText" class="connecting-text">
+
+              <div class="connecting-title">
+                Connecting your assistant
+              </div>
+
+              <div
+                id="connectingText"
+                class="connecting-text">
                 Creating a secure session…
               </div>
+
             </div>
+
           </div>
+
 
           <!-- ERROR -->
-          <div id="errorBox" class="error-box"></div>
 
-          <!-- EXPERIENCE CHIP -->
-          <div class="experience-chip">
-            <span class="tiny-dot"></span>
-            Real-time conversational experience
+          <div
+            id="errorBox"
+            class="error-box">
           </div>
 
-          <!-- CONTROLS -->
+
+          <!-- =================================================
+               CONTROLS
+          ================================================== -->
+
           <div class="control-bar">
-            <button id="startButton" class="btn btn-start" type="button">
+
+            <button
+              id="startButton"
+              class="btn btn-start"
+              type="button">
+
               Start Conversation
+
             </button>
 
-            <button id="stopButton" class="btn btn-stop" type="button" disabled>
+
+            <button
+              id="stopButton"
+              class="btn btn-stop"
+              type="button"
+              disabled>
+
               End Conversation
+
             </button>
 
-            <div id="micStatus" class="mic-status">
+
+            <div
+              id="micStatus"
+              class="mic-status">
+
               <div class="mic-wave">
-                <span></span><span></span><span></span><span></span>
+
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+
               </div>
+
               Listening
+
             </div>
+
           </div>
 
         </div>
-      </div>
-    </section>
 
-    <!-- PRINCIPLES / FOOTER -->
-    <section class="bottom-area">
-      <div class="principles">
-        <div class="principle">
-          <span class="principle-mark"></span>
-          <span><b>Human-first</b> interaction</span>
-        </div>
-
-        <div class="principle">
-          <span class="principle-mark"></span>
-          <span><b>AI-powered</b> intelligence</span>
-        </div>
-
-        <div class="principle">
-          <span class="principle-mark"></span>
-          <span><b>Secure</b> session architecture</span>
-        </div>
       </div>
 
-      <footer>
-        <span class="secure">
-          <span class="secure-icon">✓</span>
-          AvatarX · Secure AI Experience
-        </span>
-      </footer>
     </section>
+
+
+    <!-- =====================================================
+         INFORMATION
+    ====================================================== -->
+
+    <section class="info-grid">
+
+      <div class="info-card">
+
+        <strong>
+          🎤 Voice interaction
+        </strong>
+
+        Speak naturally using your microphone.
+
+      </div>
+
+
+      <div class="info-card">
+
+        <strong>
+          👄 Live avatar
+        </strong>
+
+        Your avatar streams in real time.
+
+      </div>
+
+
+      <div class="info-card">
+
+        <strong>
+          🔐 Secure connection
+        </strong>
+
+        Your session credentials remain protected.
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer>
+
+      <div>
+        AvatarX
+      </div>
+
+      <div class="secure">
+
+        <div class="secure-icon">
+          ✓
+        </div>
+
+        Secure session architecture
+
+      </div>
+
+    </footer>
 
   </main>
 
-  <!-- ANAM SDK & APPLICATION LOGIC -->
+
+  <!-- =======================================================
+       ANAM SDK
+  ======================================================== -->
+
   <script type="module">
+
     import {
       createClient
-    } from "https://esm.sh/@anam-ai/js-sdk@latest";
+    } from
+      "https://esm.sh/@anam-ai/js-sdk@latest";
 
-    /*
-      IMPORTANT:
-      These are public configuration values only.
-      No Anam or ElevenLabs API keys are placed in this page.
-    */
+
+    /* ========================================================
+       CONFIGURATION
+    ======================================================== */
+
     const SESSION_ENDPOINT =
       "https://cfthqsvxidzxflbvhxkk.supabase.co/functions/v1/anam-eleven-session";
 
@@ -998,317 +1554,627 @@
     const AGENT_ID =
       "agent_0301ky516eb3emwsy22td2f8z96g";
 
+
+    /* ========================================================
+       STATE
+    ======================================================== */
+
     let anamClient = null;
+
     let isStarting = false;
+
     let isConnected = false;
 
-    const video = document.getElementById("avatar-video");
-    const avatarMotion = document.getElementById("avatar-motion");
 
-    const startButton = document.getElementById("startButton");
-    const stopButton = document.getElementById("stopButton");
+    /* ========================================================
+       ELEMENTS
+    ======================================================== */
 
-    const idleState = document.getElementById("idleState");
-    const connectingState = document.getElementById("connectingState");
-    const connectingText = document.getElementById("connectingText");
-
-    const errorBox = document.getElementById("errorBox");
-    const micStatus = document.getElementById("micStatus");
-
-    const statusText = document.getElementById("statusText");
-    const statusDot = document.getElementById("statusDot");
-
-    function setAvatarMotion(mode) {
-      if (!avatarMotion) return;
-
-      avatarMotion.classList.remove(
-        "idle-motion",
-        "walking",
-        "talking-motion"
+    const video =
+      document.getElementById(
+        "avatar-video"
       );
 
-      if (mode === "walking") {
-        avatarMotion.classList.add("walking");
-      } else if (mode === "talking") {
-        avatarMotion.classList.add("talking-motion");
-      } else {
-        avatarMotion.classList.add("idle-motion");
-      }
-    }
+    const startButton =
+      document.getElementById(
+        "startButton"
+      );
 
-    function setStatus(text, type = "idle") {
-      statusText.textContent = text;
-      statusDot.className = "status-dot";
+    const stopButton =
+      document.getElementById(
+        "stopButton"
+      );
+
+    const idleState =
+      document.getElementById(
+        "idleState"
+      );
+
+    const connectingState =
+      document.getElementById(
+        "connectingState"
+      );
+
+    const connectingText =
+      document.getElementById(
+        "connectingText"
+      );
+
+    const errorBox =
+      document.getElementById(
+        "errorBox"
+      );
+
+    const micStatus =
+      document.getElementById(
+        "micStatus"
+      );
+
+    const statusText =
+      document.getElementById(
+        "statusText"
+      );
+
+    const statusDot =
+      document.getElementById(
+        "statusDot"
+      );
+
+
+    /* ========================================================
+       STATUS
+    ======================================================== */
+
+    function setStatus(
+      text,
+      type = "idle"
+    ) {
+
+      statusText.textContent =
+        text;
+
+      statusDot.className =
+        "status-dot";
+
 
       if (type === "connected") {
-        statusDot.classList.add("connected");
+
+        statusDot.classList.add(
+          "connected"
+        );
+
       }
+
 
       if (type === "connecting") {
-        statusDot.classList.add("connecting");
+
+        statusDot.classList.add(
+          "connecting"
+        );
+
       }
+
 
       if (type === "error") {
-        statusDot.classList.add("error");
+
+        statusDot.classList.add(
+          "error"
+        );
+
       }
+
     }
+
+
+    /* ========================================================
+       ERROR
+    ======================================================== */
 
     function showError(message) {
-      console.error("AvatarX:", message);
-      errorBox.textContent = message;
-      errorBox.classList.add("visible");
-      setStatus("Connection error", "error");
+
+      console.error(
+        "AvatarX:",
+        message
+      );
+
+      errorBox.textContent =
+        message;
+
+      errorBox.classList.add(
+        "visible"
+      );
+
+      setStatus(
+        "Connection error",
+        "error"
+      );
+
     }
+
 
     function hideError() {
-      errorBox.textContent = "";
-      errorBox.classList.remove("visible");
+
+      errorBox.textContent =
+        "";
+
+      errorBox.classList.remove(
+        "visible"
+      );
+
     }
+
+
+    /* ========================================================
+       IDLE UI
+    ======================================================== */
 
     function setIdleUI() {
-      startButton.disabled = false;
-      stopButton.disabled = true;
 
-      idleState.classList.remove("hidden");
-      connectingState.classList.remove("visible");
+      startButton.disabled =
+        false;
 
-      micStatus.classList.remove("visible");
-      video.classList.remove("active");
+      stopButton.disabled =
+        true;
 
-      setAvatarMotion("idle");
-      setStatus("Ready", "idle");
+      idleState.classList.remove(
+        "hidden"
+      );
+
+      connectingState.classList.remove(
+        "visible"
+      );
+
+      micStatus.classList.remove(
+        "visible"
+      );
+
+      video.classList.remove(
+        "active"
+      );
+
+      setStatus(
+        "Ready",
+        "idle"
+      );
+
     }
 
-    function setConnectingUI() {
-      startButton.disabled = true;
-      stopButton.disabled = true;
 
-      idleState.classList.add("hidden");
-      connectingState.classList.add("visible");
+    /* ========================================================
+       CONNECTING UI
+    ======================================================== */
+
+    function setConnectingUI() {
+
+      startButton.disabled =
+        true;
+
+      stopButton.disabled =
+        true;
+
+      idleState.classList.add(
+        "hidden"
+      );
+
+      connectingState.classList.add(
+        "visible"
+      );
 
       connectingText.textContent =
         "Creating a secure session…";
 
-      setAvatarMotion("idle");
-      setStatus("Connecting", "connecting");
+      setStatus(
+        "Connecting",
+        "connecting"
+      );
+
     }
+
+
+    /* ========================================================
+       CONNECTED UI
+    ======================================================== */
 
     function setConnectedUI() {
-      startButton.disabled = true;
-      stopButton.disabled = false;
 
-      idleState.classList.add("hidden");
-      connectingState.classList.remove("visible");
+      startButton.disabled =
+        true;
 
-      video.classList.add("active");
-      micStatus.classList.add("visible");
+      stopButton.disabled =
+        false;
 
-      setAvatarMotion("walking");
-      setStatus("Connected", "connected");
+      idleState.classList.add(
+        "hidden"
+      );
+
+      connectingState.classList.remove(
+        "visible"
+      );
+
+      video.classList.add(
+        "active"
+      );
+
+      micStatus.classList.add(
+        "visible"
+      );
+
+      setStatus(
+        "Connected",
+        "connected"
+      );
+
     }
 
+
+    /* ========================================================
+       SUPABASE SESSION
+    ======================================================== */
+
     async function createSession() {
-      const response = await fetch(SESSION_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          avatarId: AVATAR_ID,
-          agentId: AGENT_ID
-        }),
-        cache: "no-store"
-      });
+
+      const response =
+        await fetch(
+          SESSION_ENDPOINT,
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+              avatarId:
+                AVATAR_ID,
+
+              agentId:
+                AGENT_ID
+            }),
+
+            cache:
+              "no-store"
+          }
+        );
+
 
       let data = null;
 
+
       try {
-        data = await response.json();
+
+        data =
+          await response.json();
+
       } catch {
+
         throw new Error(
           `Supabase returned HTTP ${response.status}.`
         );
+
       }
 
+
       if (!response.ok) {
+
         throw new Error(
           data?.details ||
           data?.error ||
           `HTTP ${response.status}`
         );
+
       }
 
+
       if (!data?.success) {
+
         throw new Error(
           data?.error ||
           "Unable to create avatar session."
         );
+
       }
 
+
       if (!data?.sessionToken) {
+
         throw new Error(
           "Supabase did not return an Anam session token."
         );
+
       }
 
+
       return data.sessionToken;
+
     }
 
-    async function startConversation() {
-      if (isStarting || isConnected) return;
 
-      isStarting = true;
+    /* ========================================================
+       START CONVERSATION
+    ======================================================== */
+
+    async function startConversation() {
+
+      if (
+        isStarting ||
+        isConnected
+      ) {
+        return;
+      }
+
+
+      isStarting =
+        true;
+
       hideError();
+
       setConnectingUI();
 
+
       try {
-        const sessionToken = await createSession();
+
+        const sessionToken =
+          await createSession();
+
 
         connectingText.textContent =
           "Starting your AI avatar…";
 
-        anamClient = createClient(sessionToken);
 
-        await anamClient.streamToVideoElement(
-          "avatar-video"
-        );
+        anamClient =
+          createClient(
+            sessionToken
+          );
 
-        isConnected = true;
-        isStarting = false;
+
+        await anamClient
+          .streamToVideoElement(
+            "avatar-video"
+          );
+
+
+        isConnected =
+          true;
+
+        isStarting =
+          false;
+
 
         setConnectedUI();
+
 
         console.log(
           "AvatarX conversation started."
         );
 
+
       } catch (error) {
+
         console.error(
           "Start conversation failed:",
           error
         );
 
-        isStarting = false;
-        isConnected = false;
+
+        isStarting =
+          false;
+
+        isConnected =
+          false;
+
 
         try {
+
           if (anamClient) {
-            anamClient.stopStreaming();
+
+            anamClient
+              .stopStreaming();
+
           }
-        } catch (cleanupError) {
+
+        } catch (
+          cleanupError
+        ) {
+
           console.warn(
             "Cleanup error:",
             cleanupError
           );
+
         }
 
-        anamClient = null;
-        video.srcObject = null;
+
+        anamClient =
+          null;
+
+        video.srcObject =
+          null;
+
 
         let message =
           "Unable to start the conversation.";
 
+
         if (
           error &&
-          typeof error.message === "string"
+          typeof error.message ===
+            "string"
         ) {
-          message = error.message;
+
+          message =
+            error.message;
+
         }
+
 
         if (
           message
             .toLowerCase()
-            .includes("microphone")
+            .includes(
+              "microphone"
+            )
         ) {
+
           message =
             "Microphone access is required. Please allow microphone access in your browser and try again.";
+
         }
 
-        showError(message);
 
-        setTimeout(() => {
-          setIdleUI();
-        }, 100);
+        showError(
+          message
+        );
+
+
+        setTimeout(
+          () => setIdleUI(),
+          100
+        );
 
       }
+
     }
 
+
+    /* ========================================================
+       STOP CONVERSATION
+    ======================================================== */
+
     async function stopConversation() {
+
       if (!anamClient) {
+
         setIdleUI();
+
         return;
+
       }
 
-      startButton.disabled = true;
-      stopButton.disabled = true;
+
+      startButton.disabled =
+        true;
+
+      stopButton.disabled =
+        true;
+
 
       try {
-        anamClient.stopStreaming();
+
+        anamClient
+          .stopStreaming();
+
       } catch (error) {
+
         console.warn(
           "Anam stop error:",
           error
         );
+
       }
 
-      anamClient = null;
-      isConnected = false;
-      isStarting = false;
+
+      anamClient =
+        null;
+
+      isConnected =
+        false;
+
+      isStarting =
+        false;
+
 
       try {
-        const stream = video.srcObject;
+
+        const stream =
+          video.srcObject;
+
 
         if (stream) {
+
           stream
             .getTracks()
-            .forEach(track => track.stop());
+            .forEach(
+              track =>
+                track.stop()
+            );
+
         }
 
       } catch (error) {
+
         console.warn(
           "Media cleanup error:",
           error
         );
+
       }
 
-      video.srcObject = null;
 
-      setAvatarMotion("idle");
+      video.srcObject =
+        null;
+
+
       setIdleUI();
+
 
       console.log(
         "AvatarX conversation ended."
       );
+
     }
+
+
+    /* ========================================================
+       EVENTS
+    ======================================================== */
 
     startButton.addEventListener(
       "click",
       startConversation
     );
 
+
     stopButton.addEventListener(
       "click",
       stopConversation
     );
 
+
     window.addEventListener(
       "beforeunload",
       () => {
+
         try {
+
           if (anamClient) {
-            anamClient.stopStreaming();
+
+            anamClient
+              .stopStreaming();
+
           }
+
         } catch {
-          // Ignore cleanup errors.
+
+          // Ignore cleanup errors
+
         }
+
       }
     );
 
+
+    /* ========================================================
+       INITIAL STATE
+    ======================================================== */
+
     setIdleUI();
+
 
     console.log(
       "AvatarX initialized."
     );
+
   </script>
 
 </body>
