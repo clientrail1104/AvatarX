@@ -1,1948 +1,1008 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>AvatarX — AI Assistant</title>
+  <meta name="description" content="AvatarX real-time AI voice assistant powered by Anam and ElevenLabs." />
 
-<title>AvatarX — AI Assistant</title>
-
-<style>
-:root {
-    --blue: #1683ff;
-    --blue2: #006eff;
-    --cyan: #00d9ff;
-    --dark: #07101d;
-    --panel: rgba(7, 18, 35, .88);
-    --glass: rgba(15, 30, 53, .76);
-    --border: rgba(65, 157, 255, .38);
-    --text: #ffffff;
-    --muted: #9caec4;
-    --danger: #ff4056;
-    --green: #20ed73;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-html,
-body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-    background:
-        radial-gradient(circle at 50% 35%, rgba(0, 103, 255, .16), transparent 32%),
-        radial-gradient(circle at 20% 80%, rgba(0, 217, 255, .08), transparent 28%),
-        #02070e;
-    color: white;
-}
-
-/* =========================================================
-   APP
-========================================================= */
-
-.avatar-app {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-}
-
-/* =========================================================
-   BACKGROUND
-========================================================= */
-
-.background-glow {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-        radial-gradient(
-            ellipse at center 80%,
-            rgba(0, 100, 255, .16),
-            transparent 48%
-        );
-}
-
-.grid {
-    position: absolute;
-    inset: 0;
-    opacity: .06;
-    background-image:
-        linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px);
-    background-size: 50px 50px;
-    mask-image: linear-gradient(to bottom, transparent, black 30%, transparent);
-}
-
-/* =========================================================
-   TOP STATUS
-========================================================= */
-
-.status-pill {
-    position: absolute;
-    top: 24px;
-    left: 24px;
-    z-index: 50;
-
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    padding: 12px 18px;
-
-    border: 1px solid rgba(39, 152, 255, .45);
-    border-radius: 30px;
-
-    background: rgba(8, 21, 39, .82);
-
-    box-shadow:
-        0 0 25px rgba(0, 104, 255, .20),
-        inset 0 0 20px rgba(0, 110, 255, .06);
-
-    backdrop-filter: blur(18px);
-
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.status-dot {
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: var(--green);
-
-    box-shadow:
-        0 0 8px var(--green),
-        0 0 18px rgba(32,237,115,.7);
-
-    animation: pulseGreen 1.8s infinite;
-}
-
-.status-pill.connecting .status-dot {
-    background: #ffc400;
-    box-shadow: 0 0 14px #ffc400;
-}
-
-.status-pill.offline .status-dot {
-    background: var(--danger);
-    box-shadow: 0 0 14px rgba(255,64,86,.7);
-}
-
-@keyframes pulseGreen {
-    0%, 100% {
-        opacity: 1;
-        transform: scale(1);
+  <style>
+    * {
+      box-sizing: border-box;
     }
 
-    50% {
-        opacity: .5;
-        transform: scale(.75);
-    }
-}
-
-/* =========================================================
-   CLOSE
-========================================================= */
-
-.close-button {
-    position: absolute;
-    top: 20px;
-    right: 24px;
-    z-index: 60;
-
-    width: 56px;
-    height: 56px;
-
-    border-radius: 50%;
-    border: 1px solid rgba(60,155,255,.5);
-
-    background:
-        radial-gradient(circle at center,
-        rgba(18,57,103,.95),
-        rgba(4,14,27,.94));
-
-    color: white;
-
-    font-size: 32px;
-    font-weight: 200;
-
-    cursor: pointer;
-
-    box-shadow:
-        0 0 20px rgba(0,110,255,.45),
-        inset 0 0 20px rgba(0,115,255,.15);
-
-    transition: .25s ease;
-}
-
-.close-button:hover {
-    transform: rotate(90deg) scale(1.05);
-}
-
-/* =========================================================
-   AVATAR STAGE
-========================================================= */
-
-.avatar-stage {
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-
-    width: min(820px, 80vw);
-    height: 86vh;
-
-    transform: translateX(-50%);
-
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-
-    pointer-events: none;
-
-    transition: .6s ease;
-}
-
-.avatar-stage.active {
-    animation: avatarEntrance .9s cubic-bezier(.16,1,.3,1);
-}
-
-@keyframes avatarEntrance {
-    from {
-        opacity: 0;
-        transform:
-            translateX(-50%)
-            translateY(80px)
-            scale(.94);
+    :root {
+      --bg: #f7f8fc;
+      --card: rgba(255, 255, 255, 0.86);
+      --card-solid: #ffffff;
+      --text: #17181c;
+      --muted: #70747d;
+      --border: rgba(0, 0, 0, 0.08);
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+      --accent: #111111;
+      --success: #16834b;
+      --danger: #c63636;
     }
 
-    to {
-        opacity: 1;
-        transform:
-            translateX(-50%)
-            translateY(0)
-            scale(1);
-    }
-}
-
-/* =========================================================
-   LIVE AVATAR
-========================================================= */
-
-.avatar-live-wrap {
-    position: relative;
-
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-
-    animation: gentleFloat 5s ease-in-out infinite;
-}
-
-@keyframes gentleFloat {
-    0%, 100% {
-        transform: translateY(0);
+    html, body {
+      width: 100%;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
     }
 
-    50% {
-        transform: translateY(-7px);
-    }
-}
-
-/*
-   IMPORTANT:
-   Anam streams into this video element.
-*/
-
-#avatar-video {
-    width: 100%;
-    height: 100%;
-
-    object-fit: contain;
-
-    border: 0;
-    outline: 0;
-
-    background: transparent;
-
-    filter:
-        drop-shadow(0 25px 60px rgba(0,0,0,.55))
-        drop-shadow(0 0 30px rgba(0,105,255,.12));
-
-    transition:
-        opacity .6s ease,
-        transform .6s ease;
-}
-
-#avatar-video.hidden {
-    opacity: 0;
-    transform: scale(.94);
-}
-
-/* =========================================================
-   AVATAR GLOW
-========================================================= */
-
-.avatar-glow {
-    position: absolute;
-
-    bottom: 0;
-    left: 50%;
-
-    width: 55%;
-    height: 180px;
-
-    transform: translateX(-50%);
-
-    border-radius: 50%;
-
-    background:
-        radial-gradient(
-            ellipse,
-            rgba(0,113,255,.28),
-            transparent 68%
-        );
-
-    filter: blur(25px);
-
-    z-index: -1;
-}
-
-/* =========================================================
-   WELCOME MESSAGE
-========================================================= */
-
-.welcome-card {
-    position: absolute;
-
-    top: 105px;
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    z-index: 30;
-
-    width: min(390px, calc(100vw - 40px));
-
-    padding: 18px 22px;
-
-    border-radius: 22px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(18,48,88,.93),
-            rgba(3,15,30,.92)
-        );
-
-    border: 1px solid rgba(43,143,255,.48);
-
-    box-shadow:
-        0 15px 45px rgba(0,0,0,.4),
-        0 0 28px rgba(0,104,255,.28),
-        inset 0 0 30px rgba(0,120,255,.07);
-
-    backdrop-filter: blur(20px);
-
-    animation: bubbleIn .8s cubic-bezier(.16,1,.3,1);
-}
-
-.welcome-card::after {
-    content: "";
-
-    position: absolute;
-
-    bottom: -12px;
-    left: 50%;
-
-    width: 22px;
-    height: 22px;
-
-    background: #0a203c;
-
-    transform: translateX(-50%) rotate(45deg);
-
-    border-right: 1px solid rgba(43,143,255,.48);
-    border-bottom: 1px solid rgba(43,143,255,.48);
-}
-
-@keyframes bubbleIn {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(-15px) scale(.94);
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(220, 225, 255, 0.55), transparent 35%),
+        radial-gradient(circle at 85% 20%, rgba(240, 220, 255, 0.42), transparent 32%),
+        var(--bg);
+      display: flex;
+      flex-direction: column;
     }
 
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0) scale(1);
-    }
-}
-
-.welcome-title {
-    font-size: 19px;
-    font-weight: 750;
-    margin-bottom: 5px;
-}
-
-.welcome-text {
-    color: #d7e5f6;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-/* =========================================================
-   MINI ASSISTANT
-========================================================= */
-
-.mini-assistant {
-    position: absolute;
-
-    right: 25px;
-    top: 105px;
-
-    z-index: 40;
-
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    padding: 12px 16px 12px 12px;
-
-    border-radius: 50px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(12,45,84,.96),
-            rgba(5,17,31,.96)
-        );
-
-    border: 1px solid rgba(46,145,255,.48);
-
-    box-shadow:
-        0 0 30px rgba(0,105,255,.25);
-
-    backdrop-filter: blur(18px);
-
-    animation: miniFloat 4s ease-in-out infinite;
-}
-
-@keyframes miniFloat {
-    0%, 100% {
-        transform: translateY(0);
+    button {
+      font: inherit;
     }
 
-    50% {
-        transform: translateY(-6px);
-    }
-}
+    /* =========================
+       HEADER
+    ========================== */
 
-.mini-avatar {
-    width: 48px;
-    height: 48px;
-
-    border-radius: 50%;
-
-    object-fit: cover;
-
-    background: #152c47;
-
-    border: 2px solid rgba(73,170,255,.65);
-
-    box-shadow: 0 0 20px rgba(0,116,255,.35);
-}
-
-.mini-title {
-    font-size: 14px;
-    font-weight: 700;
-}
-
-.mini-subtitle {
-    margin-top: 2px;
-
-    color: #9eb3cb;
-
-    font-size: 12px;
-}
-
-/* =========================================================
-   QUICK ACTIONS
-========================================================= */
-
-.quick-actions {
-    position: absolute;
-
-    right: 28px;
-    top: 190px;
-
-    z-index: 45;
-
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.quick-action {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-
-    min-width: 150px;
-
-    padding: 10px 14px;
-
-    border: 1px solid rgba(68,154,255,.32);
-
-    border-radius: 30px;
-
-    background: rgba(9,24,44,.78);
-
-    color: #e9f3ff;
-
-    cursor: pointer;
-
-    backdrop-filter: blur(15px);
-
-    box-shadow: 0 0 18px rgba(0,93,255,.10);
-
-    transition: .25s ease;
-
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.quick-action:hover {
-    transform: translateX(-6px);
-
-    border-color: rgba(78,174,255,.72);
-
-    background: rgba(13,38,69,.9);
-
-    box-shadow:
-        0 0 24px rgba(0,105,255,.28);
-}
-
-.quick-icon {
-    width: 30px;
-    height: 30px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 50%;
-
-    background: rgba(23,62,105,.85);
-
-    font-size: 14px;
-}
-
-/* =========================================================
-   WAVEFORM
-========================================================= */
-
-.wave-card {
-    position: absolute;
-
-    left: 30px;
-    top: 180px;
-
-    z-index: 40;
-
-    padding: 13px 18px;
-
-    border-radius: 20px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(12,38,70,.92),
-            rgba(4,16,29,.92)
-        );
-
-    border: 1px solid rgba(47,146,255,.45);
-
-    box-shadow:
-        0 0 25px rgba(0,100,255,.2);
-
-    backdrop-filter: blur(18px);
-}
-
-.wave-top {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-
-    color: #eaf4ff;
-
-    font-size: 13px;
-    font-weight: 650;
-
-    margin-bottom: 10px;
-}
-
-.mic-small {
-    width: 30px;
-    height: 30px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 50%;
-
-    background: #096fff;
-
-    box-shadow: 0 0 15px rgba(0,119,255,.6);
-}
-
-.waveform {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-
-    height: 25px;
-}
-
-.waveform span {
-    width: 3px;
-
-    border-radius: 4px;
-
-    background: linear-gradient(
-        to top,
-        #0780ff,
-        #00dcff
-    );
-
-    animation: wave 1s ease-in-out infinite;
-}
-
-.waveform span:nth-child(1) { height: 7px; animation-delay: .0s; }
-.waveform span:nth-child(2) { height: 15px; animation-delay: .1s; }
-.waveform span:nth-child(3) { height: 22px; animation-delay: .2s; }
-.waveform span:nth-child(4) { height: 12px; animation-delay: .3s; }
-.waveform span:nth-child(5) { height: 20px; animation-delay: .4s; }
-.waveform span:nth-child(6) { height: 10px; animation-delay: .5s; }
-.waveform span:nth-child(7) { height: 17px; animation-delay: .6s; }
-.waveform span:nth-child(8) { height: 8px; animation-delay: .7s; }
-.waveform span:nth-child(9) { height: 19px; animation-delay: .8s; }
-.waveform span:nth-child(10) { height: 12px; animation-delay: .9s; }
-
-@keyframes wave {
-    0%,100% {
-        transform: scaleY(.55);
-        opacity: .55;
+    .topbar {
+      height: 56px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+      background: rgba(247, 248, 252, 0.78);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
 
-    50% {
-        transform: scaleY(1.15);
-        opacity: 1;
-    }
-}
-
-/* =========================================================
-   BOTTOM CONTROLS
-========================================================= */
-
-.control-dock {
-    position: absolute;
-
-    left: 50%;
-    bottom: 22px;
-
-    transform: translateX(-50%);
-
-    z-index: 100;
-
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    padding: 10px 13px;
-
-    border-radius: 38px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(12,29,50,.96),
-            rgba(3,11,20,.96)
-        );
-
-    border: 1px solid rgba(61,147,255,.42);
-
-    box-shadow:
-        0 15px 40px rgba(0,0,0,.55),
-        0 0 30px rgba(0,100,255,.18);
-
-    backdrop-filter: blur(22px);
-}
-
-.control-button {
-    width: 52px;
-    height: 52px;
-
-    border: 0;
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    color: white;
-
-    background: rgba(24,42,65,.92);
-
-    cursor: pointer;
-
-    font-size: 20px;
-
-    transition:
-        transform .2s ease,
-        background .2s ease,
-        box-shadow .2s ease;
-}
-
-.control-button:hover {
-    transform: translateY(-3px);
-
-    background: rgba(33,61,92,.95);
-
-    box-shadow:
-        0 0 20px rgba(0,112,255,.25);
-}
-
-.control-button.primary {
-    width: 62px;
-    height: 62px;
-
-    background:
-        radial-gradient(
-            circle,
-            #168cff,
-            #0056d6
-        );
-
-    border: 1px solid rgba(130,210,255,.55);
-
-    box-shadow:
-        0 0 20px rgba(0,125,255,.75),
-        0 0 45px rgba(0,110,255,.35);
-}
-
-.control-button.primary.active {
-    animation: micPulse 1.4s infinite;
-}
-
-@keyframes micPulse {
-    0%,100% {
-        box-shadow:
-            0 0 20px rgba(0,125,255,.75),
-            0 0 45px rgba(0,110,255,.35);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    50% {
-        box-shadow:
-            0 0 28px rgba(0,160,255,.95),
-            0 0 70px rgba(0,110,255,.55);
-    }
-}
-
-.control-button.end {
-    background:
-        linear-gradient(
-            135deg,
-            #ff475d,
-            #d71936
-        );
-
-    box-shadow:
-        0 0 18px rgba(255,54,78,.3);
-}
-
-/* =========================================================
-   START OVERLAY
-========================================================= */
-
-.start-overlay {
-    position: absolute;
-    inset: 0;
-
-    z-index: 200;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background:
-        radial-gradient(
-            circle at center,
-            rgba(0,94,255,.14),
-            rgba(0,0,0,.82)
-        );
-
-    backdrop-filter: blur(8px);
-
-    transition: opacity .4s ease;
-}
-
-.start-overlay.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.start-card {
-    width: min(460px, calc(100vw - 40px));
-
-    text-align: center;
-
-    padding: 34px 28px;
-
-    border-radius: 30px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(12,33,59,.96),
-            rgba(3,12,22,.97)
-        );
-
-    border: 1px solid rgba(56,153,255,.45);
-
-    box-shadow:
-        0 25px 80px rgba(0,0,0,.6),
-        0 0 50px rgba(0,100,255,.18);
-
-    backdrop-filter: blur(24px);
-
-    animation: cardIn .7s cubic-bezier(.16,1,.3,1);
-}
-
-@keyframes cardIn {
-    from {
-        opacity: 0;
-        transform: translateY(30px) scale(.94);
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      color: white;
+      background: #111;
+      font-size: 15px;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-.start-avatar {
-    width: 82px;
-    height: 82px;
-
-    margin: 0 auto 18px;
-
-    border-radius: 50%;
-
-    background:
-        radial-gradient(circle at 40% 30%, #4eb7ff, #073b85);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 36px;
-
-    border: 2px solid rgba(85,182,255,.65);
-
-    box-shadow:
-        0 0 25px rgba(0,121,255,.55),
-        0 0 70px rgba(0,98,255,.2);
-}
-
-.start-card h1 {
-    margin: 0 0 10px;
-
-    font-size: 28px;
-    letter-spacing: -.5px;
-}
-
-.start-card p {
-    margin: 0 auto 25px;
-
-    max-width: 350px;
-
-    color: #a9bbd1;
-
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.start-button {
-    width: 100%;
-
-    border: 0;
-
-    padding: 15px 20px;
-
-    border-radius: 15px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #168dff,
-            #005bd8
-        );
-
-    color: white;
-
-    font-size: 15px;
-    font-weight: 750;
-
-    cursor: pointer;
-
-    box-shadow:
-        0 0 25px rgba(0,113,255,.35);
-
-    transition: .25s ease;
-}
-
-.start-button:hover {
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 0 35px rgba(0,128,255,.55);
-}
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast {
-    position: fixed;
-
-    left: 50%;
-    bottom: 105px;
-
-    z-index: 500;
-
-    transform:
-        translateX(-50%)
-        translateY(20px);
-
-    opacity: 0;
-
-    pointer-events: none;
-
-    padding: 12px 18px;
-
-    border-radius: 14px;
-
-    background: rgba(7,21,37,.94);
-
-    border: 1px solid rgba(60,158,255,.45);
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,.45),
-        0 0 20px rgba(0,103,255,.18);
-
-    color: #e9f4ff;
-
-    font-size: 13px;
-
-    transition: .3s ease;
-}
-
-.toast.show {
-    opacity: 1;
-    transform:
-        translateX(-50%)
-        translateY(0);
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media (max-width: 900px) {
-
-    .avatar-stage {
-        width: 100vw;
-        height: 76vh;
+    .brand-name {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
     }
 
-    .wave-card {
-        left: 15px;
-        top: 150px;
-        transform: scale(.9);
-        transform-origin: left top;
+    .brand-badge {
+      font-size: 11px;
+      color: #74777e;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.05);
     }
 
-    .quick-actions {
-        right: 15px;
-        top: 170px;
-        transform: scale(.9);
-        transform-origin: right top;
+    .top-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
     }
 
-    .mini-assistant {
-        right: 15px;
-        top: 85px;
-    }
-}
-
-@media (max-width: 650px) {
-
-    .status-pill {
-        top: 14px;
-        left: 14px;
-        padding: 9px 13px;
-        font-size: 12px;
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #b8bbc1;
+      transition: 0.25s ease;
     }
 
-    .close-button {
-        top: 10px;
-        right: 12px;
-        width: 45px;
-        height: 45px;
-        font-size: 25px;
+    .status-dot.connected {
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(22, 131, 75, 0.12);
     }
 
-    .welcome-card {
-        top: 85px;
-        width: calc(100vw - 80px);
-        padding: 14px 16px;
+    .status-dot.connecting {
+      background: #d58b20;
+      animation: pulse 1.2s infinite;
     }
 
-    .welcome-title {
-        font-size: 16px;
+    .status-dot.error {
+      background: var(--danger);
     }
 
-    .welcome-text {
-        font-size: 12px;
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
     }
 
-    .wave-card {
-        display: none;
+    /* =========================
+       MAIN LAYOUT (NO SCROLL)
+    ========================== */
+
+    .page {
+      flex: 1;
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 12px 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 0;
     }
 
-    .mini-assistant {
-        display: none;
+    .hero {
+      text-align: center;
+      flex-shrink: 0;
     }
 
-    .quick-actions {
-        display: none;
+    .hero h1 {
+      margin: 0 0 2px;
+      font-size: clamp(22px, 3.2vw, 36px);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      font-weight: 750;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* =========================
+       ASSISTANT CARD (FLEX STREAM)
+    ========================== */
+
+    .assistant-shell {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      min-height: 0;
+      padding: 6px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.68));
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .assistant {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      min-height: 0;
+      overflow: hidden;
+      border-radius: 18px;
+      background: radial-gradient(circle at 50% 30%, #ffffff, #f0f2f6 58%, #e8ebf1 100%);
     }
 
     .avatar-stage {
-        height: 78vh;
-        width: 110vw;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .control-dock {
-        bottom: 12px;
-        padding: 8px 10px;
+    #avatar-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: transparent;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: scale(1.01);
+    }
+
+    #avatar-video.active {
+      opacity: 1;
+    }
+
+    /* IDLE STATE */
+
+    .idle-state {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .idle-state.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .idle-inner {
+      max-width: 380px;
+    }
+
+    .idle-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 12px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: #111;
+      color: white;
+      font-size: 22px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.14);
+    }
+
+    .idle-inner h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .idle-inner p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    /* CONNECTING STATE */
+
+    .connecting-state {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 10;
+      background: rgba(247, 248, 252, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .connecting-state.visible {
+      display: flex;
+    }
+
+    .loader {
+      width: 38px;
+      height: 38px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      border: 3px solid rgba(0, 0, 0, 0.08);
+      border-top-color: #111;
+      animation: spin 0.85s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .connecting-title {
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .connecting-text {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* CONTROLS */
+
+    .control-bar {
+      position: absolute;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn {
+      height: 38px;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 11px;
+      cursor: pointer;
+      font-weight: 650;
+      font-size: 13px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+      transform: none;
+    }
+
+    .btn-start {
+      background: #111;
+      color: white;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-stop {
+      background: #f1f2f4;
+      color: #25262a;
+    }
+
+    .mic-status {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 0 8px;
+      color: #62666e;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .mic-status.visible {
+      display: flex;
+    }
+
+    .mic-wave {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      height: 16px;
+    }
+
+    .mic-wave span {
+      width: 3px;
+      height: 6px;
+      border-radius: 4px;
+      background: #222;
+      animation: wave 0.8s ease-in-out infinite;
+    }
+
+    .mic-wave span:nth-child(2) { animation-delay: 0.1s; }
+    .mic-wave span:nth-child(3) { animation-delay: 0.2s; }
+    .mic-wave span:nth-child(4) { animation-delay: 0.3s; }
+
+    @keyframes wave {
+      0%, 100% { height: 4px; }
+      50% { height: 14px; }
+    }
+
+    /* ERROR */
+
+    .error-box {
+      display: none;
+      position: absolute;
+      left: 50%;
+      top: 16px;
+      transform: translateX(-50%);
+      width: min(calc(100% - 32px), 540px);
+      z-index: 40;
+      padding: 10px 14px;
+      border-radius: 12px;
+      color: #8e2424;
+      background: rgba(255, 244, 244, 0.96);
+      border: 1px solid rgba(198, 54, 54, 0.15);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .error-box.visible {
+      display: block;
+    }
+
+    /* =========================
+       INFO GRID & FOOTER
+    ========================== */
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .info-card {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.67);
+      border: 1px solid var(--border);
+      color: #676b73;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .info-card strong {
+      display: block;
+      margin-bottom: 2px;
+      color: #25262a;
+      font-size: 12px;
+    }
+
+    footer {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #888c94;
+      font-size: 11px;
+      padding-top: 2px;
+    }
+
+    .secure {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .secure-icon {
+      width: 14px;
+      height: 14px;
+      display: grid;
+      place-items: center;
+      border-radius: 4px;
+      background: rgba(22, 131, 75, 0.1);
+      color: var(--success);
+      font-size: 9px;
+    }
+
+
+    /* =========================
+       AVATAR MOTION — AVATAR ONLY
+       Keeps the original AvatarX theme unchanged.
+    ========================== */
+
+    .avatar-stage {
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    /*
+      The Anam stream remains the real avatar.
+      The wrapper lets us animate the avatar independently from
+      the control bar, idle state and the rest of the page.
+    */
+    #avatar-motion {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      will-change: transform;
+    }
+
+    #avatar-motion.walking {
+      animation: avatarWalk 18s ease-in-out infinite;
+    }
+
+    #avatar-motion.idle-motion {
+      animation: avatarIdle 4.8s ease-in-out infinite;
+    }
+
+    #avatar-motion.talking-motion {
+      animation:
+        avatarWalkTalking 18s ease-in-out infinite,
+        avatarBreath 3.6s ease-in-out infinite;
+    }
+
+    /*
+      Subtle left/right movement with natural pauses.
+      The avatar never leaves the assistant card.
+    */
+    @keyframes avatarWalk {
+      0% {
+        transform: translate3d(-7%, 0, 0) scale(1);
+      }
+      12% {
+        transform: translate3d(-7%, 0, 0) scale(1);
+      }
+      28% {
+        transform: translate3d(0%, -0.4%, 0) scale(1.01);
+      }
+      44% {
+        transform: translate3d(7%, 0, 0) scale(1);
+      }
+      56% {
+        transform: translate3d(7%, 0, 0) scale(1);
+      }
+      72% {
+        transform: translate3d(0%, -0.4%, 0) scale(1.01);
+      }
+      88% {
+        transform: translate3d(-7%, 0, 0) scale(1);
+      }
+      100% {
+        transform: translate3d(-7%, 0, 0) scale(1);
+      }
+    }
+
+    @keyframes avatarWalkTalking {
+      0% {
+        transform: translate3d(-5%, 0, 0) scale(1);
+      }
+      13% {
+        transform: translate3d(-5%, 0, 0) scale(1);
+      }
+      29% {
+        transform: translate3d(0%, -0.35%, 0) scale(1.01);
+      }
+      45% {
+        transform: translate3d(5%, 0, 0) scale(1);
+      }
+      57% {
+        transform: translate3d(5%, 0, 0) scale(1);
+      }
+      73% {
+        transform: translate3d(0%, -0.35%, 0) scale(1.01);
+      }
+      89% {
+        transform: translate3d(-5%, 0, 0) scale(1);
+      }
+      100% {
+        transform: translate3d(-5%, 0, 0) scale(1);
+      }
+    }
+
+    @keyframes avatarIdle {
+      0%, 100% {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      25% {
+        transform: translate3d(-0.8%, -0.25%, 0) scale(1.006);
+      }
+      50% {
+        transform: translate3d(0.8%, 0, 0) scale(1);
+      }
+      75% {
+        transform: translate3d(-0.45%, -0.15%, 0) scale(1.004);
+      }
+    }
+
+    @keyframes avatarBreath {
+      0%, 100% {
+        filter: brightness(1);
+      }
+      50% {
+        filter: brightness(1.012);
+      }
+    }
+
+    /*
+      Keep the existing video styling, but place it inside
+      the motion wrapper. No theme/layout changes.
+    */
+    #avatar-motion #avatar-video {
+      position: absolute;
+      inset: 0;
+    }
+
+    /*
+      Respect users who request reduced motion.
+    */
+    @media (prefers-reduced-motion: reduce) {
+      #avatar-motion.walking,
+      #avatar-motion.idle-motion,
+      #avatar-motion.talking-motion {
+        animation: none !important;
+      }
+    }
+
+    /* MOBILE BREAKPOINT */
+
+    @media (max-width: 700px) {
+      .topbar {
+        height: 48px;
+        padding: 0 16px;
+      }
+
+      .brand-badge {
+        display: none;
+      }
+
+      .page {
+        padding: 10px 12px 12px;
         gap: 8px;
+      }
+
+      .control-bar {
+        width: calc(100% - 24px);
+        justify-content: center;
+        bottom: 12px;
+      }
+
+      .btn {
+        flex: 1;
+        padding: 0 8px;
+      }
+
+      .mic-status {
+        display: none !important;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .info-card {
+        padding: 6px 10px;
+      }
+
+      footer {
+        flex-direction: row;
+        justify-content: space-between;
+      }
     }
 
-    .control-button {
-        width: 46px;
-        height: 46px;
-        font-size: 18px;
-    }
-
-    .control-button.primary {
-        width: 58px;
-        height: 58px;
-    }
-
-    .start-card {
-        padding: 28px 22px;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        animation-duration: .01ms !important;
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
     }
-}
-</style>
+  </style>
 </head>
 
 <body>
 
-<div class="avatar-app">
-
-    <div class="background-glow"></div>
-    <div class="grid"></div>
-
-    <!-- STATUS -->
-    <div class="status-pill" id="statusPill">
-        <span class="status-dot"></span>
-        <span id="statusText">AI Assistant Online</span>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">A</div>
+      <div class="brand-name">AvatarX</div>
+      <div class="brand-badge">AI Assistant</div>
     </div>
-
-    <!-- CLOSE -->
-    <button
-        class="close-button"
-        id="closeButton"
-        aria-label="Close assistant"
-    >
-        ×
-    </button>
-
-    <!-- WELCOME -->
-    <div class="welcome-card" id="welcomeCard">
-
-        <div class="welcome-title">
-            Hi there! 👋
-        </div>
-
-        <div class="welcome-text">
-            I'm your AI Assistant.
-            <br>
-            How can I help you today?
-        </div>
-
+    <div class="top-status">
+      <span id="statusDot" class="status-dot"></span>
+      <span id="statusText">Ready</span>
     </div>
+  </header>
 
-    <!-- LEFT WAVE -->
-    <div class="wave-card">
+  <!-- MAIN CONTAINER (100vh Locked) -->
+  <main class="page">
 
-        <div class="wave-top">
-            <div class="mic-small">🎙</div>
-            <span id="waveText">Ready to talk</span>
-        </div>
+    <section class="hero">
+      <h1>Hi there! How can I help you today?</h1>
+      <p>Speak with our AI assistant.</p>
+    </section>
 
-        <div class="waveform">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
+    <!-- ASSISTANT STAGE -->
+    <section class="assistant-shell">
+      <div class="assistant">
+        <div class="avatar-stage">
 
-    </div>
+          <!-- ANAM VIDEO / MOVING AVATAR ONLY -->
+          <div id="avatar-motion" class="idle-motion">
+            <video id="avatar-video" autoplay playsinline muted="false"></video>
+          </div>
 
-    <!-- MINI ASSISTANT -->
-    <div class="mini-assistant">
-
-        <div class="mini-avatar">
-            AI
-        </div>
-
-        <div>
-            <div class="mini-title">
-                Need help?
+          <!-- IDLE STATE -->
+          <div id="idleState" class="idle-state">
+            <div class="idle-inner">
+              <div class="idle-icon">✦</div>
+              <h2>Your assistant is ready</h2>
+              <p>Click <strong>Start Conversation</strong> and allow microphone access when requested.</p>
             </div>
+          </div>
 
-            <div class="mini-subtitle">
-                Ask me anything!
+          <!-- CONNECTING STATE -->
+          <div id="connectingState" class="connecting-state">
+            <div>
+              <div class="loader"></div>
+              <div class="connecting-title">Connecting your assistant</div>
+              <div id="connectingText" class="connecting-text">Creating a secure session…</div>
             </div>
-        </div>
+          </div>
 
-    </div>
+          <!-- ERROR BOX -->
+          <div id="errorBox" class="error-box"></div>
 
-    <!-- QUICK ACTIONS -->
-    <div class="quick-actions">
-
-        <button class="quick-action" data-message="Tell me about your services.">
-            <span class="quick-icon">▤</span>
-            <span>Services</span>
-        </button>
-
-        <button class="quick-action" data-message="Tell me about pricing.">
-            <span class="quick-icon">$</span>
-            <span>Pricing</span>
-        </button>
-
-        <button class="quick-action" data-message="I need support.">
-            <span class="quick-icon">◉</span>
-            <span>Support</span>
-        </button>
-
-        <button class="quick-action" data-message="I would like to book a demo.">
-            <span class="quick-icon">▣</span>
-            <span>Book a Demo</span>
-        </button>
-
-    </div>
-
-    <!-- LIVE AVATAR -->
-    <div class="avatar-stage" id="avatarStage">
-
-        <div class="avatar-live-wrap">
-
-            <video
-                id="avatar-video"
-                autoplay
-                playsinline
-                muted
-            ></video>
-
-            <div class="avatar-glow"></div>
-
-        </div>
-
-    </div>
-
-    <!-- CONTROLS -->
-    <div class="control-dock">
-
-        <button
-            class="control-button"
-            id="chatButton"
-            title="Chat"
-        >
-            ▣
-        </button>
-
-        <button
-            class="control-button primary"
-            id="startButton"
-            title="Start conversation"
-        >
-            🎙
-        </button>
-
-        <button
-            class="control-button"
-            id="speakerButton"
-            title="Speaker"
-        >
-            🔊
-        </button>
-
-        <button
-            class="control-button end"
-            id="endButton"
-            title="End conversation"
-            disabled
-        >
-            ☎
-        </button>
-
-    </div>
-
-    <!-- START OVERLAY -->
-    <div class="start-overlay" id="startOverlay">
-
-        <div class="start-card">
-
-            <div class="start-avatar">
-                ✨
+          <!-- CONTROLS -->
+          <div class="control-bar">
+            <button id="startButton" class="btn btn-start" type="button">Start Conversation</button>
+            <button id="stopButton" class="btn btn-stop" type="button" disabled>End Conversation</button>
+            <div id="micStatus" class="mic-status">
+              <div class="mic-wave">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              Listening
             </div>
-
-            <h1>
-                Meet your AI Assistant
-            </h1>
-
-            <p>
-                Start a real-time conversation with your
-                AI assistant. Speak naturally and the avatar
-                will respond with synchronized voice and animation.
-            </p>
-
-            <button
-                class="start-button"
-                id="startConversation"
-            >
-                🎙 Start Conversation
-            </button>
+          </div>
 
         </div>
+      </div>
+    </section>
 
-    </div>
+    <!-- INFORMATION GRID -->
+    <section class="info-grid">
+      <div class="info-card">
+        <strong>🎤 Voice interaction</strong>
+        Speak naturally using your microphone.
+      </div>
+      <div class="info-card">
+        <strong>👄 Live avatar</strong>
+        Your avatar streams in real time.
+      </div>
+      <div class="info-card">
+        <strong>🔐 Secure connection</strong>
+        All credentials are secured.
+      </div>
+    </section>
 
-    <!-- TOAST -->
-    <div class="toast" id="toast"></div>
+    <!-- FOOTER -->
+    <footer>
+      <div>AvatarX</div>
+      <div class="secure">
+        <div class="secure-icon">✓</div>
+        Secure session architecture
+      </div>
+    </footer>
 
-</div>
+  </main>
 
+  <!-- ANAM SDK & APPLICATION LOGIC -->
+  <script type="module">
+    import { createClient } from "https://esm.sh/@anam-ai/js-sdk@latest";
 
-<script type="module">
+    const SESSION_ENDPOINT = "https://cfthqsvxidzxflbvhxkk.supabase.co/functions/v1/anam-eleven-session";
+    const AVATAR_ID = "0caf57ab-3da9-4d27-b356-53837508aaf6";
+    const AGENT_ID = "agent_0301ky516eb3emwsy22td2f8z96g";
 
-/*
-=========================================================
- AVATARX CONFIGURATION
-=========================================================
+    let anamClient = null;
+    let isStarting = false;
+    let isConnected = false;
 
- IMPORTANT:
+    const video = document.getElementById("avatar-video");
+    const avatarMotion = document.getElementById("avatar-motion");
+    const startButton = document.getElementById("startButton");
+    const stopButton = document.getElementById("stopButton");
+    const idleState = document.getElementById("idleState");
+    const connectingState = document.getElementById("connectingState");
+    const connectingText = document.getElementById("connectingText");
+    const errorBox = document.getElementById("errorBox");
+    const micStatus = document.getElementById("micStatus");
+    const statusText = document.getElementById("statusText");
+    const statusDot = document.getElementById("statusDot");
 
- The Anam API key and ElevenLabs API key are NOT here.
+    function setAvatarMotion(mode) {
+      if (!avatarMotion) return;
 
- Your browser calls Supabase and receives a short-lived
- Anam session token.
+      avatarMotion.classList.remove(
+        "walking",
+        "idle-motion",
+        "talking-motion"
+      );
 
-=========================================================
-*/
-
-const SUPABASE_FUNCTION_URL =
-    "https://cfthqsvxidzxflbvhxkk.supabase.co/functions/v1/anam-eleven-session";
-
-
-/*
-=========================================================
- ANAM SDK
-=========================================================
-*/
-
-import {
-    createClient,
-    AnamEvent
-} from "https://esm.sh/@anam-ai/js-sdk";
-
-
-/*
-=========================================================
- ELEMENTS
-=========================================================
-*/
-
-const avatarVideo =
-    document.getElementById("avatar-video");
-
-const avatarStage =
-    document.getElementById("avatarStage");
-
-const startOverlay =
-    document.getElementById("startOverlay");
-
-const startButton =
-    document.getElementById("startButton");
-
-const startConversation =
-    document.getElementById("startConversation");
-
-const endButton =
-    document.getElementById("endButton");
-
-const closeButton =
-    document.getElementById("closeButton");
-
-const speakerButton =
-    document.getElementById("speakerButton");
-
-const chatButton =
-    document.getElementById("chatButton");
-
-const statusPill =
-    document.getElementById("statusPill");
-
-const statusText =
-    document.getElementById("statusText");
-
-const waveText =
-    document.getElementById("waveText");
-
-const welcomeCard =
-    document.getElementById("welcomeCard");
-
-const toast =
-    document.getElementById("toast");
-
-
-/*
-=========================================================
- STATE
-=========================================================
-*/
-
-let anamClient = null;
-let isConnected = false;
-let isMuted = false;
-
-
-/*
-=========================================================
- TOAST
-=========================================================
-*/
-
-function showToast(message) {
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-    setTimeout(() => {
-        toast.classList.remove("show");
-    }, 3000);
-}
-
-
-/*
-=========================================================
- STATUS
-=========================================================
-*/
-
-function setStatus(
-    state,
-    message
-) {
-
-    statusPill.classList.remove(
-        "connecting",
-        "offline"
-    );
-
-    if (state === "connecting") {
-
-        statusPill.classList.add("connecting");
-
+      if (mode === "walking") {
+        avatarMotion.classList.add("walking");
+      } else if (mode === "talking") {
+        avatarMotion.classList.add("talking-motion");
+      } else {
+        avatarMotion.classList.add("idle-motion");
+      }
     }
 
-    if (state === "offline") {
-
-        statusPill.classList.add("offline");
-
+    function setStatus(text, type = "idle") {
+      statusText.textContent = text;
+      statusDot.className = "status-dot";
+      if (type === "connected") statusDot.classList.add("connected");
+      if (type === "connecting") statusDot.classList.add("connecting");
+      if (type === "error") statusDot.classList.add("error");
     }
 
-    statusText.textContent = message;
-}
-
-
-/*
-=========================================================
- GET SESSION TOKEN
-=========================================================
-*/
-
-async function getSessionToken() {
-
-    const response =
-        await fetch(
-            SUPABASE_FUNCTION_URL,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({})
-            }
-        );
-
-    const text =
-        await response.text();
-
-    let data;
-
-    try {
-
-        data = JSON.parse(text);
-
-    } catch {
-
-        throw new Error(
-            "Supabase returned invalid JSON."
-        );
-
+    function showError(message) {
+      console.error("AvatarX:", message);
+      errorBox.textContent = message;
+      errorBox.classList.add("visible");
+      setStatus("Connection error", "error");
     }
 
-    if (!response.ok) {
-
-        console.error(
-            "Supabase error:",
-            data
-        );
-
-        throw new Error(
-            data.error ||
-            data.details ||
-            `Supabase HTTP ${response.status}`
-        );
-
+    function hideError() {
+      errorBox.textContent = "";
+      errorBox.classList.remove("visible");
     }
 
-    if (!data.success) {
-
-        throw new Error(
-            data.error ||
-            "Unable to create Avatar session."
-        );
-
+    function setIdleUI() {
+      startButton.disabled = false;
+      stopButton.disabled = true;
+      idleState.classList.remove("hidden");
+      connectingState.classList.remove("visible");
+      micStatus.classList.remove("visible");
+      video.classList.remove("active");
+      setAvatarMotion("idle");
+      setStatus("Ready", "idle");
     }
 
-    if (!data.sessionToken) {
-
-        throw new Error(
-            "Supabase did not return sessionToken."
-        );
-
+    function setConnectingUI() {
+      startButton.disabled = true;
+      stopButton.disabled = true;
+      idleState.classList.add("hidden");
+      connectingState.classList.add("visible");
+      connectingText.textContent = "Creating a secure session…";
+      setAvatarMotion("idle");
+      setStatus("Connecting", "connecting");
     }
 
-    return data.sessionToken;
-}
-
-
-/*
-=========================================================
- START ANAM
-=========================================================
-*/
-
-async function startAvatar() {
-
-    if (isConnected) {
-        return;
+    function setConnectedUI() {
+      startButton.disabled = true;
+      stopButton.disabled = false;
+      idleState.classList.add("hidden");
+      connectingState.classList.remove("visible");
+      video.classList.add("active");
+      micStatus.classList.add("visible");
+      setAvatarMotion("walking");
+      setStatus("Connected", "connected");
     }
 
-    try {
+    async function createSession() {
+      const response = await fetch(SESSION_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ avatarId: AVATAR_ID, agentId: AGENT_ID }),
+        cache: "no-store"
+      });
 
-        setStatus(
-            "connecting",
-            "Connecting..."
-        );
+      let data = null;
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error(`Supabase returned HTTP ${response.status}.`);
+      }
 
-        waveText.textContent =
-            "Connecting to assistant...";
+      if (!response.ok) {
+        throw new Error(data?.details || data?.error || `HTTP ${response.status}`);
+      }
+      if (!data?.success) {
+        throw new Error(data?.error || "Unable to create avatar session.");
+      }
+      if (!data?.sessionToken) {
+        throw new Error("Supabase did not return an Anam session token.");
+      }
 
-        startConversation.disabled = true;
+      return data.sessionToken;
+    }
 
-        startConversation.textContent =
-            "Connecting...";
+    async function startConversation() {
+      if (isStarting || isConnected) return;
 
-        /*
-         * Ask Supabase for a short-lived Anam token.
-         */
+      isStarting = true;
+      hideError();
+      setConnectingUI();
 
-        const sessionToken =
-            await getSessionToken();
+      try {
+        const sessionToken = await createSession();
+        connectingText.textContent = "Starting your AI avatar…";
 
-        console.log(
-            "Anam session token received."
-        );
+        anamClient = createClient(sessionToken);
+        await anamClient.streamToVideoElement("avatar-video");
 
-        /*
-         * Create Anam client.
-         */
-
-        anamClient =
-            createClient(
-                sessionToken,
-                {
-                    disableInputAudio: false,
-                    voiceDetection: {
-                        endOfSpeechSensitivity: 0.5
-                    }
-                }
-            );
-
-        /*
-         * Session ready
-         */
-
-        anamClient.addListener(
-            AnamEvent.SESSION_READY,
-            () => {
-
-                console.log(
-                    "Anam session ready."
-                );
-
-                isConnected = true;
-
-                setStatus(
-                    "online",
-                    "AI Assistant Online"
-                );
-
-                waveText.textContent =
-                    "Listening...";
-
-                startOverlay.classList.add(
-                    "hidden"
-                );
-
-                avatarStage.classList.add(
-                    "active"
-                );
-
-                avatarVideo.classList.remove(
-                    "hidden"
-                );
-
-                startButton.classList.add(
-                    "active"
-                );
-
-                endButton.disabled = false;
-
-                startConversation.disabled = false;
-
-                startConversation.textContent =
-                    "Start Conversation";
-
-            }
-        );
-
-
-        /*
-         * Session started
-         */
-
-        anamClient.addListener(
-            AnamEvent.SESSION_STARTED,
-            () => {
-
-                console.log(
-                    "Anam session started."
-                );
-
-            }
-        );
-
-
-        /*
-         * Errors
-         */
-
-        anamClient.addListener(
-            AnamEvent.SESSION_ERROR,
-            (error) => {
-
-                console.error(
-                    "Anam session error:",
-                    error
-                );
-
-                showToast(
-                    "Avatar connection error."
-                );
-
-                setStatus(
-                    "offline",
-                    "Connection error"
-                );
-
-            }
-        );
-
-
-        /*
-         * Stream avatar video
-         */
-
-        await anamClient.streamToVideoElement(
-            "avatar-video"
-        );
-
-        console.log(
-            "Avatar video streaming."
-        );
-
-    } catch (error) {
-
-        console.error(
-            "START ERROR:",
-            error
-        );
-
+        isConnected = true;
+        isStarting = false;
+        setConnectedUI();
+        console.log("AvatarX conversation started.");
+      } catch (error) {
+        console.error("Start conversation failed:", error);
+        isStarting = false;
         isConnected = false;
 
-        setStatus(
-            "offline",
-            "Unable to connect"
-        );
-
-        waveText.textContent =
-            "Connection failed";
-
-        startConversation.disabled = false;
-
-        startConversation.textContent =
-            "🎙 Try Again";
-
-        showToast(
-            error.message ||
-            "Unable to start conversation."
-        );
-
-    }
-
-}
-
-
-/*
-=========================================================
- END SESSION
-=========================================================
-*/
-
-async function endConversation() {
-
-    try {
-
-        if (
-            anamClient &&
-            anamClient.isStreaming()
-        ) {
-
-            await anamClient.stopStreaming();
-
+        try {
+          if (anamClient) anamClient.stopStreaming();
+        } catch (cleanupError) {
+          console.warn("Cleanup error:", cleanupError);
         }
 
-    } catch (error) {
+        anamClient = null;
+        video.srcObject = null;
 
-        console.warn(
-            "Stop error:",
-            error
-        );
-
-    }
-
-    anamClient = null;
-
-    isConnected = false;
-
-    startButton.classList.remove(
-        "active"
-    );
-
-    endButton.disabled = true;
-
-    avatarVideo.classList.add(
-        "hidden"
-    );
-
-    avatarStage.classList.remove(
-        "active"
-    );
-
-    setStatus(
-        "offline",
-        "Assistant Offline"
-    );
-
-    waveText.textContent =
-        "Ready to talk";
-
-    startOverlay.classList.remove(
-        "hidden"
-    );
-
-}
-
-
-/*
-=========================================================
- MICROPHONE BUTTON
-=========================================================
-*/
-
-startButton.addEventListener(
-    "click",
-    async () => {
-
-        if (!isConnected) {
-
-            await startAvatar();
-
+        let message = "Unable to start the conversation.";
+        if (error && typeof error.message === "string") {
+          message = error.message;
         }
 
-    }
-);
-
-
-/*
-=========================================================
- START OVERLAY
-=========================================================
-*/
-
-startConversation.addEventListener(
-    "click",
-    async () => {
-
-        await startAvatar();
-
-    }
-);
-
-
-/*
-=========================================================
- END BUTTON
-=========================================================
-*/
-
-endButton.addEventListener(
-    "click",
-    async () => {
-
-        await endConversation();
-
-    }
-);
-
-
-/*
-=========================================================
- CLOSE BUTTON
-=========================================================
-*/
-
-closeButton.addEventListener(
-    "click",
-    async () => {
-
-        await endConversation();
-
-    }
-);
-
-
-/*
-=========================================================
- SPEAKER
-=========================================================
-*/
-
-speakerButton.addEventListener(
-    "click",
-    () => {
-
-        if (!isConnected) {
-
-            showToast(
-                "Start the conversation first."
-            );
-
-            return;
-
+        if (message.toLowerCase().includes("microphone")) {
+          message = "Microphone access is required. Please allow microphone access in your browser and try again.";
         }
 
-        isMuted = !isMuted;
-
-        /*
-         * Do not mute the Anam WebRTC stream itself
-         * by changing the video muted property unless
-         * you intentionally want local playback muted.
-         *
-         * This button currently provides UI feedback.
-         */
-
-        if (isMuted) {
-
-            speakerButton.textContent = "🔇";
-
-            showToast(
-                "Speaker muted"
-            );
-
-        } else {
-
-            speakerButton.textContent = "🔊";
-
-            showToast(
-                "Speaker enabled"
-            );
-
-        }
-
+        showError(message);
+        setTimeout(() => setIdleUI(), 100);
+      }
     }
-);
 
+    async function stopConversation() {
+      if (!anamClient) {
+        setIdleUI();
+        return;
+      }
 
-/*
-=========================================================
- CHAT BUTTON
-=========================================================
-*/
+      startButton.disabled = true;
+      stopButton.disabled = true;
 
-chatButton.addEventListener(
-    "click",
-    () => {
+      try {
+        anamClient.stopStreaming();
+      } catch (error) {
+        console.warn("Anam stop error:", error);
+      }
 
-        showToast(
-            "Text chat can be added here."
-        );
+      anamClient = null;
+      isConnected = false;
+      isStarting = false;
 
-    }
-);
-
-
-/*
-=========================================================
- QUICK ACTIONS
-=========================================================
-*/
-
-document
-    .querySelectorAll(".quick-action")
-    .forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    const message =
-                        button.dataset.message;
-
-                    /*
-                     * For your current ElevenLabs +
-                     * Anam server-side integration,
-                     * microphone conversation is handled
-                     * by the Anam session.
-                     *
-                     * These buttons are UI placeholders
-                     * until you add an agent client-message
-                     * mechanism.
-                     */
-
-                    showToast(
-                        message
-                    );
-
-                }
-            );
-
+      try {
+        const stream = video.srcObject;
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
         }
-    );
+      } catch (error) {
+        console.warn("Media cleanup error:", error);
+      }
 
+      video.srcObject = null;
+      setAvatarMotion("idle");
+      setIdleUI();
+      console.log("AvatarX conversation ended.");
+    }
 
-/*
-=========================================================
- INITIAL STATE
-=========================================================
-*/
+    startButton.addEventListener("click", startConversation);
+    stopButton.addEventListener("click", stopConversation);
 
-setStatus(
-    "online",
-    "AI Assistant Online"
-);
+    window.addEventListener("beforeunload", () => {
+      try {
+        if (anamClient) anamClient.stopStreaming();
+      } catch {
+        // Ignore cleanup errors
+      }
+    });
 
-avatarVideo.classList.add(
-    "hidden"
-);
-
-console.log(
-    "AvatarX initialized."
-);
-
-</script>
+    setIdleUI();
+    console.log("AvatarX initialized.");
+  </script>
 
 </body>
 </html>
