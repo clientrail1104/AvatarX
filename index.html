@@ -2,17 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>AvatarX — AI Assistant</title>
-
-  <meta
-    name="description"
-    content="AvatarX real-time AI voice assistant powered by Anam and ElevenLabs."
-  />
+  <meta name="description" content="AvatarX real-time AI voice assistant powered by Anam and ElevenLabs." />
 
   <style>
     * {
@@ -26,46 +18,29 @@
       --text: #17181c;
       --muted: #70747d;
       --border: rgba(0, 0, 0, 0.08);
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.10);
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
       --accent: #111111;
       --success: #16834b;
       --danger: #c63636;
     }
 
-    html,
-    body {
+    html, body {
       width: 100%;
-      min-height: 100%;
+      height: 100vh;
       margin: 0;
       padding: 0;
+      overflow: hidden;
     }
 
     body {
-      font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif;
-
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(
-          circle at 20% 10%,
-          rgba(220, 225, 255, 0.55),
-          transparent 35%
-        ),
-        radial-gradient(
-          circle at 85% 20%,
-          rgba(240, 220, 255, 0.42),
-          transparent 32%
-        ),
+        radial-gradient(circle at 20% 10%, rgba(220, 225, 255, 0.55), transparent 35%),
+        radial-gradient(circle at 85% 20%, rgba(240, 220, 255, 0.42), transparent 32%),
         var(--bg);
-
-      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     button {
@@ -77,54 +52,40 @@
     ========================== */
 
     .topbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-
-      height: 72px;
-
+      height: 56px;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
-
-      padding: 0 28px;
-
+      padding: 0 24px;
       z-index: 100;
-
       background: rgba(247, 248, 252, 0.78);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
-
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 11px;
+      gap: 10px;
     }
 
     .brand-mark {
-      width: 36px;
-      height: 36px;
-
+      width: 32px;
+      height: 32px;
       display: grid;
       place-items: center;
-
-      border-radius: 12px;
-
+      border-radius: 10px;
       color: white;
       background: #111;
-
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 800;
-
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     }
 
     .brand-name {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
       letter-spacing: -0.02em;
     }
@@ -132,9 +93,7 @@
     .brand-badge {
       font-size: 11px;
       color: #74777e;
-
-      padding: 4px 8px;
-
+      padding: 3px 8px;
       border-radius: 999px;
       background: rgba(0, 0, 0, 0.05);
     }
@@ -143,7 +102,6 @@
       display: flex;
       align-items: center;
       gap: 8px;
-
       color: var(--muted);
       font-size: 13px;
     }
@@ -151,16 +109,14 @@
     .status-dot {
       width: 8px;
       height: 8px;
-
       border-radius: 50%;
       background: #b8bbc1;
-
       transition: 0.25s ease;
     }
 
     .status-dot.connected {
       background: var(--success);
-      box-shadow: 0 0 0 5px rgba(22, 131, 75, 0.10);
+      box-shadow: 0 0 0 4px rgba(22, 131, 75, 0.12);
     }
 
     .status-dot.connecting {
@@ -173,167 +129,91 @@
     }
 
     @keyframes pulse {
-      0% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.35;
-      }
-
-      100% {
-        opacity: 1;
-      }
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
     }
 
     /* =========================
-       MAIN
+       MAIN LAYOUT (NO SCROLL)
     ========================== */
 
     .page {
+      flex: 1;
       width: 100%;
-      max-width: 1180px;
-
+      max-width: 1080px;
       margin: 0 auto;
-
-      padding:
-        112px
-        24px
-        60px;
+      padding: 12px 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 0;
     }
 
     .hero {
       text-align: center;
-
-      max-width: 780px;
-
-      margin: 0 auto 28px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-
-      padding: 7px 12px;
-
-      border-radius: 999px;
-
-      background: rgba(255, 255, 255, 0.7);
-      border: 1px solid var(--border);
-
-      color: #686c74;
-
-      font-size: 12px;
-      font-weight: 600;
+      flex-shrink: 0;
     }
 
     .hero h1 {
-      margin: 16px 0 10px;
-
-      font-size:
-        clamp(34px, 6vw, 64px);
-
-      line-height: 0.98;
-
-      letter-spacing: -0.055em;
-
+      margin: 0 0 2px;
+      font-size: clamp(22px, 3.2vw, 36px);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
       font-weight: 750;
     }
 
     .hero p {
-      max-width: 610px;
-
-      margin: 0 auto;
-
+      margin: 0;
       color: var(--muted);
-
-      font-size: 16px;
-      line-height: 1.65;
+      font-size: 13px;
     }
 
     /* =========================
-       ASSISTANT CARD
+       ASSISTANT CARD (FLEX STREAM)
     ========================== */
 
     .assistant-shell {
       position: relative;
-
+      flex: 1;
       width: 100%;
-
-      max-width: 960px;
-
-      margin: 0 auto;
-
-      padding: 10px;
-
-      border-radius: 30px;
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255, 255, 255, 0.95),
-          rgba(255, 255, 255, 0.68)
-        );
-
+      min-height: 0;
+      padding: 6px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.68));
       border: 1px solid rgba(255, 255, 255, 0.9);
-
       box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
     }
 
     .assistant {
       position: relative;
-
-      min-height: 560px;
-
+      flex: 1;
+      width: 100%;
+      min-height: 0;
       overflow: hidden;
-
-      border-radius: 23px;
-
-      background:
-        radial-gradient(
-          circle at 50% 30%,
-          #ffffff,
-          #f0f2f6 58%,
-          #e8ebf1 100%
-        );
+      border-radius: 18px;
+      background: radial-gradient(circle at 50% 30%, #ffffff, #f0f2f6 58%, #e8ebf1 100%);
     }
-
-    /* =========================
-       AVATAR
-    ========================== */
 
     .avatar-stage {
       position: relative;
-
       width: 100%;
-      height: 520px;
-
-      overflow: hidden;
-
+      height: 100%;
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       justify-content: center;
     }
 
     #avatar-video {
       position: absolute;
-
       inset: 0;
-
       width: 100%;
       height: 100%;
-
       object-fit: cover;
-
       background: transparent;
-
       opacity: 0;
-
-      transition:
-        opacity 0.7s ease,
-        transform 0.7s ease;
-
+      transition: opacity 0.5s ease, transform 0.5s ease;
       transform: scale(1.01);
     }
 
@@ -341,26 +221,17 @@
       opacity: 1;
     }
 
-    /* =========================
-       IDLE AVATAR MESSAGE
-    ========================== */
+    /* IDLE STATE */
 
     .idle-state {
       position: absolute;
-
       inset: 0;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
-      padding: 30px;
-
+      padding: 20px;
       text-align: center;
-
-      transition:
-        opacity 0.4s ease,
-        visibility 0.4s ease;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
 
     .idle-state.hidden {
@@ -369,67 +240,46 @@
     }
 
     .idle-inner {
-      max-width: 430px;
+      max-width: 380px;
     }
 
     .idle-icon {
-      width: 72px;
-      height: 72px;
-
-      margin: 0 auto 20px;
-
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 12px;
       display: grid;
       place-items: center;
-
-      border-radius: 24px;
-
+      border-radius: 18px;
       background: #111;
       color: white;
-
-      font-size: 26px;
-
-      box-shadow:
-        0 15px 35px rgba(0, 0, 0, 0.16);
+      font-size: 22px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.14);
     }
 
     .idle-inner h2 {
-      margin: 0 0 9px;
-
-      font-size: 25px;
-      letter-spacing: -0.035em;
+      margin: 0 0 6px;
+      font-size: 20px;
+      letter-spacing: -0.03em;
     }
 
     .idle-inner p {
       margin: 0;
-
       color: var(--muted);
-
-      line-height: 1.6;
-
-      font-size: 14px;
+      line-height: 1.5;
+      font-size: 13px;
     }
 
-    /* =========================
-       CONNECTING
-    ========================== */
+    /* CONNECTING STATE */
 
     .connecting-state {
       position: absolute;
-
       inset: 0;
-
       display: none;
-
       align-items: center;
       justify-content: center;
-
       text-align: center;
-
       z-index: 10;
-
-      background:
-        rgba(247, 248, 252, 0.76);
-
+      background: rgba(247, 248, 252, 0.82);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
     }
@@ -439,91 +289,59 @@
     }
 
     .loader {
-      width: 46px;
-      height: 46px;
-
-      margin: 0 auto 18px;
-
+      width: 38px;
+      height: 38px;
+      margin: 0 auto 12px;
       border-radius: 50%;
-
-      border:
-        3px solid rgba(0, 0, 0, 0.08);
-
+      border: 3px solid rgba(0, 0, 0, 0.08);
       border-top-color: #111;
-
-      animation:
-        spin 0.85s linear infinite;
+      animation: spin 0.85s linear infinite;
     }
 
     @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+      to { transform: rotate(360deg); }
     }
 
     .connecting-title {
       font-weight: 700;
-      font-size: 17px;
+      font-size: 15px;
     }
 
     .connecting-text {
-      margin-top: 6px;
-
+      margin-top: 4px;
       color: var(--muted);
-
-      font-size: 13px;
+      font-size: 12px;
     }
 
-    /* =========================
-       CONTROLS
-    ========================== */
+    /* CONTROLS */
 
     .control-bar {
       position: absolute;
-
       left: 50%;
-      bottom: 22px;
-
+      bottom: 16px;
       transform: translateX(-50%);
-
       z-index: 30;
-
       display: flex;
       align-items: center;
-      gap: 10px;
-
-      padding: 8px;
-
-      border-radius: 18px;
-
-      background: rgba(255, 255, 255, 0.86);
-
+      gap: 8px;
+      padding: 6px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-
       border: 1px solid rgba(255, 255, 255, 0.9);
-
-      box-shadow:
-        0 15px 35px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
     }
 
     .btn {
-      height: 44px;
-
-      padding: 0 18px;
-
+      height: 38px;
+      padding: 0 16px;
       border: 0;
-
-      border-radius: 13px;
-
+      border-radius: 11px;
       cursor: pointer;
-
       font-weight: 650;
-
-      transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        opacity 0.2s ease;
+      font-size: 13px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
     }
 
     .btn:hover {
@@ -543,9 +361,7 @@
     .btn-start {
       background: #111;
       color: white;
-
-      box-shadow:
-        0 8px 18px rgba(0, 0, 0, 0.16);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
     }
 
     .btn-stop {
@@ -555,14 +371,10 @@
 
     .mic-status {
       display: none;
-
       align-items: center;
-      gap: 8px;
-
-      padding: 0 10px;
-
+      gap: 6px;
+      padding: 0 8px;
       color: #62666e;
-
       font-size: 12px;
       font-weight: 600;
     }
@@ -575,80 +387,44 @@
       display: flex;
       align-items: center;
       gap: 2px;
-
-      height: 18px;
+      height: 16px;
     }
 
     .mic-wave span {
       width: 3px;
-      height: 8px;
-
+      height: 6px;
       border-radius: 4px;
-
       background: #222;
-
       animation: wave 0.8s ease-in-out infinite;
     }
 
-    .mic-wave span:nth-child(2) {
-      animation-delay: 0.1s;
-    }
-
-    .mic-wave span:nth-child(3) {
-      animation-delay: 0.2s;
-    }
-
-    .mic-wave span:nth-child(4) {
-      animation-delay: 0.3s;
-    }
+    .mic-wave span:nth-child(2) { animation-delay: 0.1s; }
+    .mic-wave span:nth-child(3) { animation-delay: 0.2s; }
+    .mic-wave span:nth-child(4) { animation-delay: 0.3s; }
 
     @keyframes wave {
-      0%,
-      100% {
-        height: 5px;
-      }
-
-      50% {
-        height: 17px;
-      }
+      0%, 100% { height: 4px; }
+      50% { height: 14px; }
     }
 
-    /* =========================
-       ERROR
-    ========================== */
+    /* ERROR */
 
     .error-box {
       display: none;
-
       position: absolute;
-
       left: 50%;
-      top: 28px;
-
+      top: 16px;
       transform: translateX(-50%);
-
-      width: min(
-        calc(100% - 40px),
-        620px
-      );
-
+      width: min(calc(100% - 32px), 540px);
       z-index: 40;
-
-      padding: 13px 15px;
-
-      border-radius: 14px;
-
+      padding: 10px 14px;
+      border-radius: 12px;
       color: #8e2424;
-
       background: rgba(255, 244, 244, 0.96);
-
       border: 1px solid rgba(198, 54, 54, 0.15);
-
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-
-      font-size: 13px;
-
-      line-height: 1.45;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      font-size: 12px;
+      line-height: 1.4;
     }
 
     .error-box.visible {
@@ -656,96 +432,65 @@
     }
 
     /* =========================
-       INFO ROW
+       INFO GRID & FOOTER
     ========================== */
 
     .info-grid {
       display: grid;
-
-      grid-template-columns:
-        repeat(3, 1fr);
-
-      gap: 12px;
-
-      max-width: 960px;
-
-      margin: 14px auto 0;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      flex-shrink: 0;
     }
 
     .info-card {
-      padding: 16px 17px;
-
-      border-radius: 17px;
-
+      padding: 10px 12px;
+      border-radius: 14px;
       background: rgba(255, 255, 255, 0.67);
-
       border: 1px solid var(--border);
-
       color: #676b73;
-
-      font-size: 12px;
-
-      line-height: 1.5;
+      font-size: 11px;
+      line-height: 1.4;
     }
 
     .info-card strong {
       display: block;
-
-      margin-bottom: 4px;
-
+      margin-bottom: 2px;
       color: #25262a;
-
-      font-size: 13px;
+      font-size: 12px;
     }
 
-    /* =========================
-       FOOTER
-    ========================== */
-
     footer {
-      max-width: 960px;
-
-      margin: 26px auto 0;
-
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
-
       color: #888c94;
-
       font-size: 11px;
+      padding-top: 2px;
     }
 
     .secure {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .secure-icon {
-      width: 16px;
-      height: 16px;
-
+      width: 14px;
+      height: 14px;
       display: grid;
       place-items: center;
-
-      border-radius: 5px;
-
+      border-radius: 4px;
       background: rgba(22, 131, 75, 0.1);
-
       color: var(--success);
-
       font-size: 9px;
     }
 
-    /* =========================
-       MOBILE
-    ========================== */
+    /* MOBILE BREAKPOINT */
 
     @media (max-width: 700px) {
       .topbar {
-        height: 64px;
-
+        height: 48px;
         padding: 0 16px;
       }
 
@@ -754,54 +499,19 @@
       }
 
       .page {
-        padding:
-          92px
-          12px
-          35px;
-      }
-
-      .hero {
-        margin-bottom: 18px;
-      }
-
-      .hero h1 {
-        font-size: 40px;
-      }
-
-      .hero p {
-        font-size: 14px;
-      }
-
-      .assistant-shell {
-        padding: 6px;
-
-        border-radius: 22px;
-      }
-
-      .assistant {
-        min-height: 530px;
-
-        border-radius: 17px;
-      }
-
-      .avatar-stage {
-        height: 500px;
+        padding: 10px 12px 12px;
+        gap: 8px;
       }
 
       .control-bar {
-        bottom: 15px;
-
         width: calc(100% - 24px);
-
         justify-content: center;
+        bottom: 12px;
       }
 
       .btn {
         flex: 1;
-
-        min-width: 0;
-
-        padding: 0 13px;
+        padding: 0 8px;
       }
 
       .mic-status {
@@ -810,23 +520,21 @@
 
       .info-grid {
         grid-template-columns: 1fr;
+        gap: 6px;
+      }
 
-        margin-top: 10px;
+      .info-card {
+        padding: 6px 10px;
       }
 
       footer {
-        flex-direction: column;
-
-        gap: 10px;
-
-        text-align: center;
+        flex-direction: row;
+        justify-content: space-between;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
+      *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
@@ -838,962 +546,294 @@
 
 <body>
 
-  <!-- =========================================
-       TOP BAR
-  ========================================== -->
-
+  <!-- TOP BAR -->
   <header class="topbar">
-
     <div class="brand">
-
-      <div class="brand-mark">
-        A
-      </div>
-
-      <div class="brand-name">
-        AvatarX
-      </div>
-
-      <div class="brand-badge">
-        AI Assistant
-      </div>
-
+      <div class="brand-mark">A</div>
+      <div class="brand-name">AvatarX</div>
+      <div class="brand-badge">AI Assistant</div>
     </div>
-
     <div class="top-status">
-
-      <span
-        id="statusDot"
-        class="status-dot"
-      ></span>
-
-      <span id="statusText">
-        Ready
-      </span>
-
+      <span id="statusDot" class="status-dot"></span>
+      <span id="statusText">Ready</span>
     </div>
-
   </header>
 
-
-  <!-- =========================================
-       MAIN
-  ========================================== -->
-
+  <!-- MAIN CONTAINER (100vh Locked) -->
   <main class="page">
 
     <section class="hero">
-
-      <h1>
-        Hi there! How can I help you today?
-      </h1>
-
-      <p>
-        Speak with our AI assistant.
-      </p>
-
+      <h1>Hi there! How can I help you today?</h1>
+      <p>Speak with our AI assistant.</p>
     </section>
 
-
-    <!-- =========================================
-         ASSISTANT
-    ========================================== -->
-
+    <!-- ASSISTANT STAGE -->
     <section class="assistant-shell">
-
       <div class="assistant">
-
         <div class="avatar-stage">
 
           <!-- ANAM VIDEO -->
-          <video
-            id="avatar-video"
-            autoplay
-            playsinline
-            muted="false"
-          ></video>
-
+          <video id="avatar-video" autoplay playsinline muted="false"></video>
 
           <!-- IDLE STATE -->
-
-          <div
-            id="idleState"
-            class="idle-state"
-          >
-
+          <div id="idleState" class="idle-state">
             <div class="idle-inner">
-
-              <div class="idle-icon">
-                ✦
-              </div>
-
-              <h2>
-                Your assistant is ready
-              </h2>
-
-              <p>
-                Click
-                <strong>Start Conversation</strong>
-                and allow microphone access when your browser asks.
-              </p>
-
+              <div class="idle-icon">✦</div>
+              <h2>Your assistant is ready</h2>
+              <p>Click <strong>Start Conversation</strong> and allow microphone access when requested.</p>
             </div>
-
           </div>
 
-
-          <!-- CONNECTING -->
-
-          <div
-            id="connectingState"
-            class="connecting-state"
-          >
-
+          <!-- CONNECTING STATE -->
+          <div id="connectingState" class="connecting-state">
             <div>
-
               <div class="loader"></div>
-
-              <div class="connecting-title">
-                Connecting your assistant
-              </div>
-
-              <div
-                id="connectingText"
-                class="connecting-text"
-              >
-                Creating a secure session…
-              </div>
-
+              <div class="connecting-title">Connecting your assistant</div>
+              <div id="connectingText" class="connecting-text">Creating a secure session…</div>
             </div>
-
           </div>
 
-
-          <!-- ERROR -->
-
-          <div
-            id="errorBox"
-            class="error-box"
-          ></div>
-
+          <!-- ERROR BOX -->
+          <div id="errorBox" class="error-box"></div>
 
           <!-- CONTROLS -->
-
           <div class="control-bar">
-
-            <button
-              id="startButton"
-              class="btn btn-start"
-              type="button"
-            >
-              Start Conversation
-            </button>
-
-            <button
-              id="stopButton"
-              class="btn btn-stop"
-              type="button"
-              disabled
-            >
-              End Conversation
-            </button>
-
-            <div
-              id="micStatus"
-              class="mic-status"
-            >
-
+            <button id="startButton" class="btn btn-start" type="button">Start Conversation</button>
+            <button id="stopButton" class="btn btn-stop" type="button" disabled>End Conversation</button>
+            <div id="micStatus" class="mic-status">
               <div class="mic-wave">
                 <span></span>
                 <span></span>
                 <span></span>
                 <span></span>
               </div>
-
               Listening
-
             </div>
-
           </div>
 
         </div>
-
       </div>
-
     </section>
 
-
-    <!-- =========================================
-         INFORMATION
-    ========================================== -->
-
+    <!-- INFORMATION GRID -->
     <section class="info-grid">
-
       <div class="info-card">
-
-        <strong>
-          🎤 Voice interaction
-        </strong>
-
+        <strong>🎤 Voice interaction</strong>
         Speak naturally using your microphone.
-
       </div>
-
       <div class="info-card">
-
-        <strong>
-          👄 Live avatar
-        </strong>
-
-        Your avatar streams in real time
-
+        <strong>👄 Live avatar</strong>
+        Your avatar streams in real time.
       </div>
-
       <div class="info-card">
-
-        <strong>
-          🔐 Secure connection
-        </strong>
-
-        All credentials are secured
-
+        <strong>🔐 Secure connection</strong>
+        All credentials are secured.
       </div>
-
     </section>
 
-
-    <!-- =========================================
-         FOOTER
-    ========================================== -->
-
+    <!-- FOOTER -->
     <footer>
-
-      <div>
-        AvatarX
-      </div>
-
+      <div>AvatarX</div>
       <div class="secure">
-
-        <div class="secure-icon">
-          ✓
-        </div>
-
+        <div class="secure-icon">✓</div>
         Secure session architecture
-
       </div>
-
     </footer>
 
   </main>
 
-
-  <!-- =========================================
-       ANAM SDK + APPLICATION
-  ========================================== -->
-
+  <!-- ANAM SDK & APPLICATION LOGIC -->
   <script type="module">
+    import { createClient } from "https://esm.sh/@anam-ai/js-sdk@latest";
 
-    import {
-      createClient
-    } from "https://esm.sh/@anam-ai/js-sdk@latest";
-
-
-    /*
-     * ============================================================
-     * CONFIGURATION
-     * ============================================================
-     *
-     * IMPORTANT:
-     *
-     * There are NO Anam API keys here.
-     * There are NO ElevenLabs API keys here.
-     *
-     * This is your Supabase Edge Function.
-     */
-
-    const SESSION_ENDPOINT =
-      "https://cfthqsvxidzxflbvhxkk.supabase.co/functions/v1/anam-eleven-session";
-
-
-    /*
-     * Your known avatar ID.
-     *
-     * This is NOT an API key.
-     *
-     * The backend also has this configured.
-     */
-
-    const AVATAR_ID =
-      "0caf57ab-3da9-4d27-b356-53837508aaf6";
-
-
-    /*
-     * Your ElevenLabs Agent ID.
-     *
-     * This is only used for display/reference.
-     *
-     * The browser does NOT call ElevenLabs directly.
-     */
-
-    const AGENT_ID =
-      "agent_0301ky516eb3emwsy22td2f8z96g";
-
-
-    /*
-     * ============================================================
-     * STATE
-     * ============================================================
-     */
+    const SESSION_ENDPOINT = "https://cfthqsvxidzxflbvhxkk.supabase.co/functions/v1/anam-eleven-session";
+    const AVATAR_ID = "0caf57ab-3da9-4d27-b356-53837508aaf6";
+    const AGENT_ID = "agent_0301ky516eb3emwsy22td2f8z96g";
 
     let anamClient = null;
-
     let isStarting = false;
-
     let isConnected = false;
 
+    const video = document.getElementById("avatar-video");
+    const startButton = document.getElementById("startButton");
+    const stopButton = document.getElementById("stopButton");
+    const idleState = document.getElementById("idleState");
+    const connectingState = document.getElementById("connectingState");
+    const connectingText = document.getElementById("connectingText");
+    const errorBox = document.getElementById("errorBox");
+    const micStatus = document.getElementById("micStatus");
+    const statusText = document.getElementById("statusText");
+    const statusDot = document.getElementById("statusDot");
 
-    /*
-     * ============================================================
-     * DOM
-     * ============================================================
-     */
-
-    const video =
-      document.getElementById("avatar-video");
-
-    const startButton =
-      document.getElementById("startButton");
-
-    const stopButton =
-      document.getElementById("stopButton");
-
-    const idleState =
-      document.getElementById("idleState");
-
-    const connectingState =
-      document.getElementById("connectingState");
-
-    const connectingText =
-      document.getElementById("connectingText");
-
-    const errorBox =
-      document.getElementById("errorBox");
-
-    const micStatus =
-      document.getElementById("micStatus");
-
-    const statusText =
-      document.getElementById("statusText");
-
-    const statusDot =
-      document.getElementById("statusDot");
-
-
-    /*
-     * ============================================================
-     * STATUS UI
-     * ============================================================
-     */
-
-    function setStatus(
-      text,
-      type = "idle"
-    ) {
-
-      statusText.textContent =
-        text;
-
-      statusDot.className =
-        "status-dot";
-
-      if (type === "connected") {
-
-        statusDot.classList.add(
-          "connected"
-        );
-
-      }
-
-      if (type === "connecting") {
-
-        statusDot.classList.add(
-          "connecting"
-        );
-
-      }
-
-      if (type === "error") {
-
-        statusDot.classList.add(
-          "error"
-        );
-
-      }
-
+    function setStatus(text, type = "idle") {
+      statusText.textContent = text;
+      statusDot.className = "status-dot";
+      if (type === "connected") statusDot.classList.add("connected");
+      if (type === "connecting") statusDot.classList.add("connecting");
+      if (type === "error") statusDot.classList.add("error");
     }
-
-
-    /*
-     * ============================================================
-     * ERROR UI
-     * ============================================================
-     */
 
     function showError(message) {
-
-      console.error(
-        "AvatarX:",
-        message
-      );
-
-      errorBox.textContent =
-        message;
-
-      errorBox.classList.add(
-        "visible"
-      );
-
-      setStatus(
-        "Connection error",
-        "error"
-      );
-
+      console.error("AvatarX:", message);
+      errorBox.textContent = message;
+      errorBox.classList.add("visible");
+      setStatus("Connection error", "error");
     }
-
 
     function hideError() {
-
-      errorBox.textContent =
-        "";
-
-      errorBox.classList.remove(
-        "visible"
-      );
-
+      errorBox.textContent = "";
+      errorBox.classList.remove("visible");
     }
-
-
-    /*
-     * ============================================================
-     * UI STATE
-     * ============================================================
-     */
 
     function setIdleUI() {
-
-      startButton.disabled =
-        false;
-
-      stopButton.disabled =
-        true;
-
-      idleState.classList.remove(
-        "hidden"
-      );
-
-      connectingState.classList.remove(
-        "visible"
-      );
-
-      micStatus.classList.remove(
-        "visible"
-      );
-
-      video.classList.remove(
-        "active"
-      );
-
-      setStatus(
-        "Ready",
-        "idle"
-      );
-
+      startButton.disabled = false;
+      stopButton.disabled = true;
+      idleState.classList.remove("hidden");
+      connectingState.classList.remove("visible");
+      micStatus.classList.remove("visible");
+      video.classList.remove("active");
+      setStatus("Ready", "idle");
     }
-
 
     function setConnectingUI() {
-
-      startButton.disabled =
-        true;
-
-      stopButton.disabled =
-        true;
-
-      idleState.classList.add(
-        "hidden"
-      );
-
-      connectingState.classList.add(
-        "visible"
-      );
-
-      connectingText.textContent =
-        "Creating a secure session…";
-
-      setStatus(
-        "Connecting",
-        "connecting"
-      );
-
+      startButton.disabled = true;
+      stopButton.disabled = true;
+      idleState.classList.add("hidden");
+      connectingState.classList.add("visible");
+      connectingText.textContent = "Creating a secure session…";
+      setStatus("Connecting", "connecting");
     }
-
 
     function setConnectedUI() {
-
-      startButton.disabled =
-        true;
-
-      stopButton.disabled =
-        false;
-
-      idleState.classList.add(
-        "hidden"
-      );
-
-      connectingState.classList.remove(
-        "visible"
-      );
-
-      video.classList.add(
-        "active"
-      );
-
-      micStatus.classList.add(
-        "visible"
-      );
-
-      setStatus(
-        "Connected",
-        "connected"
-      );
-
+      startButton.disabled = true;
+      stopButton.disabled = false;
+      idleState.classList.add("hidden");
+      connectingState.classList.remove("visible");
+      video.classList.add("active");
+      micStatus.classList.add("visible");
+      setStatus("Connected", "connected");
     }
-
-
-    /*
-     * ============================================================
-     * REQUEST SESSION TOKEN
-     * ============================================================
-     *
-     * The browser calls ONLY Supabase.
-     *
-     * Supabase calls:
-     *
-     * ElevenLabs → signed URL
-     * Anam → session token
-     *
-     * The permanent API keys never reach this page.
-     */
 
     async function createSession() {
-
-      const response =
-        await fetch(
-          SESSION_ENDPOINT,
-          {
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-
-            body: JSON.stringify({
-              avatarId:
-                AVATAR_ID,
-
-              agentId:
-                AGENT_ID
-            }),
-
-            cache: "no-store"
-          }
-        );
-
-
-      /*
-       * Try to read JSON even if the
-       * HTTP response is an error.
-       */
+      const response = await fetch(SESSION_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ avatarId: AVATAR_ID, agentId: AGENT_ID }),
+        cache: "no-store"
+      });
 
       let data = null;
-
       try {
-
-        data =
-          await response.json();
-
+        data = await response.json();
       } catch {
-
-        throw new Error(
-          `Supabase returned HTTP ${response.status}.`
-        );
-
+        throw new Error(`Supabase returned HTTP ${response.status}.`);
       }
-
 
       if (!response.ok) {
-
-        const details =
-          data?.details ||
-          data?.error ||
-          `HTTP ${response.status}`;
-
-        throw new Error(
-          details
-        );
-
+        throw new Error(data?.details || data?.error || `HTTP ${response.status}`);
       }
-
-
       if (!data?.success) {
-
-        throw new Error(
-          data?.error ||
-          "Unable to create avatar session."
-        );
-
+        throw new Error(data?.error || "Unable to create avatar session.");
       }
-
-
       if (!data?.sessionToken) {
-
-        throw new Error(
-          "Supabase did not return an Anam session token."
-        );
-
+        throw new Error("Supabase did not return an Anam session token.");
       }
-
 
       return data.sessionToken;
-
     }
-
-
-    /*
-     * ============================================================
-     * START CONVERSATION
-     * ============================================================
-     */
 
     async function startConversation() {
-
-      if (isStarting || isConnected) {
-
-        return;
-
-      }
-
+      if (isStarting || isConnected) return;
 
       isStarting = true;
-
       hideError();
-
       setConnectingUI();
 
-
       try {
+        const sessionToken = await createSession();
+        connectingText.textContent = "Starting your AI avatar…";
 
-        /*
-         * STEP 1
-         *
-         * Get a fresh temporary session token.
-         */
-
-        const sessionToken =
-          await createSession();
-
-
-        /*
-         * STEP 2
-         *
-         * Create Anam client.
-         */
-
-        connectingText.textContent =
-          "Starting your AI avatar…";
-
-
-        anamClient =
-          createClient(
-            sessionToken
-          );
-
-
-        /*
-         * STEP 3
-         *
-         * Stream avatar into the video element.
-         *
-         * Anam handles:
-         *
-         * - WebRTC
-         * - microphone
-         * - audio
-         * - avatar video
-         * - ElevenLabs agent connection
-         * - lip synchronization
-         */
-
-        await anamClient.streamToVideoElement(
-          "avatar-video"
-        );
-
-
-        /*
-         * Connection successful.
-         */
+        anamClient = createClient(sessionToken);
+        await anamClient.streamToVideoElement("avatar-video");
 
         isConnected = true;
-
         isStarting = false;
-
         setConnectedUI();
-
-        console.log(
-          "AvatarX conversation started."
-        );
-
+        console.log("AvatarX conversation started.");
       } catch (error) {
-
-        console.error(
-          "Start conversation failed:",
-          error
-        );
-
-
+        console.error("Start conversation failed:", error);
         isStarting = false;
-
         isConnected = false;
 
-
-        /*
-         * Clean up a partially-created
-         * Anam client.
-         */
-
         try {
-
-          if (anamClient) {
-
-            anamClient.stopStreaming();
-
-          }
-
+          if (anamClient) anamClient.stopStreaming();
         } catch (cleanupError) {
-
-          console.warn(
-            "Cleanup error:",
-            cleanupError
-          );
-
+          console.warn("Cleanup error:", cleanupError);
         }
 
+        anamClient = null;
+        video.srcObject = null;
 
-        anamClient =
-          null;
-
-        video.srcObject =
-          null;
-
-
-        let message =
-          "Unable to start the conversation.";
-
-
-        if (
-          error &&
-          typeof error.message === "string"
-        ) {
-
-          message =
-            error.message;
-
+        let message = "Unable to start the conversation.";
+        if (error && typeof error.message === "string") {
+          message = error.message;
         }
 
-
-        /*
-         * Helpful browser microphone message.
-         */
-
-        if (
-          message.toLowerCase().includes(
-            "microphone"
-          )
-        ) {
-
-          message =
-            "Microphone access is required. Please allow microphone access in your browser and try again.";
-
+        if (message.toLowerCase().includes("microphone")) {
+          message = "Microphone access is required. Please allow microphone access in your browser and try again.";
         }
 
-
-        showError(
-          message
-        );
-
-
-        setTimeout(
-          () => {
-
-            setIdleUI();
-
-          },
-          100
-        );
-
+        showError(message);
+        setTimeout(() => setIdleUI(), 100);
       }
-
     }
-
-
-    /*
-     * ============================================================
-     * STOP CONVERSATION
-     * ============================================================
-     */
 
     async function stopConversation() {
-
       if (!anamClient) {
-
         setIdleUI();
-
         return;
-
       }
 
-
-      startButton.disabled =
-        true;
-
-      stopButton.disabled =
-        true;
-
+      startButton.disabled = true;
+      stopButton.disabled = true;
 
       try {
-
         anamClient.stopStreaming();
-
       } catch (error) {
-
-        console.warn(
-          "Anam stop error:",
-          error
-        );
-
+        console.warn("Anam stop error:", error);
       }
 
-
-      anamClient =
-        null;
-
-      isConnected =
-        false;
-
-      isStarting =
-        false;
-
-
-      /*
-       * Clear WebRTC media stream.
-       */
+      anamClient = null;
+      isConnected = false;
+      isStarting = false;
 
       try {
-
-        const stream =
-          video.srcObject;
-
+        const stream = video.srcObject;
         if (stream) {
-
-          stream
-            .getTracks()
-            .forEach(
-              track => track.stop()
-            );
-
+          stream.getTracks().forEach(track => track.stop());
         }
-
       } catch (error) {
-
-        console.warn(
-          "Media cleanup error:",
-          error
-        );
-
+        console.warn("Media cleanup error:", error);
       }
 
-
-      video.srcObject =
-        null;
-
-
+      video.srcObject = null;
       setIdleUI();
-
-
-      console.log(
-        "AvatarX conversation ended."
-      );
-
+      console.log("AvatarX conversation ended.");
     }
 
+    startButton.addEventListener("click", startConversation);
+    stopButton.addEventListener("click", stopConversation);
 
-    /*
-     * ============================================================
-     * BUTTONS
-     * ============================================================
-     */
-
-    startButton.addEventListener(
-      "click",
-      startConversation
-    );
-
-    stopButton.addEventListener(
-      "click",
-      stopConversation
-    );
-
-
-    /*
-     * ============================================================
-     * PAGE CLEANUP
-     * ============================================================
-     */
-
-    window.addEventListener(
-      "beforeunload",
-      () => {
-
-        try {
-
-          if (anamClient) {
-
-            anamClient.stopStreaming();
-
-          }
-
-        } catch {
-
-          // Ignore cleanup errors
-        }
-
+    window.addEventListener("beforeunload", () => {
+      try {
+        if (anamClient) anamClient.stopStreaming();
+      } catch {
+        // Ignore cleanup errors
       }
-    );
-
-
-    /*
-     * ============================================================
-     * INITIAL STATE
-     * ============================================================
-     */
+    });
 
     setIdleUI();
-
-    console.log(
-      "AvatarX initialized."
-    );
-
+    console.log("AvatarX initialized.");
   </script>
 
 </body>
