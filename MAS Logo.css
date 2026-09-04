@@ -1,0 +1,13 @@
+.idle-icon {
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.idle-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
